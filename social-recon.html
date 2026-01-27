@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Social Identity Cross-Reference - OSINT</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Noto+Sans:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">tailwind.config = {darkMode: "class",theme: {extend: {colors: {"primary": "#13ec63","background-light": "#f6f8f7","background-dark": "#102217","card-dark": "rgba(23, 33, 27, 0.7)","card-border": "#28392e",},fontFamily: {"display": ["Space Grotesk", "sans-serif"],"body": ["Noto Sans", "sans-serif"],},backgroundImage: {'grid-pattern': "linear-gradient(to right, #1f2f25 1px, transparent 1px), linear-gradient(to bottom, #1f2f25 1px, transparent 1px)",},borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},},},}</script>
+<style>.glass-panel {background: rgba(16, 34, 23, 0.6);backdrop-filter: blur(8px);-webkit-backdrop-filter: blur(8px);border: 1px solid rgba(40, 57, 46, 0.5);}.scan-line {position: absolute;top: 0;left: 0;right: 0;height: 2px;background: rgba(19, 236, 99, 0.3);box-shadow: 0 0 10px rgba(19, 236, 99, 0.5);animation: scan 3s linear infinite;z-index: 0;pointer-events: none;}@keyframes scan {0% { top: 0%; opacity: 0; }10% { opacity: 1; }90% { opacity: 1; }100% { top: 100%; opacity: 0; }}</style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display min-h-screen flex flex-col overflow-x-hidden text-slate-900 dark:text-slate-100">
+<header class="sticky top-0 z-50 w-full border-b border-[#28392e] bg-[#111813]/90 backdrop-blur-md">
+<div class="px-6 lg:px-12 py-3 flex items-center justify-between">
+<div class="flex items-center gap-4 text-white">
+<div class="size-6 text-primary animate-pulse">
+<span class="material-symbols-outlined">radar</span>
+</div>
+<h2 class="text-white text-lg font-bold leading-tight tracking-tight uppercase">NET.WATCH <span class="text-primary text-xs ml-1 align-top">V.3.0</span></h2>
+</div>
+<nav class="hidden md:flex flex-1 justify-end gap-8 items-center">
+<div class="flex items-center gap-8">
+<a class="text-gray-400 hover:text-primary transition-colors text-sm font-medium tracking-wide" href="dashboard.html">DASHBOARD</a>
+<a class="text-white border-b-2 border-primary pb-0.5 text-sm font-bold tracking-wide" href="social-recon.html">RECON</a>
+<a class="text-gray-400 hover:text-primary transition-colors text-sm font-medium tracking-wide" href="exif-extractor.html">EXIF_TOOL</a>
+<a class="text-gray-400 hover:text-primary transition-colors text-sm font-medium tracking-wide" href="breach-search.html">BREACH_CHECK</a>
+<a class="text-gray-400 hover:text-primary transition-colors text-sm font-medium tracking-wide" href="settings.html">SETTINGS</a>
+</div>
+<div class="h-6 w-px bg-[#28392e] mx-2"></div>
+<div class="flex items-center gap-3">
+<div class="text-right hidden lg:block">
+<p class="text-xs text-primary font-mono">OPERATOR_ID: 9942</p>
+<p class="text-[10px] text-gray-500 font-mono">SECURE CONNECTION</p>
+</div>
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10 border border-[#28392e] relative" data-alt="User avatar showing a stylized silhouette" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuD9bgVw3wSDuGbRZu4aEn2F4fdRCI07vqBmy1sfmgX618NZYnK0Fa1hgXlVIZCcfIbhhnUblH7cAk4Hdg9_Gg0FhF678yyQt1BFYEMM7tqWQTqSiywwc07-UtwybUMMKGrUUtjJPzTRmf1qr1nyQqzpJqFdN04yL7rUuDpX5YKgoZ95pTT8k-y8AVXD-pK0sciWYgS0M-TBXXqyENKltuMjTuhhoOjdxp9BjPjE_47x6yxLJxFIhgCaNVeJPsIsfJfa880wG9ptQswt");'>
+<div class="absolute bottom-0 right-0 size-2.5 bg-primary rounded-full border-2 border-[#111813]"></div>
+</div>
+</div>
+</nav>
+</div>
+</header>
+<main class="relative flex-1 flex flex-col bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTTAgNDBMMCAwTDQwIDAiIGZpbGw9Im5vbmUiIHN0cm9rZT0icmdiYSgzMCwgNTAsIDQwLCAwLjE1KSIgc3Ryb2tlLXdpZHRoPSIxIi8+PC9wYXR0ZXJuPjwvZGVmcz48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ1cmwoI2dyaWQpIiAvPjwvc3ZnPg==')]">
+<div class="absolute inset-0 pointer-events-none overflow-hidden opacity-20">
+<div class="scan-line"></div>
+</div>
+<div class="layout-container flex h-full grow flex-col relative z-10">
+<div class="px-4 md:px-12 lg:px-40 flex flex-1 justify-center py-8">
+<div class="layout-content-container flex flex-col max-w-[1200px] flex-1 gap-8">
+<div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 border-l-4 border-primary pl-6 py-2 bg-gradient-to-r from-primary/5 to-transparent rounded-r-lg">
+<div class="flex flex-col gap-1">
+<h1 class="text-white text-3xl md:text-4xl font-black leading-tight tracking-tighter uppercase font-display">IDENTITY RECONNAISSANCE</h1>
+<p class="text-[#9db9a7] text-sm md:text-base font-mono tracking-wide"><span class="text-primary">&gt;&gt;</span> Cross-reference social identifiers across global networks.</p>
+</div>
+<div class="flex items-center gap-2 bg-[#111813] px-3 py-1 rounded border border-[#28392e]">
+<div class="size-2 bg-primary rounded-full animate-pulse"></div>
+<span class="text-xs font-mono text-primary">SYSTEM ONLINE</span>
+</div>
+</div>
+<div class="glass-panel rounded-xl p-1 shadow-2xl shadow-primary/5">
+<div class="flex flex-col gap-4 p-6 md:p-10">
+<div class="flex flex-col gap-2 text-center items-center">
+<h2 class="text-white tracking-tight text-2xl font-bold uppercase">Target Acquisition</h2>
+<p class="text-gray-400 text-sm max-w-[500px]">Enter unique identifier for deep scan across 50+ social platforms.</p>
+</div>
+<div class="w-full max-w-2xl mx-auto mt-4">
+<label class="relative flex w-full items-center">
+<span class="absolute left-4 text-gray-500 font-mono text-lg select-none">@</span>
+<input class="w-full h-16 bg-[#0a120e] border border-[#28392e] text-white pl-10 pr-40 rounded-lg focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary placeholder:text-gray-600 font-mono text-lg tracking-wider transition-all" placeholder="TARGET_HANDLE" type="text" id="target-input"/>
+<div class="absolute right-2 top-2 bottom-2">
+<button class="h-full bg-primary hover:bg-[#10c854] text-[#111813] px-6 rounded font-bold tracking-wider flex items-center gap-2 transition-colors" onclick="startScan()">
+<span class="material-symbols-outlined text-xl">travel_explore</span>
+<span>SCAN</span>
+</button>
+</div>
+</label>
+<div class="flex justify-between items-center mt-3 px-2">
+<span class="text-xs text-gray-500 font-mono">LAST SEARCH: <span id="last-search">Never</span></span>
+<span class="text-xs text-primary font-mono cursor-pointer hover:underline">ADVANCED FILTERS [+]</span>
+</div>
+</div>
+</div>
+<div class="border-t border-[#28392e] bg-[#0f1913] px-6 py-3 flex items-center gap-4">
+<span class="text-xs font-mono text-primary whitespace-nowrap">SCANNING NODES...</span>
+<div class="flex-1 h-1.5 bg-[#1f2f25] rounded-full overflow-hidden">
+<div class="h-full bg-primary relative overflow-hidden" style="width: 0%" id="scan-progress">
+<div class="absolute inset-0 bg-white/30 w-full animate-[shimmer_1s_infinite] skew-x-12 translate-x-[-100%]"></div>
+</div>
+</div>
+<span class="text-xs font-mono text-white" id="progress-text">0%</span>
+</div>
+</div>
+<div class="flex flex-col gap-6">
+<div class="flex items-center justify-between border-b border-[#28392e] pb-2">
+<h3 class="text-white text-xl font-bold tracking-tight flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">dataset</span>CROSS-REFERENCE RESULTS
+</h3>
+<div class="flex gap-2">
+<span class="text-xs bg-primary/20 text-primary px-2 py-1 rounded font-mono border border-primary/20" id="match-count">0 MATCHES</span>
+<span class="text-xs bg-[#28392e] text-gray-400 px-2 py-1 rounded font-mono border border-transparent" id="checked-count">0 CHECKED</span>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4" id="results-grid">
+<div class="col-span-full text-center py-12 text-gray-500">
+<span class="material-symbols-outlined text-6xl mb-4 block">person_search</span>
+<p class="font-mono text-sm">Enter a target handle and click SCAN to begin reconnaissance</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+
+<script>
+let scanInProgress = false;
+let scanResults = [];
+
+// Mock social media platforms and results
+const platforms = [
+    { name: 'Twitter/X', icon: 'alternate_email', color: 'text-blue-400' },
+    { name: 'GitHub', icon: 'code', color: 'text-gray-300' },
+    { name: 'Instagram', icon: 'camera_alt', color: 'text-pink-400' },
+    { name: 'Reddit', icon: 'forum', color: 'text-orange-400' },
+    { name: 'LinkedIn', icon: 'business_center', color: 'text-blue-600' },
+    { name: 'TikTok', icon: 'music_note', color: 'text-red-400' },
+    { name: 'YouTube', icon: 'play_circle', color: 'text-red-500' },
+    { name: 'Discord', icon: 'chat', color: 'text-indigo-400' }
+];
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Check authentication
+    const isAuthenticated = localStorage.getItem('allOSINT_authenticated');
+    if (!isAuthenticated) {
+        window.location.href = 'login.html';
+        return;
+    }
+    
+    // Load target from localStorage if available
+    const target = localStorage.getItem('allOSINT_target');
+    if (target && !target.includes('.') && !target.includes('@')) {
+        document.getElementById('target-input').value = target;
+        // Auto-start scan after a brief delay
+        setTimeout(() => startScan(), 1000);
+    }
+});
+
+function startScan() {
+    const target = document.getElementById('target-input').value.trim();
+    
+    if (!target) {
+        alert('Please enter a target handle');
+        return;
+    }
+    
+    if (scanInProgress) {
+        return;
+    }
+    
+    scanInProgress = true;
+    scanResults = [];
+    
+    // Update last search time
+    document.getElementById('last-search').textContent = new Date().toLocaleTimeString();
+    
+    // Reset progress
+    document.getElementById('scan-progress').style.width = '0%';
+    document.getElementById('progress-text').textContent = '0%';
+    document.getElementById('match-count').textContent = '0 MATCHES';
+    document.getElementById('checked-count').textContent = '0 CHECKED';
+    
+    // Clear results
+    document.getElementById('results-grid').innerHTML = `
+        <div class="col-span-full text-center py-12 text-primary">
+            <span class="material-symbols-outlined text-6xl mb-4 block animate-spin">sync</span>
+            <p class="font-mono text-sm">Scanning ${target} across social networks...</p>
+        </div>
+    `;
+    
+    // Simulate progressive scanning
+    let progress = 0;
+    let checkedCount = 0;
+    let matchCount = 0;
+    
+    const scanInterval = setInterval(() => {
+        progress += Math.random() * 15 + 5;
+        checkedCount++;
+        
+        if (progress > 100) progress = 100;
+        
+        document.getElementById('scan-progress').style.width = progress + '%';
+        document.getElementById('progress-text').textContent = Math.floor(progress) + '%';
+        document.getElementById('checked-count').textContent = checkedCount + ' CHECKED';
+        
+        // Randomly find matches
+        if (Math.random() > 0.6 && checkedCount <= platforms.length) {
+            const platform = platforms[Math.min(checkedCount - 1, platforms.length - 1)];
+            const found = Math.random() > 0.3; // 70% chance of finding a match
+            
+            if (found) {
+                matchCount++;
+                scanResults.push({
+                    platform: platform.name,
+                    icon: platform.icon,
+                    color: platform.color,
+                    username: generateUsername(target, platform.name),
+                    status: 'MATCH FOUND',
+                    followers: Math.floor(Math.random() * 50000) + 100,
+                    activity: getRandomActivity(),
+                    avatar: getRandomAvatar()
+                });
+                
+                document.getElementById('match-count').textContent = matchCount + ' MATCHES';
+                updateResults();
+            }
+        }
+        
+        if (progress >= 100) {
+            clearInterval(scanInterval);
+            scanInProgress = false;
+            
+            if (scanResults.length === 0) {
+                document.getElementById('results-grid').innerHTML = `
+                    <div class="col-span-full text-center py-12 text-gray-500">
+                        <span class="material-symbols-outlined text-6xl mb-4 block">person_off</span>
+                        <p class="font-mono text-sm">No matches found for "${target}"</p>
+                        <p class="font-mono text-xs mt-2 text-gray-600">Try a different username or handle</p>
+                    </div>
+                `;
+            }
+        }
+    }, 800);
+}
+
+function generateUsername(target, platform) {
+    const variations = [
+        target,
+        target + '_official',
+        target + '2023',
+        target.replace(/[0-9]/g, '') + '_dev',
+        'real_' + target,
+        target + '_pro'
+    ];
+    return variations[Math.floor(Math.random() * variations.length)];
+}
+
+function getRandomActivity() {
+    const activities = [
+        'Active today',
+        'Last seen 2h ago',
+        'Posted 1d ago',
+        'Online now',
+        'Last active 3d ago'
+    ];
+    return activities[Math.floor(Math.random() * activities.length)];
+}
+
+function getRandomAvatar() {
+    const avatars = [
+        'https://lh3.googleusercontent.com/aida-public/AB6AXuAcAaa0TP8SEZgDnd3lgUAdADQD6ZkcONav3tso_IpGYwS5l4gbp73fpTCy-F0N_PX2aVdwwZq1VSJV7t-hx7tJxJtY3OVfyx_7iXB5LnaacasG1YQ2pG3yVK3fdPdM3bvpwy5QAe4dW9HN7uMdYotKieGlGMBobOHsC4JCE1V36Wl1Ro-9EQaN40nhfsh1BKnnjdvFdx-EmSXMmKTI1CC8gp88vlAuW50-JTMoB8982Dt0sZPtFDD1yLW_5bEERDWWf9PGW1a4ve0D',
+        'https://lh3.googleusercontent.com/aida-public/AB6AXuCI7C5JgE8x9HiRFH3eBflcMg2siAD8fRtwgh9QDfiTYu0JtZX0gbAjPL0F_AF7aIxHl0CscDlBOYcRkO58L5VpvmxNbW_Z4hIKfEG7-XDkjTmDCyzOXqJ1JpCDGWWED8rK0MpntDEsDhZcXxXer5CfxMy9-oYRWtPh1TXgT12A2cpBHs4CJwxfMe8VT9z6jCjmYPHGsQZ0OOnS4OEOEQJXbJn7GJ-P0PlRLyOfMTDRqkmRTh_w-parl-vmPf_2yPM05wxPLDLgunFX'
+    ];
+    return avatars[Math.floor(Math.random() * avatars.length)];
+}
+
+function updateResults() {
+    const grid = document.getElementById('results-grid');
+    grid.innerHTML = scanResults.map(result => `
+        <div class="group relative bg-[#111813] border border-primary/50 rounded-lg p-5 flex flex-col gap-4 shadow-[0_0_15px_rgba(19,236,99,0.1)] transition-all hover:shadow-[0_0_25px_rgba(19,236,99,0.2)] hover:border-primary">
+            <div class="absolute top-0 right-0 p-2">
+                <span class="flex size-2">
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+                    <span class="relative inline-flex rounded-full size-2 bg-primary"></span>
+                </span>
+            </div>
+            <div class="flex items-center gap-3 pb-3 border-b border-primary/20">
+                <div class="size-8 rounded bg-white/5 flex items-center justify-center text-white">
+                    <span class="material-symbols-outlined ${result.color}">${result.icon}</span>
+                </div>
+                <div>
+                    <h4 class="text-white font-bold text-sm tracking-wide">${result.platform}</h4>
+                    <span class="text-[10px] text-primary font-mono bg-primary/10 px-1 rounded">${result.status}</span>
+                </div>
+            </div>
+            <div class="flex items-center gap-4 mt-2">
+                <img alt="Profile avatar" class="size-14 rounded-md border border-primary object-cover" src="${result.avatar}"/>
+                <div class="flex flex-col gap-1">
+                    <p class="text-white font-mono text-sm">@${result.username}</p>
+                    <p class="text-gray-400 text-xs line-clamp-2">${result.activity}</p>
+                </div>
+            </div>
+            <div class="grid grid-cols-2 gap-2 mt-auto pt-4">
+                <div class="bg-[#1a2620] p-2 rounded border border-[#28392e]">
+                    <p class="text-[10px] text-gray-500 uppercase">Followers</p>
+                    <p class="text-white font-mono text-sm">${result.followers.toLocaleString()}</p>
+                </div>
+                <div class="bg-[#1a2620] p-2 rounded border border-[#28392e]">
+                    <p class="text-[10px] text-gray-500 uppercase">Status</p>
+                    <p class="text-primary font-mono text-sm">ACTIVE</p>
+                </div>
+            </div>
+            <div class="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-primary/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+        </div>
+    `).join('');
+}
+
+// Allow Enter key to trigger scan
+document.getElementById('target-input').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+        startScan();
+    }
+});
+</script>
+</body>
+</html>

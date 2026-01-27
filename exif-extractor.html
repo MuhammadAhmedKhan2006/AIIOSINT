@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>EXIF Metadata Extractor - AllOSINT</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=JetBrains+Mono:wght@300;400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/exif-js@2.3.0/exif.js"></script>
+<script>tailwind.config = {darkMode: "class",theme: {extend: {colors: {"primary": "#21c45d","primary-dark": "#16a34a","background-light": "#f6f8f7","background-dark": "#020617","surface-dark": "#0f172a","surface-glass": "rgba(15, 23, 42, 0.7)","border-neon": "rgba(33, 196, 93, 0.2)",},fontFamily: {"display": ["Space Grotesk", "sans-serif"],"mono": ["JetBrains Mono", "monospace"],},boxShadow: {'neon': '0 0 10px rgba(33, 196, 93, 0.15)','neon-strong': '0 0 20px rgba(33, 196, 93, 0.3)',}},},}</script>
+<style>::-webkit-scrollbar {width: 6px;height: 6px;}::-webkit-scrollbar-track {background: #0f172a;}::-webkit-scrollbar-thumb {background: #1e293b;border-radius: 3px;}::-webkit-scrollbar-thumb:hover {background: #21c45d;}.glass-panel {background: rgba(15, 23, 42, 0.6);backdrop-filter: blur(12px);-webkit-backdrop-filter: blur(12px);border: 1px solid rgba(33, 196, 93, 0.1);}.text-glow {text-shadow: 0 0 10px rgba(33, 196, 93, 0.5);}.drop-zone {border: 2px dashed rgba(33, 196, 93, 0.3);transition: all 0.3s ease;}.drop-zone.dragover {border-color: #21c45d;background-color: rgba(33, 196, 93, 0.1);}.metadata-grid {display: grid;grid-template-columns: 1fr 2fr;gap: 0.5rem;}.metadata-item {padding: 0.5rem;border-bottom: 1px solid rgba(255, 255, 255, 0.05);}.metadata-key {color: #21c45d;font-weight: 600;}.metadata-value {color: #e2e8f0;word-break: break-all;}</style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 antialiased selection:bg-primary selection:text-black overflow-hidden h-screen flex">
+<aside class="flex w-72 flex-col bg-[#050b14] border-r border-white/5 h-full flex-shrink-0 relative z-20">
+<div class="p-6 pb-2">
+<div class="flex items-center gap-3">
+<div class="relative size-10 rounded bg-primary/10 flex items-center justify-center border border-primary/30 shadow-neon">
+<span class="material-symbols-outlined text-primary text-2xl">photo_camera</span>
+</div>
+<div class="flex flex-col">
+<h1 class="text-white text-lg font-bold tracking-wider leading-none">AllOSINT</h1>
+<span class="text-primary text-[10px] font-mono tracking-widest uppercase opacity-80 mt-1">EXIF Extractor</span>
+</div>
+</div>
+</div>
+<div class="flex-1 overflow-y-auto px-4 py-4 space-y-6">
+<div>
+<p class="px-3 text-[10px] font-mono uppercase tracking-widest text-slate-500 mb-2">Navigation</p>
+<nav class="space-y-1">
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-400 hover:text-white hover:bg-white/5 transition-all group" href="dashboard.html">
+<span class="material-symbols-outlined text-[20px] group-hover:text-primary transition-colors">dashboard</span>
+<span class="text-sm font-medium font-mono">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-400 hover:text-white hover:bg-white/5 transition-all group" href="index.html">
+<span class="material-symbols-outlined text-[20px] group-hover:text-primary transition-colors">home</span>
+<span class="text-sm font-medium font-mono">Home</span>
+</a>
+</nav>
+</div>
+<div>
+<p class="px-3 text-[10px] font-mono uppercase tracking-widest text-slate-500 mb-2">Media Analysis</p>
+<nav class="space-y-1">
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-primary/10 border border-primary/20 text-white group shadow-neon transition-all hover:bg-primary/20" href="exif-extractor.html">
+<span class="material-symbols-outlined text-primary group-hover:text-white transition-colors text-[20px]">photo_library</span>
+<span class="text-sm font-medium font-mono">EXIF Extractor</span>
+<div class="ml-auto size-1.5 rounded-full bg-primary animate-pulse shadow-[0_0_8px_#21c45d]"></div>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-400 hover:text-white hover:bg-white/5 transition-all group" href="reverse-image.html">
+<span class="material-symbols-outlined text-[20px] group-hover:text-primary transition-colors">image_search</span>
+<span class="text-sm font-medium font-mono">Reverse Image</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-400 hover:text-white hover:bg-white/5 transition-all group" href="face-recognition.html">
+<span class="material-symbols-outlined text-[20px] group-hover:text-primary transition-colors">face</span>
+<span class="text-sm font-medium font-mono">Face Recognition</span>
+</a>
+</nav>
+</div>
+<div>
+<p class="px-3 text-[10px] font-mono uppercase tracking-widest text-slate-500 mb-2">Network Intel</p>
+<nav class="space-y-1">
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-400 hover:text-white hover:bg-white/5 transition-all group" href="subdomain-recon.html">
+<span class="material-symbols-outlined text-[20px] group-hover:text-primary transition-colors">wifi_tethering_off</span>
+<span class="text-sm font-medium font-mono">Subdomain Recon</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-400 hover:text-white hover:bg-white/5 transition-all group" href="port-scanner.html">
+<span class="material-symbols-outlined text-[20px] group-hover:text-primary transition-colors">hub</span>
+<span class="text-sm font-medium font-mono">Port Scanner</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-400 hover:text-white hover:bg-white/5 transition-all group" href="tech-stack-profiler.html">
+<span class="material-symbols-outlined text-[20px] group-hover:text-primary transition-colors">code</span>
+<span class="text-sm font-medium font-mono">Tech Stack</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-400 hover:text-white hover:bg-white/5 transition-all group" href="domain-threat-intel.html">
+<span class="material-symbols-outlined text-[20px] group-hover:text-primary transition-colors">security</span>
+<span class="text-sm font-medium font-mono">Domain Intel</span>
+</a>
+</nav>
+</div>
+<div>
+<p class="px-3 text-[10px] font-mono uppercase tracking-widest text-slate-500 mb-2">Identity Intel</p>
+<nav class="space-y-1">
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-400 hover:text-white hover:bg-white/5 transition-all group" href="breach-search.html">
+<span class="material-symbols-outlined text-[20px] group-hover:text-primary transition-colors">warning</span>
+<span class="text-sm font-medium font-mono">Email Breach</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-400 hover:text-white hover:bg-white/5 transition-all group" href="social-recon.html">
+<span class="material-symbols-outlined text-[20px] group-hover:text-primary transition-colors">group</span>
+<span class="text-sm font-medium font-mono">Social Search</span>
+</a>
+</nav>
+</div>
+</div>
+<div class="mt-auto p-4 border-t border-white/5 bg-[#03060a]">
+<div class="flex items-center gap-4 group cursor-pointer hover:bg-white/5 p-2 rounded-lg transition-colors" onclick="showUserMenu()">
+<div class="relative size-12 rounded-full bg-slate-800 overflow-hidden border border-slate-700">
+<div class="absolute inset-0 bg-cover bg-center" data-alt="White wolf illustration on dark background representing system guardian" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCjqRGMMqCQRNLS15d6waom9isQd6FFer_dwQdYgeybRf5eT6R0SgCkusZlh8e9ilU4Xft0pPlrx8luR3ukGp5gwAmUSTcP1l8VPm8cZx00AAyDat4OVcRdORxc6hcqGKo42RuM5BZ3NeKjr-FKunOr5rgTGzbr6vyArF1i8nMCbHriE3BwDEtRmdF1DMhSQAjhA70of7p7bcvUoicJrYm4TOvPcv-7UizJr9a3IMfKFV8h7PmDnEfFCoVWK1UoTKepjEw-xXLbA_AK");'></div>
+<div class="absolute bottom-0 right-0 size-3 bg-primary border-2 border-[#03060a] rounded-full shadow-neon"></div>
+</div>
+<div>
+<h3 class="text-white text-sm font-bold font-display" id="user-name">System Guardian</h3>
+<div class="flex items-center gap-1.5 mt-0.5">
+<div class="size-1.5 rounded-full bg-primary animate-pulse"></div>
+<p class="text-primary text-xs font-mono">Online • Secure</p>
+</div>
+</div>
+</div>
+</div>
+</aside>
+<main class="flex-1 flex flex-col relative overflow-hidden bg-[url('https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&amp;w=2670&amp;auto=format&amp;fit=crop')] bg-cover bg-center" data-alt="Abstract dark cyber technology grid background">
+<div class="absolute inset-0 bg-background-dark/95 backdrop-blur-sm z-0"></div>
+<header class="relative z-10 flex h-16 items-center justify-between border-b border-white/5 px-6 bg-[#020617]/80 backdrop-blur-md">
+<div class="flex items-center gap-2 text-sm font-mono">
+<span class="text-slate-500">Media Analysis</span>
+<span class="text-slate-600">/</span>
+<span class="text-primary">EXIF Extractor</span>
+<span class="text-slate-600">/</span>
+<span class="text-white">Active Session</span>
+</div>
+<div class="flex items-center gap-4 border-l border-white/10 pl-6">
+<button class="relative text-slate-400 hover:text-white transition-colors" onclick="showHelp()">
+<span class="material-symbols-outlined">help</span>
+</button>
+<div class="size-8 rounded-full bg-gradient-to-tr from-primary to-emerald-800 border border-primary/40 flex items-center justify-center text-white font-bold text-xs shadow-neon cursor-pointer" onclick="showUserMenu()">OP</div>
+</div>
+</header>
+<div class="relative z-10 flex-1 overflow-y-auto p-6 scroll-smooth">
+<div class="max-w-7xl mx-auto flex flex-col gap-6">
+<div class="flex flex-col md:flex-row justify-between items-end md:items-center gap-4">
+<div>
+<h1 class="text-3xl font-bold text-white tracking-tight mb-1">EXIF Metadata Extractor</h1>
+<p class="text-slate-400 font-mono text-sm">Extract hidden metadata from images and photos</p>
+</div>
+<div class="flex gap-2">
+<button class="px-4 py-2 bg-primary/10 text-primary border border-primary/20 rounded hover:bg-primary/20 font-mono text-sm transition-all" onclick="clearAll()">Clear All</button>
+<button class="flex items-center gap-2 px-4 py-2 bg-primary text-background-dark rounded font-bold text-sm hover:bg-primary-dark transition-all shadow-neon" onclick="document.getElementById('file-input').click()">
+<span class="material-symbols-outlined text-[18px]">upload</span>
+<span>Upload Image</span>
+</button>
+</div>
+</div>
+
+<!-- File Upload Area -->
+<div class="glass-panel rounded-lg border border-primary/20 p-8">
+<div class="drop-zone rounded-lg p-12 text-center" id="drop-zone">
+<div class="flex flex-col items-center gap-4">
+<div class="p-4 bg-primary/10 rounded-full">
+<span class="material-symbols-outlined text-primary text-4xl">cloud_upload</span>
+</div>
+<div>
+<h3 class="text-xl font-bold text-white mb-2">Drop Image Here</h3>
+<p class="text-slate-400 mb-4">Or click to browse files</p>
+<p class="text-xs text-slate-500 font-mono">Supports: JPG, PNG, TIFF, WebP (Max: 10MB)</p>
+</div>
+<input type="file" id="file-input" accept="image/*" class="hidden" onchange="handleFileSelect(event)">
+</div>
+</div>
+</div>
+
+<!-- Image Preview and Results -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6" id="results-container" style="display: none;">
+<!-- Image Preview -->
+<div class="glass-panel rounded-lg border border-primary/10 overflow-hidden">
+<div class="px-4 py-3 border-b border-white/5 bg-white/5 flex justify-between items-center">
+<h3 class="text-sm font-bold text-white font-display">Image Preview</h3>
+<div class="flex items-center gap-2">
+<span class="text-xs text-slate-400 font-mono" id="file-info">No file selected</span>
+<button class="text-slate-400 hover:text-white transition-colors" onclick="downloadImage()">
+<span class="material-symbols-outlined text-sm">download</span>
+</button>
+</div>
+</div>
+<div class="p-4 bg-slate-900/50 flex items-center justify-center min-h-[300px]">
+<img id="image-preview" class="max-w-full max-h-[400px] object-contain rounded shadow-lg" style="display: none;">
+<div id="no-image" class="text-center text-slate-500">
+<span class="material-symbols-outlined text-6xl mb-4 block">image</span>
+<p>No image loaded</p>
+</div>
+</div>
+</div>
+
+<!-- EXIF Data -->
+<div class="glass-panel rounded-lg border border-primary/10 overflow-hidden">
+<div class="px-4 py-3 border-b border-white/5 bg-white/5 flex justify-between items-center">
+<h3 class="text-sm font-bold text-white font-display">EXIF Metadata</h3>
+<div class="flex items-center gap-2">
+<span class="text-xs text-slate-400 font-mono" id="metadata-count">0 fields</span>
+<button class="text-slate-400 hover:text-white transition-colors" onclick="exportMetadata()">
+<span class="material-symbols-outlined text-sm">file_download</span>
+</button>
+</div>
+</div>
+<div class="overflow-y-auto max-h-[400px]" id="metadata-container">
+<div class="p-8 text-center text-slate-500">
+<span class="material-symbols-outlined text-6xl mb-4 block">info</span>
+<p>Upload an image to view metadata</p>
+</div>
+</div>
+</div>
+</div>
+
+<!-- Location Map (if GPS data available) -->
+<div class="glass-panel rounded-lg border border-primary/10 overflow-hidden" id="map-container" style="display: none;">
+<div class="px-4 py-3 border-b border-white/5 bg-white/5 flex justify-between items-center">
+<h3 class="text-sm font-bold text-white font-display">GPS Location</h3>
+<div class="flex items-center gap-2">
+<span class="text-xs text-slate-400 font-mono" id="gps-coords">No GPS data</span>
+<button class="text-slate-400 hover:text-white transition-colors" onclick="openInMaps()">
+<span class="material-symbols-outlined text-sm">open_in_new</span>
+</button>
+</div>
+</div>
+<div class="relative h-64 bg-slate-900">
+<div id="map-placeholder" class="absolute inset-0 flex items-center justify-center text-slate-500">
+<div class="text-center">
+<span class="material-symbols-outlined text-6xl mb-4 block">location_on</span>
+<p>GPS coordinates will appear here</p>
+</div>
+</div>
+</div>
+</div>
+
+<!-- Analysis Summary -->
+<div class="glass-panel rounded-lg border border-primary/10 p-6" id="analysis-summary" style="display: none;">
+<h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">analytics</span>
+Analysis Summary
+</h3>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+<div class="bg-slate-800/50 rounded-lg p-4 text-center">
+<div class="text-2xl font-bold text-primary font-mono" id="privacy-score">--</div>
+<div class="text-xs text-slate-400 mt-1">Privacy Risk</div>
+</div>
+<div class="bg-slate-800/50 rounded-lg p-4 text-center">
+<div class="text-2xl font-bold text-yellow-500 font-mono" id="metadata-fields">--</div>
+<div class="text-xs text-slate-400 mt-1">Metadata Fields</div>
+</div>
+<div class="bg-slate-800/50 rounded-lg p-4 text-center">
+<div class="text-2xl font-bold text-blue-500 font-mono" id="file-size">--</div>
+<div class="text-xs text-slate-400 mt-1">File Size</div>
+</div>
+</div>
+<div class="mt-4 p-4 bg-slate-800/30 rounded-lg">
+<h4 class="text-sm font-bold text-white mb-2">Key Findings:</h4>
+<ul class="text-sm text-slate-300 space-y-1" id="key-findings">
+<li>• Upload an image to see analysis results</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</main>
+
+<script>
+// Check authentication on page load
+document.addEventListener('DOMContentLoaded', function() {
+    const isAuthenticated = localStorage.getItem('allOSINT_authenticated');
+    if (!isAuthenticated) {
+        window.location.href = 'login.html';
+        return;
+    }
+    
+    // Load user data
+    const userData = localStorage.getItem('allOSINT_user');
+    if (userData) {
+        const user = JSON.parse(userData);
+        document.getElementById('user-name').textContent = user.codename || 'System Guardian';
+    }
+    
+    setupDropZone();
+});
+
+let currentImageFile = null;
+let currentMetadata = {};
+
+function setupDropZone() {
+    const dropZone = document.getElementById('drop-zone');
+    const fileInput = document.getElementById('file-input');
+    
+    // Click to upload
+    dropZone.addEventListener('click', () => fileInput.click());
+    
+    // Drag and drop
+    dropZone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        dropZone.classList.add('dragover');
+    });
+    
+    dropZone.addEventListener('dragleave', () => {
+        dropZone.classList.remove('dragover');
+    });
+    
+    dropZone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        dropZone.classList.remove('dragover');
+        
+        const files = e.dataTransfer.files;
+        if (files.length > 0) {
+            handleFile(files[0]);
+        }
+    });
+}
+
+function handleFileSelect(event) {
+    const file = event.target.files[0];
+    if (file) {
+        handleFile(file);
+    }
+}
+
+function handleFile(file) {
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+        alert('Please select a valid image file.');
+        return;
+    }
+    
+    // Validate file size (10MB limit)
+    if (file.size > 10 * 1024 * 1024) {
+        alert('File size must be less than 10MB.');
+        return;
+    }
+    
+    currentImageFile = file;
+    
+    // Show results container
+    document.getElementById('results-container').style.display = 'grid';
+    
+    // Update file info
+    const fileSize = (file.size / 1024 / 1024).toFixed(2);
+    document.getElementById('file-info').textContent = `${file.name} (${fileSize} MB)`;
+    document.getElementById('file-size').textContent = `${fileSize} MB`;
+    
+    // Preview image
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        const img = document.getElementById('image-preview');
+        img.src = e.target.result;
+        img.style.display = 'block';
+        document.getElementById('no-image').style.display = 'none';
+        
+        // Extract EXIF data
+        extractEXIF(img);
+    };
+    reader.readAsDataURL(file);
+}
+
+function extractEXIF(img) {
+    EXIF.getData(img, function() {
+        const allMetaData = EXIF.getAllTags(this);
+        currentMetadata = allMetaData;
+        
+        displayMetadata(allMetaData);
+        analyzeMetadata(allMetaData);
+        checkGPSData(allMetaData);
+    });
+}
+
+function displayMetadata(metadata) {
+    const container = document.getElementById('metadata-container');
+    const keys = Object.keys(metadata);
+    
+    if (keys.length === 0) {
+        container.innerHTML = `
+            <div class="p-8 text-center text-slate-500">
+                <span class="material-symbols-outlined text-6xl mb-4 block">info_off</span>
+                <p>No EXIF metadata found in this image</p>
+            </div>
+        `;
+        document.getElementById('metadata-count').textContent = '0 fields';
+        return;
+    }
+    
+    document.getElementById('metadata-count').textContent = `${keys.length} fields`;
+    
+    let html = '<div class="metadata-grid p-4">';
+    
+    // Sort keys for better organization
+    const sortedKeys = keys.sort();
+    
+    sortedKeys.forEach(key => {
+        const value = metadata[key];
+        let displayValue = value;
+        
+        // Format specific values
+        if (typeof value === 'object' && value !== null) {
+            displayValue = JSON.stringify(value);
+        } else if (key.includes('Date') || key.includes('Time')) {
+            displayValue = `<span class="text-yellow-400">${value}</span>`;
+        } else if (key.includes('GPS')) {
+            displayValue = `<span class="text-red-400">${value}</span>`;
+        } else if (key.includes('Camera') || key.includes('Make') || key.includes('Model')) {
+            displayValue = `<span class="text-blue-400">${value}</span>`;
+        }
+        
+        html += `
+            <div class="metadata-item">
+                <div class="metadata-key">${key}</div>
+            </div>
+            <div class="metadata-item">
+                <div class="metadata-value">${displayValue}</div>
+            </div>
+        `;
+    });
+    
+    html += '</div>';
+    container.innerHTML = html;
+}
+
+function analyzeMetadata(metadata) {
+    document.getElementById('analysis-summary').style.display = 'block';
+    
+    const keys = Object.keys(metadata);
+    document.getElementById('metadata-fields').textContent = keys.length;
+    
+    // Calculate privacy risk score
+    let riskScore = 0;
+    const findings = [];
+    
+    // Check for GPS data
+    if (metadata.GPSLatitude || metadata.GPSLongitude) {
+        riskScore += 40;
+        findings.push('GPS location data found - HIGH RISK');
+    }
+    
+    // Check for camera info
+    if (metadata.Make || metadata.Model) {
+        riskScore += 10;
+        findings.push(`Camera: ${metadata.Make || 'Unknown'} ${metadata.Model || ''}`);
+    }
+    
+    // Check for timestamps
+    if (metadata.DateTime || metadata.DateTimeOriginal) {
+        riskScore += 15;
+        findings.push('Timestamp information available');
+    }
+    
+    // Check for software info
+    if (metadata.Software) {
+        riskScore += 5;
+        findings.push(`Edited with: ${metadata.Software}`);
+    }
+    
+    // Check for user comments
+    if (metadata.UserComment) {
+        riskScore += 10;
+        findings.push('User comments found');
+    }
+    
+    if (findings.length === 0) {
+        findings.push('No sensitive metadata detected');
+    }
+    
+    // Display risk score
+    const riskElement = document.getElementById('privacy-score');
+    riskElement.textContent = `${riskScore}%`;
+    
+    if (riskScore >= 50) {
+        riskElement.className = 'text-2xl font-bold text-red-500 font-mono';
+    } else if (riskScore >= 25) {
+        riskElement.className = 'text-2xl font-bold text-yellow-500 font-mono';
+    } else {
+        riskElement.className = 'text-2xl font-bold text-green-500 font-mono';
+    }
+    
+    // Display findings
+    const findingsList = document.getElementById('key-findings');
+    findingsList.innerHTML = findings.map(finding => `<li>• ${finding}</li>`).join('');
+}
+
+function checkGPSData(metadata) {
+    if (metadata.GPSLatitude && metadata.GPSLongitude) {
+        const lat = convertDMSToDD(metadata.GPSLatitude, metadata.GPSLatitudeRef);
+        const lon = convertDMSToDD(metadata.GPSLongitude, metadata.GPSLongitudeRef);
+        
+        document.getElementById('map-container').style.display = 'block';
+        document.getElementById('gps-coords').textContent = `${lat.toFixed(6)}, ${lon.toFixed(6)}`;
+        
+        // Simple map placeholder (in a real app, you'd use Google Maps or similar)
+        const mapPlaceholder = document.getElementById('map-placeholder');
+        mapPlaceholder.innerHTML = `
+            <div class="text-center text-white">
+                <span class="material-symbols-outlined text-4xl mb-2 block text-red-400">location_on</span>
+                <p class="font-mono text-sm">GPS Location Found</p>
+                <p class="font-mono text-xs text-slate-400 mt-2">Lat: ${lat.toFixed(6)}</p>
+                <p class="font-mono text-xs text-slate-400">Lon: ${lon.toFixed(6)}</p>
+                <button class="mt-4 px-4 py-2 bg-primary text-black rounded text-sm font-bold hover:bg-primary-dark transition-all" onclick="openInMaps()">
+                    View in Maps
+                </button>
+            </div>
+        `;
+    }
+}
+
+function convertDMSToDD(dms, ref) {
+    let dd = dms[0] + dms[1]/60 + dms[2]/3600;
+    if (ref === "S" || ref === "W") dd = dd * -1;
+    return dd;
+}
+
+function openInMaps() {
+    if (currentMetadata.GPSLatitude && currentMetadata.GPSLongitude) {
+        const lat = convertDMSToDD(currentMetadata.GPSLatitude, currentMetadata.GPSLatitudeRef);
+        const lon = convertDMSToDD(currentMetadata.GPSLongitude, currentMetadata.GPSLongitudeRef);
+        window.open(`https://www.google.com/maps?q=${lat},${lon}`, '_blank');
+    }
+}
+
+function exportMetadata() {
+    if (Object.keys(currentMetadata).length === 0) {
+        alert('No metadata to export.');
+        return;
+    }
+    
+    const data = {
+        filename: currentImageFile ? currentImageFile.name : 'unknown',
+        timestamp: new Date().toISOString(),
+        metadata: currentMetadata
+    };
+    
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `exif-data-${Date.now()}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+}
+
+function downloadImage() {
+    if (!currentImageFile) {
+        alert('No image to download.');
+        return;
+    }
+    
+    const url = URL.createObjectURL(currentImageFile);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = currentImageFile.name;
+    a.click();
+    URL.revokeObjectURL(url);
+}
+
+function clearAll() {
+    currentImageFile = null;
+    currentMetadata = {};
+    
+    document.getElementById('results-container').style.display = 'none';
+    document.getElementById('map-container').style.display = 'none';
+    document.getElementById('analysis-summary').style.display = 'none';
+    
+    document.getElementById('image-preview').style.display = 'none';
+    document.getElementById('no-image').style.display = 'block';
+    document.getElementById('file-input').value = '';
+    
+    document.getElementById('file-info').textContent = 'No file selected';
+    document.getElementById('metadata-count').textContent = '0 fields';
+    document.getElementById('gps-coords').textContent = 'No GPS data';
+}
+
+function showHelp() {
+    alert(`EXIF Metadata Extractor Help:
+
+1. Upload an image by clicking "Upload Image" or dragging it to the drop zone
+2. View extracted metadata in the right panel
+3. Check GPS location if available
+4. Review privacy risk analysis
+5. Export metadata as JSON file
+
+Supported formats: JPG, PNG, TIFF, WebP
+Maximum file size: 10MB
+
+Privacy Note: All processing is done locally in your browser.`);
+}
+
+function showUserMenu() {
+    const menu = confirm('User Menu:\n\nOK - Logout\nCancel - Stay logged in');
+    if (menu) {
+        localStorage.removeItem('allOSINT_authenticated');
+        localStorage.removeItem('allOSINT_user');
+        window.location.href = 'index.html';
+    }
+}
+</script>
+</body>
+</html>

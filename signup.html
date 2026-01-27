@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Agent Recruitment - Sign Up</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&amp;family=Space+Grotesk:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">tailwind.config = {darkMode: "class",theme: {extend: {colors: {"primary": "#06f95f","primary-dim": "rgba(6, 249, 95, 0.1)","background-light": "#f5f8f6","background-dark": "#0f1210","surface-dark": "#161b18",},fontFamily: {"display": ["Space Grotesk", "sans-serif"],"cyber": ["Orbitron", "sans-serif"],},boxShadow: {'neon': '0 0 10px rgba(6, 249, 95, 0.5), 0 0 20px rgba(6, 249, 95, 0.3)','neon-sm': '0 0 5px rgba(6, 249, 95, 0.5)',}},},}</script>
+<style>::-webkit-scrollbar {width: 8px;}::-webkit-scrollbar-track {background: #0f1210;}::-webkit-scrollbar-thumb {background: #333;border-radius: 4px;}::-webkit-scrollbar-thumb:hover {background: #06f95f;}.glass-panel {background: rgba(15, 18, 16, 0.65);backdrop-filter: blur(12px);-webkit-backdrop-filter: blur(12px);border: 1px solid rgba(255, 255, 255, 0.08);box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);}.cyber-grid {background-size: 40px 40px;background-image:linear-gradient(to right, rgba(6, 249, 95, 0.05) 1px, transparent 1px),linear-gradient(to bottom, rgba(6, 249, 95, 0.05) 1px, transparent 1px);}</style>
+</head>
+<body class="font-display bg-background-light dark:bg-background-dark text-slate-900 dark:text-white antialiased overflow-hidden">
+<div class="flex min-h-screen w-full flex-col lg:flex-row">
+<div class="relative hidden lg:flex lg:w-5/12 xl:w-1/2 flex-col justify-between overflow-hidden bg-black">
+<div class="absolute inset-0 bg-cover bg-center opacity-60 z-0" data-alt="Dark noir illustration of a white wolf with glowing eyes in a rainy cyberpunk city alley" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCr0XkOn9GWfkiv7J6B99qjTUHko8cCMSMqm6MDm_7qKv1WNaHZ4CNmNj4J0nSbQR3dYI_VfU9i8z62-evuasXRBP0XGo8HHW-5KoadmIlqAI6oxuwNG1WnI1ixP2QfPIOKvJt1ud3Pvn1DilyZlpioGYjzDkd009CRCprkbi9HrKNScTy43HbnqJMrgSpgJnaWFd0fxRXxuIu-_VN2t9HKL-fD0qN8MB3_XvPnrBUezFqk_MzH0QgZUIG6eeaCyyZgFhfoPapPjY8X');"></div>
+<div class="absolute inset-0 bg-gradient-to-t from-background-dark via-background-dark/80 to-transparent z-10"></div>
+<div class="relative z-20 p-12 h-full flex flex-col justify-between">
+<div>
+<div class="flex items-center gap-3 mb-6">
+<span class="material-symbols-outlined text-primary text-4xl">security</span>
+<h2 class="text-white font-cyber font-bold tracking-widest text-lg">OSINT // WOLF</h2>
+</div>
+</div>
+<div class="max-w-md">
+<h1 class="text-5xl font-cyber font-black text-white leading-tight mb-4 tracking-wide">JOIN THE <span class="text-primary drop-shadow-[0_0_8px_rgba(6,249,95,0.8)]">SHADOWS</span></h1>
+<p class="text-gray-400 text-lg leading-relaxed">The pack is waiting. Initialize your new identity and access classified intelligence streams.</p>
+<div class="mt-12 flex gap-4 text-xs text-gray-600 font-mono tracking-widest uppercase">
+<span>Encrypted: AES-256</span>
+<span>//</span>
+<span>Node: Tokyo-3</span>
+<span>//</span>
+<span>Status: Active</span>
+</div>
+</div>
+</div>
+</div>
+<div class="relative flex flex-1 flex-col items-center justify-center p-6 lg:p-12 cyber-grid bg-background-dark">
+<div class="lg:hidden absolute top-6 left-6 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">security</span>
+<span class="font-cyber font-bold text-white tracking-widest">OSINT // WOLF</span>
+</div>
+<div class="absolute top-6 right-6 lg:top-8 lg:right-12">
+<p class="text-sm text-gray-400">Already an agent?
+<a class="text-primary hover:text-white transition-colors font-medium ml-1 decoration-primary underline underline-offset-4" href="login.html">Decrypt Login</a>
+</p>
+</div>
+<div class="glass-panel w-full max-w-[520px] rounded-2xl p-8 md:p-10 relative overflow-hidden group">
+<div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-primary to-transparent opacity-50"></div>
+<div class="relative z-10">
+<div class="mb-8">
+<h2 class="font-cyber text-3xl md:text-4xl text-white font-bold mb-2">NEW RECRUIT</h2>
+<p class="text-gray-400">Begin registration sequence.</p>
+</div>
+<form class="space-y-6" onsubmit="handleSignup(event)">
+<div class="space-y-2">
+<label class="block text-sm font-medium text-gray-300 font-mono uppercase tracking-wider" for="codename">Codename</label>
+<div class="relative">
+<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-gray-500 group-focus-within:text-primary transition-colors">fingerprint</span>
+</div>
+<input class="block w-full pl-10 pr-3 py-3 bg-surface-dark/50 border border-gray-700 rounded-lg text-white placeholder-gray-600 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all duration-300 font-display" id="codename" placeholder="Enter operational alias" type="text" required/>
+</div>
+</div>
+<div class="space-y-2">
+<label class="block text-sm font-medium text-gray-300 font-mono uppercase tracking-wider" for="email">Secure Frequency</label>
+<div class="relative">
+<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-gray-500 group-focus-within:text-primary transition-colors">alternate_email</span>
+</div>
+<input class="block w-full pl-10 pr-3 py-3 bg-surface-dark/50 border border-gray-700 rounded-lg text-white placeholder-gray-600 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all duration-300 font-display" id="email" placeholder="agent@example.com" type="email" required/>
+</div>
+</div>
+<div class="space-y-2">
+<label class="block text-sm font-medium text-gray-300 font-mono uppercase tracking-wider" for="password">Master Passphrase</label>
+<div class="relative group/pass">
+<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-gray-500 group-focus-within/pass:text-primary transition-colors">key</span>
+</div>
+<input class="block w-full pl-10 pr-3 py-3 bg-surface-dark/50 border border-gray-700 rounded-lg text-white placeholder-gray-600 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all duration-300 font-display" id="password" placeholder="••••••••••••" type="password" required/>
+</div>
+<div class="flex h-1 w-full gap-1 mt-2">
+<div class="h-full w-1/4 rounded-full bg-red-500/50"></div>
+<div class="h-full w-1/4 rounded-full bg-gray-700"></div>
+<div class="h-full w-1/4 rounded-full bg-gray-700"></div>
+<div class="h-full w-1/4 rounded-full bg-gray-700"></div>
+</div>
+</div>
+<div class="flex items-start pt-2">
+<div class="flex h-5 items-center">
+<input class="h-4 w-4 rounded border-gray-600 bg-surface-dark text-primary focus:ring-primary focus:ring-offset-background-dark" id="terms" type="checkbox" required/>
+</div>
+<div class="ml-3 text-sm">
+<label class="font-medium text-gray-300" for="terms">I agree to the <a class="text-primary hover:underline decoration-dotted underline-offset-4" href="terms.html">Cyber-Ethics Protocol</a></label>
+<p class="text-gray-500 text-xs mt-0.5">Your digital footprint will be monitored.</p>
+</div>
+</div>
+<button class="relative w-full overflow-hidden rounded-lg bg-primary py-3.5 px-4 text-center text-sm font-bold text-background-dark shadow-neon-sm hover:shadow-neon transition-all duration-300 hover:bg-[#33ff7c] focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-background-dark group/btn mt-4" type="submit">
+<span class="relative z-10 flex items-center justify-center gap-2 font-cyber tracking-widest uppercase">
+Activate Agent
+<span class="material-symbols-outlined text-[18px] group-hover/btn:translate-x-1 transition-transform">arrow_forward</span>
+</span>
+</button>
+</form>
+</div>
+</div>
+<div class="mt-8 text-center">
+<p class="text-xs text-gray-600 font-mono">SECURE CONNECTION ESTABLISHED <span class="text-primary animate-pulse">●</span></p>
+</div>
+</div>
+</div>
+
+<script>
+function handleSignup(event) {
+    event.preventDefault();
+    
+    // Get form data
+    const codename = document.getElementById('codename').value;
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+    const terms = document.getElementById('terms').checked;
+    
+    if (!terms) {
+        alert('You must agree to the Cyber-Ethics Protocol to proceed.');
+        return;
+    }
+    
+    // Simulate registration process
+    const button = event.target.querySelector('button[type="submit"]');
+    const originalText = button.innerHTML;
+    
+    button.innerHTML = '<span class="flex items-center justify-center gap-2"><span class="material-symbols-outlined animate-spin">sync</span>PROCESSING...</span>';
+    button.disabled = true;
+    
+    // Store user data in localStorage (mock database)
+    const userData = {
+        codename: codename,
+        email: email,
+        password: password, // In real app, this would be hashed
+        registrationDate: new Date().toISOString(),
+        status: 'active'
+    };
+    
+    localStorage.setItem('allOSINT_user', JSON.stringify(userData));
+    localStorage.setItem('allOSINT_authenticated', 'true');
+    
+    setTimeout(() => {
+        button.innerHTML = '<span class="flex items-center justify-center gap-2"><span class="material-symbols-outlined">check_circle</span>AGENT ACTIVATED</span>';
+        
+        setTimeout(() => {
+            window.location.href = 'dashboard.html';
+        }, 1500);
+    }, 2000);
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Port Vulnerability Scanner - OSINT Platform</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">tailwind.config = {darkMode: "class",theme: {extend: {colors: {"primary": "#137fec","danger": "#ef4444","warning": "#eab308","success": "#22c55e","background-light": "#f6f7f8","background-dark": "#101922","surface-dark": "#16202a","surface-border": "#28323e"},fontFamily: {"display": ["Space Grotesk", "sans-serif"],"mono": ["Space Mono", "monospace"]},borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},},},}</script>
+<style>::-webkit-scrollbar {width: 8px;height: 8px;}::-webkit-scrollbar-track {background: #101922;}::-webkit-scrollbar-thumb {background: #28323e;border-radius: 4px;}::-webkit-scrollbar-thumb:hover {background: #137fec;}.terminal-text {font-family: 'Courier New', Courier, monospace;}.bg-cyber-grid {background-image: linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);background-size: 40px 40px;}</style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display">
+<div class="relative flex h-auto min-h-screen w-full flex-col overflow-x-hidden bg-cyber-grid text-slate-900 dark:text-white">
+<header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-slate-200 dark:border-surface-border bg-white dark:bg-[#111418] px-10 py-3 sticky top-0 z-50">
+<div class="flex items-center gap-4">
+<div class="size-8 text-primary">
+<span class="material-symbols-outlined text-[32px]">radar</span>
+</div>
+<h2 class="text-lg font-bold leading-tight tracking-[-0.015em]">OSINT_PLATFORM_V1</h2>
+</div>
+<div class="flex flex-1 justify-end gap-8 items-center">
+<div class="hidden md:flex items-center gap-9">
+<a class="text-sm font-medium leading-normal hover:text-primary transition-colors" href="dashboard.html">Dashboard</a>
+<a class="text-sm font-medium leading-normal text-primary" href="port-scanner.html">Port Scanner</a>
+<a class="text-sm font-medium leading-normal hover:text-primary transition-colors" href="exif-extractor.html">EXIF Tool</a>
+<a class="text-sm font-medium leading-normal hover:text-primary transition-colors" href="breach-search.html">Breach Check</a>
+<a class="text-sm font-medium leading-normal hover:text-primary transition-colors" href="settings.html">Settings</a>
+</div>
+<div class="flex items-center gap-4">
+<div class="hidden sm:flex items-center justify-center size-10 rounded-full bg-slate-100 dark:bg-surface-border text-slate-500 dark:text-slate-400">
+<span class="material-symbols-outlined">notifications</span>
+</div>
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10 border-2 border-primary" data-alt="User avatar with glitch effect" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuC_j8CTbbZsNvGneS-y8ae6rgz67qlhCQiDDiCZXuvNnbVJuHoK0ezjQjdmjNV5ntUZDks4W0qgbKCHgu_m2aPyJbfJlHluOgXE-r0yWrhnneCLoqhE6oHJP8-eHZXUb7SMM5D1NTT6CreTcqOR6XznOVEViNkxESUJReI69SXtXyYRjFZCkz_gXfiBUSHcda6NkDY60NGhFLcZ7ehy8x3iKVNC_uzMgG7XcmJEzjwQx_5f8d6quVbKUTB8phpQDHOudbXXiEUiTJGg");'></div>
+</div>
+</div>
+</header>
+<main class="layout-container flex h-full grow flex-col">
+<div class="px-4 md:px-10 lg:px-40 flex flex-1 justify-center py-8">
+<div class="layout-content-container flex flex-col max-w-[1200px] flex-1 gap-8">
+<div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 border-b border-dashed border-slate-300 dark:border-surface-border pb-6">
+<div class="flex flex-col gap-2">
+<div class="flex items-center gap-2">
+<span class="bg-primary/20 text-primary px-2 py-0.5 rounded text-xs font-bold uppercase tracking-wider border border-primary/30">Module_04</span>
+<span class="text-slate-500 dark:text-slate-400 text-xs font-mono uppercase tracking-wider">v2.4.1-stable</span>
+</div>
+<h1 class="text-3xl md:text-4xl font-black leading-tight tracking-tight uppercase">Port_Vuln_Scanner</h1>
+<p class="text-slate-500 dark:text-slate-400 text-base max-w-2xl">Initiate deep packet inspection, latency analysis, and service banner grabbing for target reconnaissance.</p>
+</div>
+<div class="flex items-center gap-2 text-right">
+<div class="flex flex-col items-end">
+<span class="text-xs text-slate-500 dark:text-slate-400 font-mono uppercase">System Status</span>
+<div class="flex items-center gap-2">
+<span class="size-2 rounded-full bg-success animate-pulse"></span>
+<span class="text-sm font-bold tracking-wider">OPERATIONAL</span>
+</div>
+</div>
+</div>
+</div>
+<div class="bg-white dark:bg-surface-dark rounded-xl p-1 shadow-sm border border-slate-200 dark:border-surface-border">
+<div class="flex flex-col sm:flex-row items-center gap-2 p-4">
+<div class="flex items-center gap-3 text-slate-400 px-2">
+<span class="material-symbols-outlined">wifi_tethering</span>
+<span class="hidden sm:block font-mono text-sm uppercase">Target_IP:</span>
+</div>
+<input class="flex-1 bg-transparent border-none text-lg font-mono placeholder:text-slate-600 focus:ring-0 text-slate-900 dark:text-white w-full" placeholder="e.g. 192.168.0.1 or domain.com" id="target-input"/>
+<div class="flex items-center gap-2 w-full sm:w-auto mt-4 sm:mt-0">
+<div class="flex items-center gap-2 px-3 py-1 bg-slate-100 dark:bg-black/30 rounded border border-slate-200 dark:border-surface-border">
+<span class="size-2 rounded-full bg-warning"></span>
+<span class="text-xs font-mono text-slate-500">Fast Scan</span>
+</div>
+<button class="group relative flex items-center justify-center gap-2 bg-primary hover:bg-blue-600 text-white px-6 py-3 rounded-lg font-bold tracking-wide transition-all active:scale-[0.98] w-full sm:w-auto overflow-hidden" onclick="startScan()">
+<span class="relative z-10 flex items-center gap-2">
+<span class="material-symbols-outlined text-[20px]">play_arrow</span>EXECUTE_SCAN
+</span>
+<div class="absolute inset-0 -translate-x-full group-hover:animate-[shimmer_1.5s_infinite] bg-gradient-to-r from-transparent via-white/20 to-transparent z-0"></div>
+</button>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+<div class="lg:col-span-2 flex flex-col gap-6">
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+<div class="bg-white dark:bg-surface-dark rounded-xl p-5 border border-slate-200 dark:border-surface-border flex flex-col justify-between relative overflow-hidden group">
+<div class="absolute top-0 right-0 p-3 opacity-10 group-hover:opacity-20 transition-opacity">
+<span class="material-symbols-outlined text-4xl">dns</span>
+</div>
+<p class="text-slate-500 dark:text-slate-400 text-sm font-medium uppercase tracking-wider mb-1">Ports Scanned</p>
+<div class="flex items-end gap-3">
+<span class="text-3xl font-black text-slate-900 dark:text-white" id="ports-scanned">0</span>
+<span class="text-xs text-success font-mono mb-1.5" id="scan-progress">0%</span>
+</div>
+</div>
+<div class="bg-white dark:bg-surface-dark rounded-xl p-5 border border-slate-200 dark:border-surface-border flex flex-col justify-between relative overflow-hidden group">
+<div class="absolute top-0 right-0 p-3 opacity-10 group-hover:opacity-20 transition-opacity">
+<span class="material-symbols-outlined text-4xl">lock_open</span>
+</div>
+<p class="text-slate-500 dark:text-slate-400 text-sm font-medium uppercase tracking-wider mb-1">Open Ports</p>
+<div class="flex items-end gap-3">
+<span class="text-3xl font-black text-slate-900 dark:text-white" id="open-ports">0</span>
+<span class="text-xs text-danger font-mono mb-1.5" id="new-ports">+0 NEW</span>
+</div>
+</div>
+<div class="bg-white dark:bg-surface-dark rounded-xl p-5 border border-slate-200 dark:border-surface-border border-l-4 border-l-danger flex flex-col justify-between relative overflow-hidden group">
+<div class="absolute top-0 right-0 p-3 opacity-10 group-hover:opacity-20 transition-opacity">
+<span class="material-symbols-outlined text-4xl">gpp_maybe</span>
+</div>
+<p class="text-slate-500 dark:text-slate-400 text-sm font-medium uppercase tracking-wider mb-1">Threat Level</p>
+<div class="flex items-end gap-3">
+<span class="text-3xl font-black text-danger" id="threat-level">LOW</span>
+<span class="text-xs text-slate-500 dark:text-slate-400 font-mono mb-1.5">SCORE: <span id="threat-score">2.1</span></span>
+</div>
+</div>
+</div>
+<div class="bg-white dark:bg-surface-dark rounded-xl border border-slate-200 dark:border-surface-border p-6 flex-1 min-h-[400px]">
+<div class="flex justify-between items-center mb-6">
+<div>
+<h3 class="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">bar_chart</span>Common Port Latency Analysis
+</h3>
+<p class="text-sm text-slate-500 dark:text-slate-400">Response time (ms) vs Port criticality</p>
+</div>
+<div class="flex gap-4 text-xs font-mono">
+<div class="flex items-center gap-2">
+<div class="size-3 bg-danger rounded-sm"></div>
+<span class="text-slate-500 dark:text-slate-300">Dangerous</span>
+</div>
+<div class="flex items-center gap-2">
+<div class="size-3 bg-primary rounded-sm"></div>
+<span class="text-slate-500 dark:text-slate-300">Standard</span>
+</div>
+</div>
+</div>
+<div class="flex flex-col gap-5 font-mono text-sm" id="port-chart">
+<div class="text-center text-slate-500 py-8">
+<span class="material-symbols-outlined text-4xl mb-2 block">analytics</span>
+<p>Port analysis will appear here after scan</p>
+</div>
+</div>
+</div>
+</div>
+<div class="lg:col-span-1 flex flex-col gap-6">
+<div class="bg-[#0c0e12] rounded-xl border border-surface-border flex flex-col h-full overflow-hidden shadow-2xl">
+<div class="bg-[#1a2026] px-4 py-2 flex items-center justify-between border-b border-surface-border">
+<div class="flex items-center gap-2">
+<div class="flex gap-1.5">
+<div class="size-2.5 rounded-full bg-[#ff5f56]"></div>
+<div class="size-2.5 rounded-full bg-[#ffbd2e]"></div>
+<div class="size-2.5 rounded-full bg-[#27c93f]"></div>
+</div>
+<span class="ml-2 text-xs font-mono text-slate-400">root@scanner:~</span>
+</div>
+<span class="material-symbols-outlined text-slate-500 text-sm cursor-pointer hover:text-white">content_copy</span>
+</div>
+<div class="p-4 font-mono text-xs md:text-sm leading-relaxed overflow-y-auto h-[500px] terminal-text text-slate-300" id="terminal-output">
+<div class="mb-2">
+<span class="text-success">➜</span> <span class="text-primary">~</span> <span class="text-white">System ready. Awaiting target...</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
+<div class="bg-white dark:bg-surface-dark rounded-xl border border-slate-200 dark:border-surface-border p-6">
+<h3 class="text-lg font-bold text-slate-900 dark:text-white mb-4">Vulnerability Feed</h3>
+<div class="space-y-4" id="vuln-feed">
+<div class="text-center text-slate-500 py-4">
+<span class="material-symbols-outlined text-3xl mb-2 block">security</span>
+<p class="text-sm">Vulnerability analysis will appear after scan</p>
+</div>
+</div>
+</div>
+<div class="bg-white dark:bg-surface-dark rounded-xl border border-slate-200 dark:border-surface-border p-6">
+<h3 class="text-lg font-bold text-slate-900 dark:text-white mb-4">Geographic Context</h3>
+<div class="flex gap-4" id="geo-context">
+<div class="text-center text-slate-500 py-4 w-full">
+<span class="material-symbols-outlined text-3xl mb-2 block">public</span>
+<p class="text-sm">Geographic data will appear after scan</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+
+<script>
+let scanInProgress = false;
+let scanResults = [];
+
+// Mock port data
+const commonPorts = [
+    { port: 21, service: 'FTP', dangerous: true, latency: 45 },
+    { port: 22, service: 'SSH', dangerous: false, latency: 15 },
+    { port: 23, service: 'TELNET', dangerous: true, latency: 12 },
+    { port: 53, service: 'DNS', dangerous: false, latency: 4 },
+    { port: 80, service: 'HTTP', dangerous: false, latency: 8 },
+    { port: 443, service: 'HTTPS', dangerous: false, latency: 10 },
+    { port: 3389, service: 'RDP', dangerous: true, latency: 124 }
+];
+
+const vulnerabilities = [
+    { port: 23, service: 'TELNET', severity: 'high', description: 'Telnet Cleartext Login', details: 'Port 23 allows unencrypted communication. Credentials can be intercepted easily.' },
+    { port: 80, service: 'HTTP', severity: 'medium', description: 'Apache Version Outdated', details: 'Version 2.4.41 has 3 known vulnerabilities. Upgrade recommended.' }
+];
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Check authentication
+    const isAuthenticated = localStorage.getItem('allOSINT_authenticated');
+    if (!isAuthenticated) {
+        window.location.href = 'login.html';
+        return;
+    }
+    
+    // Load target from localStorage if available
+    const target = localStorage.getItem('allOSINT_target');
+    if (target && target.match(/^\d+\.\d+\.\d+\.\d+$/)) {
+        document.getElementById('target-input').value = target;
+        // Auto-start scan after a brief delay
+        setTimeout(() => startScan(), 1000);
+    }
+});
+
+function startScan() {
+    const target = document.getElementById('target-input').value.trim();
+    
+    if (!target) {
+        alert('Please enter a target IP or domain');
+        return;
+    }
+    
+    if (scanInProgress) {
+        return;
+    }
+    
+    scanInProgress = true;
+    scanResults = [];
+    
+    // Reset counters
+    document.getElementById('ports-scanned').textContent = '0';
+    document.getElementById('open-ports').textContent = '0';
+    document.getElementById('new-ports').textContent = '+0 NEW';
+    document.getElementById('scan-progress').textContent = '0%';
+    document.getElementById('threat-level').textContent = 'LOW';
+    document.getElementById('threat-score').textContent = '0.0';
+    
+    // Clear terminal and add initial messages
+    const terminal = document.getElementById('terminal-output');
+    terminal.innerHTML = `
+        <div class="mb-2">
+            <span class="text-success">➜</span> <span class="text-primary">~</span> <span class="text-white">nmap -sV -p- ${target}</span>
+        </div>
+        <div class="mb-4 text-slate-400">
+            Starting Nmap 7.92 ( https://nmap.org ) at ${new Date().toLocaleString()}<br/>
+            Nmap scan report for ${target}<br/>
+            Host is up (0.0012s latency).<br/>
+            Scanning ports...
+        </div>
+    `;
+    
+    // Simulate progressive scanning
+    let scannedPorts = 0;
+    let openPorts = 0;
+    let progress = 0;
+    
+    const scanInterval = setInterval(() => {
+        // Update progress
+        progress += Math.random() * 10 + 5;
+        scannedPorts += Math.floor(Math.random() * 1000) + 500;
+        
+        if (progress > 100) progress = 100;
+        if (scannedPorts > 65535) scannedPorts = 65535;
+        
+        document.getElementById('ports-scanned').textContent = scannedPorts.toLocaleString();
+        document.getElementById('scan-progress').textContent = Math.floor(progress) + '%';
+        
+        // Randomly discover open ports
+        if (Math.random() > 0.7 && openPorts < commonPorts.length) {
+            const port = commonPorts[openPorts];
+            openPorts++;
+            scanResults.push(port);
+            
+            document.getElementById('open-ports').textContent = openPorts;
+            document.getElementById('new-ports').textContent = `+${openPorts} NEW`;
+            
+            // Add to terminal
+            const portEntry = document.createElement('div');
+            portEntry.className = `p-2 border-l-2 ${port.dangerous ? 'border-danger bg-danger/10 text-danger-50' : 'border-primary bg-primary/5 text-primary-50'}`;
+            portEntry.innerHTML = `
+                <span class="block ${port.dangerous ? 'text-danger' : 'text-primary'} font-bold mb-1">PORT ${port.port}/tcp OPEN (${port.service})</span>
+                <span class="opacity-80">&gt; Service detected: ${port.service}</span>
+                <span class="block mt-1 text-white bg-black/50 p-1 rounded font-mono text-[10px]">Response time: ${port.latency}ms</span>
+            `;
+            terminal.appendChild(portEntry);
+            terminal.scrollTop = terminal.scrollHeight;
+        }
+        
+        if (progress >= 100) {
+            clearInterval(scanInterval);
+            completeScan();
+        }
+    }, 1000);
+}
+
+function completeScan() {
+    scanInProgress = false;
+    
+    // Update threat level
+    const dangerousPorts = scanResults.filter(p => p.dangerous).length;
+    let threatLevel = 'LOW';
+    let threatScore = 2.1;
+    
+    if (dangerousPorts > 2) {
+        threatLevel = 'CRITICAL';
+        threatScore = 9.8;
+    } else if (dangerousPorts > 0) {
+        threatLevel = 'MEDIUM';
+        threatScore = 5.4;
+    }
+    
+    document.getElementById('threat-level').textContent = threatLevel;
+    document.getElementById('threat-score').textContent = threatScore;
+    
+    // Update port chart
+    updatePortChart();
+    
+    // Update vulnerability feed
+    updateVulnFeed();
+    
+    // Update geographic context
+    updateGeoContext();
+    
+    // Add completion message to terminal
+    const terminal = document.getElementById('terminal-output');
+    const completion = document.createElement('div');
+    completion.className = 'text-slate-500 animate-pulse mt-4';
+    completion.innerHTML = 'Scan complete. Generating report...<br/>_';
+    terminal.appendChild(completion);
+    terminal.scrollTop = terminal.scrollHeight;
+}
+
+function updatePortChart() {
+    const chart = document.getElementById('port-chart');
+    chart.innerHTML = scanResults.map(port => `
+        <div class="group">
+            <div class="flex justify-between items-end mb-1">
+                <span class="font-bold ${port.dangerous ? 'text-danger' : 'text-slate-700 dark:text-slate-300'} flex items-center gap-2">
+                    ${port.dangerous ? '<span class="material-symbols-outlined text-[16px] animate-pulse">warning</span>' : ''}
+                    ${port.port} (${port.service})
+                </span>
+                <span class="text-slate-500">${port.latency}ms</span>
+            </div>
+            <div class="w-full bg-slate-100 dark:bg-black/40 rounded-full h-3 overflow-hidden">
+                <div class="${port.dangerous ? 'bg-danger' : 'bg-primary'} h-full rounded-full" style="width: ${100 - (port.latency / 150 * 100)}%;"></div>
+            </div>
+        </div>
+    `).join('');
+}
+
+function updateVulnFeed() {
+    const feed = document.getElementById('vuln-feed');
+    const relevantVulns = vulnerabilities.filter(v => scanResults.some(p => p.port === v.port));
+    
+    if (relevantVulns.length === 0) {
+        feed.innerHTML = `
+            <div class="text-center text-green-500 py-4">
+                <span class="material-symbols-outlined text-3xl mb-2 block">shield</span>
+                <p class="text-sm">No critical vulnerabilities detected</p>
+            </div>
+        `;
+        return;
+    }
+    
+    feed.innerHTML = relevantVulns.map(vuln => `
+        <div class="flex gap-4 items-start">
+            <div class="bg-${vuln.severity === 'high' ? 'danger' : 'warning'}/20 text-${vuln.severity === 'high' ? 'danger' : 'warning'} rounded p-1.5 shrink-0 mt-1">
+                <span class="material-symbols-outlined text-sm font-bold">bug_report</span>
+            </div>
+            <div>
+                <p class="text-sm font-bold text-slate-900 dark:text-white">${vuln.description}</p>
+                <p class="text-xs text-slate-500 mt-1">${vuln.details}</p>
+            </div>
+        </div>
+    `).join('');
+}
+
+function updateGeoContext() {
+    const geo = document.getElementById('geo-context');
+    geo.innerHTML = `
+        <div class="w-1/3 aspect-video rounded-lg overflow-hidden relative">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-10"></div>
+            <div class="w-full h-full bg-cover bg-center" data-alt="Dark map showing server location" data-location="Seattle" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuD3eqGXjDqpqfgQkV7KKoZkxpbR9TDEvoWtnz92lT28ss6jLQ991CyxzDc9ZZcs7PaT4Ap46OoEGMX3LRXroSiI4NEO_ZJtuosDLU_xtDolqxW8rprZMVZKvcXcdVrR1v83MO76l0BaNfzWcVhE5hQLgNwpxX6bE5MynL7eRI9ZRj8A2YIuBp9NoqdTRN08-EjonMNbQOOCFZggPWSYoLXMwSFRt5F1fQBlDIQeNTo8O_kliyhmx1_Z6M3j-igWLZHDqbR2aV7lOKId");'></div>
+            <div class="absolute bottom-2 left-2 z-20 text-white text-xs font-bold">SEATTLE, WA</div>
+        </div>
+        <div class="flex-1 space-y-3">
+            <div class="flex justify-between border-b border-slate-200 dark:border-surface-border pb-2">
+                <span class="text-sm text-slate-500">ISP</span>
+                <span class="text-sm font-medium text-slate-900 dark:text-white">CloudFlare Inc.</span>
+            </div>
+            <div class="flex justify-between border-b border-slate-200 dark:border-surface-border pb-2">
+                <span class="text-sm text-slate-500">ASN</span>
+                <span class="text-sm font-medium text-slate-900 dark:text-white">AS13335</span>
+            </div>
+            <div class="flex justify-between">
+                <span class="text-sm text-slate-500">Timezone</span>
+                <span class="text-sm font-medium text-slate-900 dark:text-white">UTC -07:00</span>
+            </div>
+        </div>
+    `;
+}
+
+// Allow Enter key to trigger scan
+document.getElementById('target-input').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+        startScan();
+    }
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>System Initialization Overlay</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Noto+Sans:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">tailwind.config = {darkMode: "class",theme: {extend: {colors: {"primary": "#21c45d","background-light": "#f6f8f7","background-dark": "#122017","slate-dark": "#0f172a",},fontFamily: {"display": ["Space Grotesk", "sans-serif"],"mono": ["Space Grotesk", "monospace"],},backgroundImage: {'grid-pattern': "linear-gradient(to right, #21c45d05 1px, transparent 1px), linear-gradient(to bottom, #21c45d05 1px, transparent 1px)",},animation: {'pulse-fast': 'pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite',}},},}</script>
+<style>.scanlines {background: linear-gradient(to bottom,rgba(255,255,255,0),rgba(255,255,255,0) 50%,rgba(0,0,0,0.2) 50%,rgba(0,0,0,0.2));background-size: 100% 4px;pointer-events: none;}.text-glow {text-shadow: 0 0 10px rgba(33, 196, 93, 0.5), 0 0 20px rgba(33, 196, 93, 0.3);}.box-glow {box-shadow: 0 0 15px rgba(33, 196, 93, 0.15);}</style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display min-h-screen flex flex-col overflow-hidden selection:bg-primary selection:text-black">
+<div class="relative flex h-full grow flex-col bg-[#0f172a] text-white overflow-hidden">
+<div class="absolute inset-0 z-0">
+<div class="absolute inset-0 bg-grid-pattern bg-[size:40px_40px]"></div>
+<div class="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_10%,#0f172a_90%)]"></div>
+<div class="absolute inset-0 scanlines z-10 opacity-30"></div>
+<div class="absolute top-0 left-0 w-full h-full opacity-[0.03] z-0" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCMyIG4Omo_jUBtHdT2oEh0Z42iEVPQ7-HLSXdsT-5RlnXURaXHivhgJZzFAqb-P9f9_CJfKP-YeHKmCVMyLa--Quk0AqHKevYogpxJ9TzN739oEdGg-7DVLk9ltJezLB_D9CXaJQAN2mY_6DSShcCu-aBQihrH3UIFIGw5vHQrRXACD0FGzQaXSOgC-pU74NoZn7s7g2xspynVs2AEPeombv3iHKnpj7FwPTamC7clPCOG3aQ9uOnHOnKwSZwsNkYNis4e1I65T4xt'); background-repeat: repeat; filter: blur(1px);"></div>
+</div>
+<div class="layout-container flex h-full w-full flex-col items-center justify-center relative z-20">
+<div class="flex flex-col items-center justify-center w-full max-w-[600px] px-6 gap-10">
+<div class="relative group">
+<div class="absolute inset-0 rounded-full border border-primary/20 scale-150 opacity-20"></div>
+<div class="absolute inset-0 rounded-full border border-primary/10 scale-[1.8] opacity-10"></div>
+<div class="relative w-48 h-48 rounded-full bg-[#122017] border border-primary/40 flex items-center justify-center box-glow overflow-hidden">
+<div class="w-full h-full bg-center bg-cover opacity-90 mix-blend-luminosity hover:mix-blend-normal transition-all duration-500" data-alt="Stylized illustration of a white wolf running in a cyber noir style" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAYkKpV_YS2dPY_YZ8AAzbkuKUZYvfITDcUiIhUD1pUC6CtUDutur1B52SECL_Raazd77hFJA_007ks-1ULkawumnU3dJgHKUSF2Qqp2hhTOgacwsUxbkA2ywT-CDPwo4U10PjT1vLZsY1KLR_xrmxF7MrOJAPlYgsRaUuPE8pjsv2ZvtF6QqME9VKIU5eG06wyRnVqRm6v4lXajKMU_JsS0XWozBw5mK07tsP1Efc7x1McoYVcTxe-qhGxNWFPB7h_soQDG7BnKlrv');"></div>
+<div class="absolute inset-0 bg-primary/5 mix-blend-overlay"></div>
+</div>
+<div class="absolute bottom-2 right-4 bg-black/80 backdrop-blur border border-primary/50 px-2 py-0.5 rounded text-[10px] text-primary font-mono flex items-center gap-1">
+<span class="material-symbols-outlined text-[12px] animate-pulse">bolt</span>LIVE
+</div>
+</div>
+<div class="flex flex-col items-center w-full gap-6">
+<div class="flex flex-col items-center gap-1 min-h-[80px]">
+<h2 class="text-white text-2xl md:text-3xl font-bold tracking-widest uppercase text-glow text-center">System Initialization</h2>
+<div class="flex flex-col items-center gap-1 mt-2 font-mono text-sm md:text-base">
+<p class="text-primary font-medium tracking-wider flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px]">terminal</span>
+<span id="status-text">&gt; DECRYPTING PACKETS...</span>
+</p>
+<p class="text-primary/60 text-xs tracking-wide">&gt; HANDSHAKING WITH NODES [45.2.19.0]</p>
+<p class="text-primary/40 text-xs tracking-wide animate-pulse-fast">&gt; TRIANGULATING SIGNAL_</p>
+</div>
+</div>
+<div class="w-full max-w-sm flex flex-col gap-2">
+<div class="flex justify-between items-end px-1">
+<span class="text-xs text-primary/70 font-mono tracking-widest">LOADING MODULES</span>
+<span id="progress-text" class="text-xs text-primary font-bold font-mono">0%</span>
+</div>
+<div class="h-1.5 w-full bg-[#1e293b] rounded-full overflow-hidden border border-primary/20 relative">
+<div id="progress-bar" class="h-full bg-primary relative w-[0%] shadow-[0_0_15px_#21c45d] transition-all duration-300">
+<div class="absolute top-0 right-0 h-full w-[2px] bg-white opacity-50 shadow-[0_0_5px_white]"></div>
+</div>
+</div>
+<div class="flex justify-between text-[10px] text-[#9fb7a8] font-mono opacity-60 mt-1">
+<span>MEMORY_ALLOC: OK</span>
+<span>SECURITY_PROTOCOL: ENFORCED</span>
+</div>
+</div>
+</div>
+</div>
+<div class="absolute bottom-8 w-full flex flex-col items-center gap-3">
+<div class="h-px w-24 bg-gradient-to-r from-transparent via-primary/30 to-transparent"></div>
+<p class="text-[#9fb7a8] text-xs font-mono tracking-[0.2em] text-center uppercase opacity-70">
+<span class="inline-flex items-center align-middle mx-2">
+<span class="material-symbols-outlined text-[12px]">verified_user</span>
+</span>v.2.0.4 | MEM: 64TB | SECURE CONNECTION
+</p>
+</div>
+</div>
+</div>
+
+<script>
+let progress = 0;
+const statusTexts = [
+    '&gt; DECRYPTING PACKETS...',
+    '&gt; INITIALIZING NEURAL NETWORKS...',
+    '&gt; CONNECTING TO DARK WEB NODES...',
+    '&gt; LOADING THREAT INTELLIGENCE...',
+    '&gt; CALIBRATING SENSORS...',
+    '&gt; ESTABLISHING SECURE CHANNELS...',
+    '&gt; SYSTEM READY FOR DEPLOYMENT'
+];
+
+let currentStatusIndex = 0;
+
+function updateProgress() {
+    if (progress < 100) {
+        progress += Math.random() * 15 + 5;
+        if (progress > 100) progress = 100;
+        
+        document.getElementById('progress-bar').style.width = progress + '%';
+        document.getElementById('progress-text').textContent = Math.floor(progress) + '%';
+        
+        // Update status text occasionally
+        if (Math.random() > 0.7 && currentStatusIndex < statusTexts.length - 1) {
+            currentStatusIndex++;
+            document.getElementById('status-text').innerHTML = statusTexts[currentStatusIndex];
+        }
+        
+        if (progress >= 100) {
+            setTimeout(() => {
+                document.getElementById('status-text').innerHTML = statusTexts[statusTexts.length - 1];
+                setTimeout(() => {
+                    window.location.href = 'dashboard.html';
+                }, 1500);
+            }, 500);
+        } else {
+            setTimeout(updateProgress, Math.random() * 800 + 400);
+        }
+    }
+}
+
+// Start the initialization process
+setTimeout(updateProgress, 1000);
+</script>
+</body>
+</html>

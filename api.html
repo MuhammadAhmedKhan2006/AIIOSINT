@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>AllOSINT - API Documentation</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#21c45d",
+                        "primary-dark": "#16a34a",
+                        "background-light": "#f6f8f7",
+                        "background-dark": "#020617",
+                        "surface-dark": "#0f172a",
+                        "surface-glass": "rgba(15, 23, 42, 0.7)",
+                        "border-neon": "rgba(33, 196, 93, 0.2)",
+                    },
+                    fontFamily: {
+                        "display": ["Space Grotesk", "sans-serif"],
+                        "mono": ["JetBrains Mono", "monospace"],
+                    },
+                    boxShadow: {
+                        'neon': '0 0 10px rgba(33, 196, 93, 0.15)',
+                        'neon-strong': '0 0 20px rgba(33, 196, 93, 0.3)',
+                    },
+                },
+            },
+        }
+    </script>
+    <style>
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(33, 196, 93, 0.1);
+        }
+        .text-glow {
+            text-shadow: 0 0 10px rgba(33, 196, 93, 0.5);
+        }
+        pre {
+            background: #0f172a;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            overflow-x: auto;
+            border: 1px solid rgba(33, 196, 93, 0.2);
+        }
+        code {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.875rem;
+        }
+        .endpoint {
+            border-left: 3px solid #21c45d;
+            padding-left: 1rem;
+            margin: 1.5rem 0;
+        }
+    </style>
+</head>
+<body class="bg-background-dark text-white font-display min-h-screen antialiased">
+    <div class="min-h-screen flex flex-col">
+        <!-- Navigation -->
+        <nav class="bg-[#050b14] border-b border-white/5">
+            <div class="max-w-7xl mx-auto px-6 py-4">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <div class="size-8 rounded bg-primary/10 flex items-center justify-center border border-primary/30">
+                            <span class="material-symbols-outlined text-primary">api</span>
+                        </div>
+                        <h1 class="text-white text-lg font-bold tracking-wider">AllOSINT API</h1>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <a href="dashboard.html" class="text-sm text-slate-400 hover:text-primary transition-colors">Back to Dashboard</a>
+                        <a href="docs.html" class="text-sm text-slate-400 hover:text-primary transition-colors">Documentation</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="flex-1 py-8">
+            <div class="max-w-6xl mx-auto px-6">
+                <div class="mb-12">
+                    <h2 class="text-3xl font-bold mb-2">AllOSINT API Documentation</h2>
+                    <p class="text-slate-400">Programmatic access to AllOSINT's intelligence gathering capabilities</p>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <!-- Sidebar -->
+                    <div class="lg:col-span-1">
+                        <div class="glass-panel rounded-lg p-6 sticky top-8">
+                            <h3 class="text-lg font-bold mb-4 text-primary">API Endpoints</h3>
+                            <nav class="space-y-2">
+                                <a href="#authentication" class="block text-slate-300 hover:text-primary transition-colors">Authentication</a>
+                                <a href="#subdomain-enumeration" class="block text-slate-300 hover:text-primary transition-colors">Subdomain Enumeration</a>
+                                <a href="#ip-geolocation" class="block text-slate-300 hover:text-primary transition-colors">IP Geolocation</a>
+                                <a href="#breach-lookup" class="block text-slate-300 hover:text-primary transition-colors">Breach Lookup</a>
+                                <a href="#reverse-image-search" class="block text-slate-300 hover:text-primary transition-colors">Reverse Image Search</a>
+                            </nav>
+                            
+                            <div class="mt-8 pt-6 border-t border-white/10">
+                                <h4 class="text-sm font-bold text-slate-400 mb-3">API STATUS</h4>
+                                <div class="flex items-center gap-2">
+                                    <div class="size-2 rounded-full bg-green-500 animate-pulse"></div>
+                                    <span class="text-sm text-green-500 font-mono">OPERATIONAL</span>
+                                </div>
+                                <p class="text-xs text-slate-500 mt-2">v2.0.0 | Rate Limit: 1000/day</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Content -->
+                    <div class="lg:col-span-2 space-y-12">
+                        <!-- Authentication Section -->
+                        <section id="authentication" class="scroll-mt-20">
+                            <h3 class="text-2xl font-bold mb-6 flex items-center gap-2">
+                                <span class="material-symbols-outlined text-primary">key</span>
+                                Authentication
+                            </h3>
+                            
+                            <div class="glass-panel rounded-lg p-6">
+                                <p class="mb-4">All API requests require an API key sent in the <code>X-API-Key</code> header.</p>
+                                
+                                <div class="endpoint">
+                                    <div class="flex items-center gap-2 mb-2">
+                                        <span class="px-2 py-1 bg-blue-900/50 text-blue-400 text-xs font-mono rounded">POST</span>
+                                        <code class="text-sm">/api/v1/auth/verify</code>
+                                    </div>
+                                    <p class="text-slate-400 text-sm mb-3">Verify your API key</p>
+                                    
+                                    <div class="mb-4">
+                                        <h4 class="text-sm font-bold text-slate-300 mb-2">Example Request</h4>
+                                        <pre><code>curl -X GET https://api.allosint.dev/v1/auth/verify \
+  -H "X-API-Key: your_api_key_here"</code></pre>
+                                    </div>
+                                    
+                                    <div>
+                                        <h4 class="text-sm font-bold text-slate-300 mb-2">Response (200 OK)</h4>
+                                        <pre><code class="text-green-400">{
+  "status": "success",
+  "data": {
+    "valid": true,
+    "rate_limit": 1000,
+    "remaining": 876,
+    "reset": 1620000000
+  }
+}</code></pre>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- Subdomain Enumeration Section -->
+                        <section id="subdomain-enumeration" class="scroll-mt-20">
+                            <h3 class="text-2xl font-bold mb-6 flex items-center gap-2">
+                                <span class="material-symbols-outlined text-primary">dns</span>
+                                Subdomain Enumeration
+                            </h3>
+                            
+                            <div class="glass-panel rounded-lg p-6">
+                                <p class="mb-4">Discover subdomains for a given domain name.</p>
+                                
+                                <div class="endpoint">
+                                    <div class="flex items-center gap-2 mb-2">
+                                        <span class="px-2 py-1 bg-green-900/50 text-green-400 text-xs font-mono rounded">GET</span>
+                                        <code class="text-sm">/api/v1/subdomains?domain=example.com</code>
+                                    </div>
+                                    <p class="text-slate-400 text-sm mb-3">Get all discovered subdomains</p>
+                                    
+                                    <div class="mb-4">
+                                        <h4 class="text-sm font-bold text-slate-300 mb-2">Parameters</h4>
+                                        <div class="overflow-x-auto">
+                                            <table class="min-w-full text-sm">
+                                                <thead>
+                                                    <tr class="border-b border-white/10">
+                                                        <th class="text-left py-2 px-4">Parameter</th>
+                                                        <th class="text-left py-2 px-4">Type</th>
+                                                        <th class="text-left py-2 px-4">Required</th>
+                                                        <th class="text-left py-2 px-4">Description</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr class="border-b border-white/5">
+                                                        <td class="py-2 px-4">domain</td>
+                                                        <td class="py-2 px-4">string</td>
+                                                        <td class="py-2 px-4">Yes</td>
+                                                        <td class="py-2 px-4">The domain to search subdomains for</td>
+                                                    </tr>
+                                                    <tr class="border-b border-white/5">
+                                                        <td class="py-2 px-4">max_results</td>
+                                                        <td class="py-2 px-4">integer</td>
+                                                        <td class="py-2 px-4">No</td>
+                                                        <td class="py-2 px-4">Maximum number of results to return (default: 100)</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="mb-4">
+                                        <h4 class="text-sm font-bold text-slate-300 mb-2">Example Request</h4>
+                                        <pre><code>curl -X GET \
+  'https://api.allosint.dev/v1/subdomains?domain=example.com&max_results=50' \
+  -H 'X-API-Key: your_api_key_here'</code></pre>
+                                    </div>
+                                    
+                                    <div>
+                                        <h4 class="text-sm font-bold text-slate-300 mb-2">Response (200 OK)</h4>
+                                        <pre><code class="text-green-400">{
+  "status": "success",
+  "data": {
+    "domain": "example.com",
+    "subdomains": [
+      "www.example.com",
+      "mail.example.com",
+      "api.example.com",
+      "dev.example.com"
+    ],
+    "count": 4,
+    "timestamp": 1620000000
+  }
+}</code></pre>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- IP Geolocation Section -->
+                        <section id="ip-geolocation" class="scroll-mt-20">
+                            <h3 class="text-2xl font-bold mb-6 flex items-center gap-2">
+                                <span class="material-symbols-outlined text-primary">location_on</span>
+                                IP Geolocation
+                            </h3>
+                            
+                            <div class="glass-panel rounded-lg p-6">
+                                <p class="mb-4">Get geolocation data for an IP address.</p>
+                                
+                                <div class="endpoint">
+                                    <div class="flex items-center gap-2 mb-2">
+                                        <span class="px-2 py-1 bg-green-900/50 text-green-400 text-xs font-mono rounded">GET</span>
+                                        <code class="text-sm">/api/v1/ip/geo?ip=8.8.8.8</code>
+                                    </div>
+                                    <p class="text-slate-400 text-sm mb-3">Get geolocation data for an IP</p>
+                                    
+                                    <div class="mb-4">
+                                        <h4 class="text-sm font-bold text-slate-300 mb-2">Example Request</h4>
+                                        <pre><code>curl -X GET \
+  'https://api.allosint.dev/v1/ip/geo?ip=8.8.8.8' \
+  -H 'X-API-Key: your_api_key_here'</code></pre>
+                                    </div>
+                                    
+                                    <div>
+                                        <h4 class="text-sm font-bold text-slate-300 mb-2">Response (200 OK)</h4>
+                                        <pre><code class="text-green-400">{
+  "status": "success",
+  "data": {
+    "ip": "8.8.8.8",
+    "continent": "North America",
+    "country": "United States",
+    "country_code": "US",
+    "region": "California",
+    "city": "Mountain View",
+    "latitude": 37.386,
+    "longitude": -122.0838,
+    "timezone": "America/Los_Angeles",
+    "isp": "Google LLC",
+    "organization": "Google Public DNS",
+    "asn": "AS15169",
+    "is_hosting": true,
+    "is_tor": false,
+    "is_proxy": false,
+    "threat_score": 0,
+    "last_updated": 1620000000
+  }
+}</code></pre>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- Breach Lookup Section -->
+                        <section id="breach-lookup" class="scroll-mt-20">
+                            <h3 class="text-2xl font-bold mb-6 flex items-center gap-2">
+                                <span class="material-symbols-outlined text-primary">security</span>
+                                Breach Lookup
+                            </h3>
+                            
+                            <div class="glass-panel rounded-lg p-6">
+                                <p class="mb-4">Check if an email or username has been involved in known data breaches.</p>
+                                
+                                <div class="endpoint">
+                                    <div class="flex items-center gap-2 mb-2">
+                                        <span class="px-2 py-1 bg-green-900/50 text-green-400 text-xs font-mono rounded">GET</span>
+                                        <code class="text-sm">/api/v1/breach/lookup?email=user@example.com</code>
+                                    </div>
+                                    <p class="text-slate-400 text-sm mb-3">Check for breaches by email</p>
+                                    
+                                    <div class="mb-4">
+                                        <h4 class="text-sm font-bold text-slate-300 mb-2">Parameters</h4>
+                                        <div class="overflow-x-auto">
+                                            <table class="min-w-full text-sm">
+                                                <thead>
+                                                    <tr class="border-b border-white/10">
+                                                        <th class="text-left py-2 px-4">Parameter</th>
+                                                        <th class="text-left py-2 px-4">Type</th>
+                                                        <th class="text-left py-2 px-4">Required</th>
+                                                        <th class="text-left py-2 px-4">Description</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr class="border-b border-white/5">
+                                                        <td class="py-2 px-4">email</td>
+                                                        <td class="py-2 px-4">string</td>
+                                                        <td class="py-2 px-4">Yes*</td>
+                                                        <td class="py-2 px-4">Email address to check (either email or username required)</td>
+                                                    </tr>
+                                                    <tr class="border-b border-white/5">
+                                                        <td class="py-2 px-4">username</td>
+                                                        <td class="py-2 px-4">string</td>
+                                                        <td class="py-2 px-4">Yes*</td>
+                                                        <td class="py-2 px-4">Username to check (either email or username required)</td>
+                                                    </tr>
+                                                    <tr class="border-b border-white/5">
+                                                        <td class="py-2 px-4">include_unverified</td>
+                                                        <td class="py-2 px-4">boolean</td>
+                                                        <td class="py-2 px-4">No</td>
+                                                        <td class="py-2 px-4">Include unverified breaches (default: false)</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="mb-4">
+                                        <h4 class="text-sm font-bold text-slate-300 mb-2">Example Request</h4>
+                                        <pre><code>curl -X GET \
+  'https://api.allosint.dev/v1/breach/lookup?email=user@example.com' \
+  -H 'X-API-Key: your_api_key_here'</code></pre>
+                                    </div>
+                                    
+                                    <div>
+                                        <h4 class="text-sm font-bold text-slate-300 mb-2">Response (200 OK)</h4>
+                                        <pre><code class="text-green-400">{
+  "status": "success",
+  "data": {
+    "email": "user@example.com",
+    "found": true,
+    "breach_count": 3,
+    "breaches": [
+      {
+        "name": "Example Breach 2021",
+        "domain": "example.com",
+        "breach_date": "2021-03-15",
+        "added_date": "2021-06-22T14:30:45Z",
+        "modified_date": "2021-06-22T14:30:45Z",
+        "pwn_count": 1234567,
+        "description": "In March 2021, Example.com suffered a data breach that exposed 1.2M unique email addresses. The data was being sold on a popular hacking forum and contained email addresses and passwords stored as unsalted MD5 hashes.",
+        "data_classes": ["Email addresses", "Passwords", "Usernames"],
+        "is_verified": true,
+        "is_fabricated": false,
+        "is_sensitive": false,
+        "is_retired": false,
+        "is_spam_list": false
+      },
+      {
+        "name": "Another Breach 2020",
+        "domain": "anothersite.com",
+        "breach_date": "2020-11-05",
+        "added_date": "2020-12-10T08:15:22Z",
+        "modified_date": "2020-12-10T08:15:22Z",
+        "pwn_count": 8765432,
+        "description": "In November 2020, a major data breach was discovered that impacted over 8.7 million users of AnotherSite.com. The breach included email addresses, usernames, and hashed passwords.",
+        "data_classes": ["Email addresses", "Passwords", "Usernames", "IP addresses"],
+        "is_verified": true,
+        "is_fabricated": false,
+        "is_sensitive": false,
+        "is_retired": false,
+        "is_spam_list": false
+      }
+    ]
+  }
+}</code></pre>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- Reverse Image Search Section -->
+                        <section id="reverse-image-search" class="scroll-mt-20">
+                            <h3 class="text-2xl font-bold mb-6 flex items-center gap-2">
+                                <span class="material-symbols-outlined text-primary">image_search</span>
+                                Reverse Image Search
+                            </h3>
+                            
+                            <div class="glass-panel rounded-lg p-6">
+                                <p class="mb-4">Search the web for similar or matching images.</p>
+                                
+                                <div class="endpoint">
+                                    <div class="flex items-center gap-2 mb-2">
+                                        <span class="px-2 py-1 bg-green-900/50 text-green-400 text-xs font-mono rounded">POST</span>
+                                        <code class="text-sm">/api/v1/image/search</code>
+                                    </div>
+                                    <p class="text-slate-400 text-sm mb-3">Search by image</p>
+                                    
+                                    <div class="mb-4">
+                                        <h4 class="text-sm font-bold text-slate-300 mb-2">Parameters</h4>
+                                        <div class="overflow-x-auto">
+                                            <table class="min-w-full text-sm">
+                                                <thead>
+                                                    <tr class="border-b border-white/10">
+                                                        <th class="text-left py-2 px-4">Parameter</th>
+                                                        <th class="text-left py-2 px-4">Type</th>
+                                                        <th class="text-left py-2 px-4">Required</th>
+                                                        <th class="text-left py-2 px-4">Description</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr class="border-b border-white/5">
+                                                        <td class="py-2 px-4">image</td>
+                                                        <td class="py-2 px-4">file</td>
+                                                        <td class="py-2 px-4">Yes*</td>
+                                                        <td class="py-2 px-4">Image file to search (either image or image_url required)</td>
+                                                    </tr>
+                                                    <tr class="border-b border-white/5">
+                                                        <td class="py-2 px-4">image_url</td>
+                                                        <td class="py-2 px-4">string</td>
+                                                        <td class="py-2 px-4">Yes*</td>
+                                                        <td class="py-2 px-4">URL of the image to search (either image or image_url required)</td>
+                                                    </tr>
+                                                    <tr class="border-b border-white/5">
+                                                        <td class="py-2 px-4">limit</td>
+                                                        <td class="py-2 px-4">integer</td>
+                                                        <td class="py-2 px-4">No</td>
+                                                        <td class="py-2 px-4">Maximum number of results to return (default: 10, max: 50)</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="py-2 px-4">sites</td>
+                                                        <td class="py-2 px-4">array</td>
+                                                        <td class="py-2 px-4">No</td>
+                                                        <td class="py-2 px-4">Array of domains to limit the search to</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="mb-4">
+                                        <h4 class="text-sm font-bold text-slate-300 mb-2">Example Request</h4>
+                                        <pre><code>curl -X POST \
+  'https://api.allosint.dev/v1/image/search' \
+  -H 'X-API-Key: your_api_key_here' \
+  -F 'image=@/path/to/image.jpg' \
+  -F 'limit=5'</code></pre>
+                                    </div>
+                                    
+                                    <div>
+                                        <h4 class="text-sm font-bold text-slate-300 mb-2">Response (200 OK)</h4>
+                                        <pre><code class="text-green-400">{
+  "status": "success",
+  "data": {
+    "query_image": {
+      "width": 1200,
+      "height": 800,
+      "format": "jpeg",
+      "size_kb": 245,
+      "dominant_color": "#3a5f8a"
+    },
+    "matches": [
+      {
+        "url": "https://example.com/similar-image.jpg",
+        "page_url": "https://example.com/gallery/123",
+        "source": "Example Site",
+        "title": "Similar Image on Example Site",
+        "width": 1180,
+        "height": 786,
+        "similarity": 0.94,
+        "thumbnail": "https://t1.example.com/thumbnail.jpg",
+        "last_seen": "2023-10-15T08:30:45Z"
+      },
+      {
+        "url": "https://another-site.org/images/photo.jpg",
+        "page_url": "https://another-site.org/blog/post",
+        "source": "Another Site",
+        "title": "Blog Post with Similar Image",
+        "width": 800,
+        "height": 600,
+        "similarity": 0.87,
+        "thumbnail": "https://t2.another-site.org/thumb.jpg",
+        "last_seen": "2023-09-28T14:22:10Z"
+      }
+    ],
+    "statistics": {
+      "total_matches": 42,
+      "sources": 12,
+      "processing_time_ms": 345
+    }
+  }
+}</code></pre>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="border-t border-white/5 bg-[#050b14]/80 backdrop-blur-md py-6">
+            <div class="max-w-6xl mx-auto px-6">
+                <div class="flex flex-col md:flex-row justify-between items-center">
+                    <div class="flex items-center gap-3 mb-4 md:mb-0">
+                        <div class="size-8 rounded bg-primary/10 flex items-center justify-center border border-primary/30">
+                            <span class="material-symbols-outlined text-primary">radar</span>
+                        </div>
+                        <div class="text-sm">
+                            <div class="font-bold">AllOSINT API</div>
+                            <div class="text-xs text-slate-500">v2.0.0</div>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-6 text-sm text-slate-400">
+                        <a href="#" class="hover:text-primary transition-colors">Documentation</a>
+                        <a href="#" class="hover:text-primary transition-colors">API Status</a>
+                        <a href="#" class="hover:text-primary transition-colors">Support</a>
+                        <a href="#" class="hover:text-primary transition-colors">Terms</a>
+                        <a href="#" class="hover:text-primary transition-colors">Privacy</a>
+                    </div>
+                </div>
+                <div class="mt-6 pt-6 border-t border-white/5 text-xs text-slate-600 text-center">
+                    <p>© 2023 AllOSINT. All rights reserved. This product includes GeoLite2 data created by MaxMind, available from <a href="https://www.maxmind.com" class="text-primary hover:underline">https://www.maxmind.com</a>.</p>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 20,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // Add copy functionality to code blocks
+        document.querySelectorAll('pre').forEach(pre => {
+            const button = document.createElement('button');
+            button.className = 'absolute top-2 right-2 p-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white transition-colors';
+            button.innerHTML = '<span class="material-symbols-outlined text-sm">content_copy</span>';
+            button.title = 'Copy to clipboard';
+            
+            button.addEventListener('click', () => {
+                const code = pre.querySelector('code')?.textContent || pre.textContent;
+                navigator.clipboard.writeText(code).then(() => {
+                    const originalText = button.innerHTML;
+                    button.innerHTML = '<span class="material-symbols-outlined text-sm">done</span>';
+                    button.classList.add('text-green-500');
+                    setTimeout(() => {
+                        button.innerHTML = originalText;
+                        button.classList.remove('text-green-500');
+                    }, 2000);
+                });
+            });
+            
+            if (pre.querySelector('code')) {
+                pre.style.position = 'relative';
+                pre.prepend(button);
+            }
+        });
+    </script>
+</body>
+</html>
