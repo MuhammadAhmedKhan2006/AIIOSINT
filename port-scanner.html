@@ -1,423 +1,533 @@
 <!DOCTYPE html>
 <html class="dark" lang="en">
+
 <head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Port Vulnerability Scanner - OSINT Platform</title>
-<link href="https://fonts.googleapis.com" rel="preconnect"/>
-<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<script id="tailwind-config">tailwind.config = {darkMode: "class",theme: {extend: {colors: {"primary": "#137fec","danger": "#ef4444","warning": "#eab308","success": "#22c55e","background-light": "#f6f7f8","background-dark": "#101922","surface-dark": "#16202a","surface-border": "#28323e"},fontFamily: {"display": ["Space Grotesk", "sans-serif"],"mono": ["Space Mono", "monospace"]},borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},},},}</script>
-<style>::-webkit-scrollbar {width: 8px;height: 8px;}::-webkit-scrollbar-track {background: #101922;}::-webkit-scrollbar-thumb {background: #28323e;border-radius: 4px;}::-webkit-scrollbar-thumb:hover {background: #137fec;}.terminal-text {font-family: 'Courier New', Courier, monospace;}.bg-cyber-grid {background-image: linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);background-size: 40px 40px;}</style>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <link rel="icon" type="image/png" href="logo2.png" />
+    <title>OSINT // PORT SCANNER</title>
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#13ec63",
+                        "primary-dim": "#0eac48",
+                        "danger": "#ef4444",
+                        "warning": "#eab308",
+                        "background-light": "#f6f8f7",
+                        "background-dark": "#050a07",
+                        "surface-dark": "#0f1612",
+                        "surface-border": "#1f2e25",
+                    },
+                    fontFamily: {
+                        "display": ["Space Grotesk", "sans-serif"],
+                        "mono": ["JetBrains Mono", "monospace"],
+                    },
+                    backgroundImage: {
+                        'cyber-grid': "linear-gradient(to right, #1f2e25 1px, transparent 1px), linear-gradient(to bottom, #1f2e25 1px, transparent 1px)",
+                    }
+                },
+            },
+        }
+    </script>
+    <style>
+        .neon-glow {
+            box-shadow: 0 0 10px rgba(19, 236, 99, 0.2);
+        }
+
+        .grid-bg {
+            background-size: 40px 40px;
+            mask-image: linear-gradient(to bottom, black 40%, transparent 100%);
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #0f1612;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #1f2e25;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #13ec63;
+        }
+
+        .animate-spin-slow {
+            animation: spin 3s linear infinite;
+        }
+
+        .terminal-text {
+            font-family: 'JetBrains Mono', monospace;
+            line-height: 1.4;
+        }
+    </style>
 </head>
-<body class="bg-background-light dark:bg-background-dark font-display">
-<div class="relative flex h-auto min-h-screen w-full flex-col overflow-x-hidden bg-cyber-grid text-slate-900 dark:text-white">
-<header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-slate-200 dark:border-surface-border bg-white dark:bg-[#111418] px-10 py-3 sticky top-0 z-50">
-<div class="flex items-center gap-4">
-<div class="size-8 text-primary">
-<span class="material-symbols-outlined text-[32px]">radar</span>
-</div>
-<h2 class="text-lg font-bold leading-tight tracking-[-0.015em]">OSINT_PLATFORM_V1</h2>
-</div>
-<div class="flex flex-1 justify-end gap-8 items-center">
-<div class="hidden md:flex items-center gap-9">
-<a class="text-sm font-medium leading-normal hover:text-primary transition-colors" href="dashboard.html">Dashboard</a>
-<a class="text-sm font-medium leading-normal text-primary" href="port-scanner.html">Port Scanner</a>
-<a class="text-sm font-medium leading-normal hover:text-primary transition-colors" href="exif-extractor.html">EXIF Tool</a>
-<a class="text-sm font-medium leading-normal hover:text-primary transition-colors" href="breach-search.html">Breach Check</a>
-<a class="text-sm font-medium leading-normal hover:text-primary transition-colors" href="settings.html">Settings</a>
-</div>
-<div class="flex items-center gap-4">
-<div class="hidden sm:flex items-center justify-center size-10 rounded-full bg-slate-100 dark:bg-surface-border text-slate-500 dark:text-slate-400">
-<span class="material-symbols-outlined">notifications</span>
-</div>
-<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10 border-2 border-primary" data-alt="User avatar with glitch effect" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuC_j8CTbbZsNvGneS-y8ae6rgz67qlhCQiDDiCZXuvNnbVJuHoK0ezjQjdmjNV5ntUZDks4W0qgbKCHgu_m2aPyJbfJlHluOgXE-r0yWrhnneCLoqhE6oHJP8-eHZXUb7SMM5D1NTT6CreTcqOR6XznOVEViNkxESUJReI69SXtXyYRjFZCkz_gXfiBUSHcda6NkDY60NGhFLcZ7ehy8x3iKVNC_uzMgG7XcmJEzjwQx_5f8d6quVbKUTB8phpQDHOudbXXiEUiTJGg");'></div>
-</div>
-</div>
-</header>
-<main class="layout-container flex h-full grow flex-col">
-<div class="px-4 md:px-10 lg:px-40 flex flex-1 justify-center py-8">
-<div class="layout-content-container flex flex-col max-w-[1200px] flex-1 gap-8">
-<div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 border-b border-dashed border-slate-300 dark:border-surface-border pb-6">
-<div class="flex flex-col gap-2">
-<div class="flex items-center gap-2">
-<span class="bg-primary/20 text-primary px-2 py-0.5 rounded text-xs font-bold uppercase tracking-wider border border-primary/30">Module_04</span>
-<span class="text-slate-500 dark:text-slate-400 text-xs font-mono uppercase tracking-wider">v2.4.1-stable</span>
-</div>
-<h1 class="text-3xl md:text-4xl font-black leading-tight tracking-tight uppercase">Port_Vuln_Scanner</h1>
-<p class="text-slate-500 dark:text-slate-400 text-base max-w-2xl">Initiate deep packet inspection, latency analysis, and service banner grabbing for target reconnaissance.</p>
-</div>
-<div class="flex items-center gap-2 text-right">
-<div class="flex flex-col items-end">
-<span class="text-xs text-slate-500 dark:text-slate-400 font-mono uppercase">System Status</span>
-<div class="flex items-center gap-2">
-<span class="size-2 rounded-full bg-success animate-pulse"></span>
-<span class="text-sm font-bold tracking-wider">OPERATIONAL</span>
-</div>
-</div>
-</div>
-</div>
-<div class="bg-white dark:bg-surface-dark rounded-xl p-1 shadow-sm border border-slate-200 dark:border-surface-border">
-<div class="flex flex-col sm:flex-row items-center gap-2 p-4">
-<div class="flex items-center gap-3 text-slate-400 px-2">
-<span class="material-symbols-outlined">wifi_tethering</span>
-<span class="hidden sm:block font-mono text-sm uppercase">Target_IP:</span>
-</div>
-<input class="flex-1 bg-transparent border-none text-lg font-mono placeholder:text-slate-600 focus:ring-0 text-slate-900 dark:text-white w-full" placeholder="e.g. 192.168.0.1 or domain.com" id="target-input"/>
-<div class="flex items-center gap-2 w-full sm:w-auto mt-4 sm:mt-0">
-<div class="flex items-center gap-2 px-3 py-1 bg-slate-100 dark:bg-black/30 rounded border border-slate-200 dark:border-surface-border">
-<span class="size-2 rounded-full bg-warning"></span>
-<span class="text-xs font-mono text-slate-500">Fast Scan</span>
-</div>
-<button class="group relative flex items-center justify-center gap-2 bg-primary hover:bg-blue-600 text-white px-6 py-3 rounded-lg font-bold tracking-wide transition-all active:scale-[0.98] w-full sm:w-auto overflow-hidden" onclick="startScan()">
-<span class="relative z-10 flex items-center gap-2">
-<span class="material-symbols-outlined text-[20px]">play_arrow</span>EXECUTE_SCAN
-</span>
-<div class="absolute inset-0 -translate-x-full group-hover:animate-[shimmer_1.5s_infinite] bg-gradient-to-r from-transparent via-white/20 to-transparent z-0"></div>
-</button>
-</div>
-</div>
-</div>
-<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-<div class="lg:col-span-2 flex flex-col gap-6">
-<div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-<div class="bg-white dark:bg-surface-dark rounded-xl p-5 border border-slate-200 dark:border-surface-border flex flex-col justify-between relative overflow-hidden group">
-<div class="absolute top-0 right-0 p-3 opacity-10 group-hover:opacity-20 transition-opacity">
-<span class="material-symbols-outlined text-4xl">dns</span>
-</div>
-<p class="text-slate-500 dark:text-slate-400 text-sm font-medium uppercase tracking-wider mb-1">Ports Scanned</p>
-<div class="flex items-end gap-3">
-<span class="text-3xl font-black text-slate-900 dark:text-white" id="ports-scanned">0</span>
-<span class="text-xs text-success font-mono mb-1.5" id="scan-progress">0%</span>
-</div>
-</div>
-<div class="bg-white dark:bg-surface-dark rounded-xl p-5 border border-slate-200 dark:border-surface-border flex flex-col justify-between relative overflow-hidden group">
-<div class="absolute top-0 right-0 p-3 opacity-10 group-hover:opacity-20 transition-opacity">
-<span class="material-symbols-outlined text-4xl">lock_open</span>
-</div>
-<p class="text-slate-500 dark:text-slate-400 text-sm font-medium uppercase tracking-wider mb-1">Open Ports</p>
-<div class="flex items-end gap-3">
-<span class="text-3xl font-black text-slate-900 dark:text-white" id="open-ports">0</span>
-<span class="text-xs text-danger font-mono mb-1.5" id="new-ports">+0 NEW</span>
-</div>
-</div>
-<div class="bg-white dark:bg-surface-dark rounded-xl p-5 border border-slate-200 dark:border-surface-border border-l-4 border-l-danger flex flex-col justify-between relative overflow-hidden group">
-<div class="absolute top-0 right-0 p-3 opacity-10 group-hover:opacity-20 transition-opacity">
-<span class="material-symbols-outlined text-4xl">gpp_maybe</span>
-</div>
-<p class="text-slate-500 dark:text-slate-400 text-sm font-medium uppercase tracking-wider mb-1">Threat Level</p>
-<div class="flex items-end gap-3">
-<span class="text-3xl font-black text-danger" id="threat-level">LOW</span>
-<span class="text-xs text-slate-500 dark:text-slate-400 font-mono mb-1.5">SCORE: <span id="threat-score">2.1</span></span>
-</div>
-</div>
-</div>
-<div class="bg-white dark:bg-surface-dark rounded-xl border border-slate-200 dark:border-surface-border p-6 flex-1 min-h-[400px]">
-<div class="flex justify-between items-center mb-6">
-<div>
-<h3 class="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
-<span class="material-symbols-outlined text-primary">bar_chart</span>Common Port Latency Analysis
-</h3>
-<p class="text-sm text-slate-500 dark:text-slate-400">Response time (ms) vs Port criticality</p>
-</div>
-<div class="flex gap-4 text-xs font-mono">
-<div class="flex items-center gap-2">
-<div class="size-3 bg-danger rounded-sm"></div>
-<span class="text-slate-500 dark:text-slate-300">Dangerous</span>
-</div>
-<div class="flex items-center gap-2">
-<div class="size-3 bg-primary rounded-sm"></div>
-<span class="text-slate-500 dark:text-slate-300">Standard</span>
-</div>
-</div>
-</div>
-<div class="flex flex-col gap-5 font-mono text-sm" id="port-chart">
-<div class="text-center text-slate-500 py-8">
-<span class="material-symbols-outlined text-4xl mb-2 block">analytics</span>
-<p>Port analysis will appear here after scan</p>
-</div>
-</div>
-</div>
-</div>
-<div class="lg:col-span-1 flex flex-col gap-6">
-<div class="bg-[#0c0e12] rounded-xl border border-surface-border flex flex-col h-full overflow-hidden shadow-2xl">
-<div class="bg-[#1a2026] px-4 py-2 flex items-center justify-between border-b border-surface-border">
-<div class="flex items-center gap-2">
-<div class="flex gap-1.5">
-<div class="size-2.5 rounded-full bg-[#ff5f56]"></div>
-<div class="size-2.5 rounded-full bg-[#ffbd2e]"></div>
-<div class="size-2.5 rounded-full bg-[#27c93f]"></div>
-</div>
-<span class="ml-2 text-xs font-mono text-slate-400">root@scanner:~</span>
-</div>
-<span class="material-symbols-outlined text-slate-500 text-sm cursor-pointer hover:text-white">content_copy</span>
-</div>
-<div class="p-4 font-mono text-xs md:text-sm leading-relaxed overflow-y-auto h-[500px] terminal-text text-slate-300" id="terminal-output">
-<div class="mb-2">
-<span class="text-success">➜</span> <span class="text-primary">~</span> <span class="text-white">System ready. Awaiting target...</span>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
-<div class="bg-white dark:bg-surface-dark rounded-xl border border-slate-200 dark:border-surface-border p-6">
-<h3 class="text-lg font-bold text-slate-900 dark:text-white mb-4">Vulnerability Feed</h3>
-<div class="space-y-4" id="vuln-feed">
-<div class="text-center text-slate-500 py-4">
-<span class="material-symbols-outlined text-3xl mb-2 block">security</span>
-<p class="text-sm">Vulnerability analysis will appear after scan</p>
-</div>
-</div>
-</div>
-<div class="bg-white dark:bg-surface-dark rounded-xl border border-slate-200 dark:border-surface-border p-6">
-<h3 class="text-lg font-bold text-slate-900 dark:text-white mb-4">Geographic Context</h3>
-<div class="flex gap-4" id="geo-context">
-<div class="text-center text-slate-500 py-4 w-full">
-<span class="material-symbols-outlined text-3xl mb-2 block">public</span>
-<p class="text-sm">Geographic data will appear after scan</p>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</main>
-</div>
 
-<script>
-let scanInProgress = false;
-let scanResults = [];
+<body
+    class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 min-h-screen flex flex-col overflow-x-hidden selection:bg-primary selection:text-black">
+    <div class="fixed inset-0 pointer-events-none opacity-20 bg-cyber-grid grid-bg z-0"></div>
 
-// Mock port data
-const commonPorts = [
-    { port: 21, service: 'FTP', dangerous: true, latency: 45 },
-    { port: 22, service: 'SSH', dangerous: false, latency: 15 },
-    { port: 23, service: 'TELNET', dangerous: true, latency: 12 },
-    { port: 53, service: 'DNS', dangerous: false, latency: 4 },
-    { port: 80, service: 'HTTP', dangerous: false, latency: 8 },
-    { port: 443, service: 'HTTPS', dangerous: false, latency: 10 },
-    { port: 3389, service: 'RDP', dangerous: true, latency: 124 }
-];
+    <div class="relative z-10 flex flex-col h-full grow">
+        <header
+            class="sticky top-0 z-50 flex items-center justify-between border-b border-surface-border bg-surface-dark/95 backdrop-blur-md px-6 py-3">
+            <div class="flex items-center gap-4 text-white">
+                <div
+                    class="size-8 text-primary flex items-center justify-center rounded bg-primary/10 border border-primary/20 neon-glow">
+                    <img src="logo2.png" alt="Logo" class="w-6 h-6 object-contain" />
+                </div>
+                <h2 class="text-white text-xl font-bold tracking-tight uppercase">OSINT <span
+                        class="text-primary">//</span> PORT SCANNER</h2>
+            </div>
 
-const vulnerabilities = [
-    { port: 23, service: 'TELNET', severity: 'high', description: 'Telnet Cleartext Login', details: 'Port 23 allows unencrypted communication. Credentials can be intercepted easily.' },
-    { port: 80, service: 'HTTP', severity: 'medium', description: 'Apache Version Outdated', details: 'Version 2.4.41 has 3 known vulnerabilities. Upgrade recommended.' }
-];
+            <div class="hidden md:flex flex-1 justify-center px-8">
+                <nav class="flex items-center gap-2 p-1 bg-black/40 rounded-lg border border-surface-border">
+                    <a href="dashboard.html"
+                        class="px-4 py-1.5 text-sm font-medium text-slate-400 hover:text-white hover:bg-surface-border/50 rounded transition-colors">Dashboard</a>
+                    <a href="#"
+                        class="px-4 py-1.5 text-sm font-bold text-primary bg-primary/10 border border-primary/20 rounded shadow shadow-primary/10">Scanner</a>
+                </nav>
+            </div>
 
-document.addEventListener('DOMContentLoaded', function() {
-    // Check authentication
-    const isAuthenticated = localStorage.getItem('allOSINT_authenticated');
-    if (!isAuthenticated) {
-        window.location.href = 'login.html';
-        return;
-    }
-    
-    // Load target from localStorage if available
-    const target = localStorage.getItem('allOSINT_target');
-    if (target && target.match(/^\d+\.\d+\.\d+\.\d+$/)) {
-        document.getElementById('target-input').value = target;
-        // Auto-start scan after a brief delay
-        setTimeout(() => startScan(), 1000);
-    }
-});
+            <div class="flex items-center gap-4">
+                <div class="size-9 rounded-full bg-gradient-to-br from-primary to-blue-500 p-[1px]">
+                    <div
+                        class="size-full rounded-full bg-surface-dark flex items-center justify-center overflow-hidden">
+                        <span class="material-symbols-outlined text-white text-[20px]">person</span>
+                    </div>
+                </div>
+            </div>
+        </header>
 
-function startScan() {
-    const target = document.getElementById('target-input').value.trim();
-    
-    if (!target) {
-        alert('Please enter a target IP or domain');
-        return;
-    }
-    
-    if (scanInProgress) {
-        return;
-    }
-    
-    scanInProgress = true;
-    scanResults = [];
-    
-    // Reset counters
-    document.getElementById('ports-scanned').textContent = '0';
-    document.getElementById('open-ports').textContent = '0';
-    document.getElementById('new-ports').textContent = '+0 NEW';
-    document.getElementById('scan-progress').textContent = '0%';
-    document.getElementById('threat-level').textContent = 'LOW';
-    document.getElementById('threat-score').textContent = '0.0';
-    
-    // Clear terminal and add initial messages
-    const terminal = document.getElementById('terminal-output');
-    terminal.innerHTML = `
-        <div class="mb-2">
-            <span class="text-success">➜</span> <span class="text-primary">~</span> <span class="text-white">nmap -sV -p- ${target}</span>
-        </div>
-        <div class="mb-4 text-slate-400">
-            Starting Nmap 7.92 ( https://nmap.org ) at ${new Date().toLocaleString()}<br/>
-            Nmap scan report for ${target}<br/>
-            Host is up (0.0012s latency).<br/>
-            Scanning ports...
-        </div>
+        <main class="flex-1 px-4 md:px-8 py-6 w-full max-w-[1600px] mx-auto flex flex-col gap-6">
+            <div class="flex flex-col md:flex-row gap-6 items-end justify-between">
+                <div class="flex flex-col gap-2">
+                    <div class="flex items-center gap-2 text-primary text-xs font-mono uppercase tracking-widest">
+                        <span class="material-symbols-outlined text-[16px] animate-spin-slow">sync</span>System Ready
+                    </div>
+                    <h1 class="text-4xl md:text-5xl font-black tracking-tight text-white uppercase">Port Intelligence
+                    </h1>
+                    <p class="text-slate-400 max-w-lg">Leverages InternetDB & passive routing analysis to identify open
+                        ports, service banners, and CVEs.</p>
+                </div>
+                <div class="w-full md:w-auto md:min-w-[500px]">
+                    <div class="relative group">
+                        <div
+                            class="absolute -inset-0.5 bg-gradient-to-r from-primary/50 to-emerald-600/50 rounded-lg blur opacity-30 group-hover:opacity-75 transition duration-500">
+                        </div>
+                        <div
+                            class="relative flex items-stretch bg-surface-dark rounded-lg border border-surface-border">
+                            <div class="pl-4 flex items-center justify-center text-slate-500">
+                                <span class="material-symbols-outlined">wifi_tethering</span>
+                            </div>
+                            <input
+                                class="w-full bg-transparent border-none text-white font-mono placeholder-slate-600 focus:ring-0 py-4 px-3"
+                                placeholder="ENTER IP OR DOMAIN (e.g. scanme.nmap.org)" type="text" id="target-input" />
+                            <button
+                                class="m-1 px-6 bg-primary hover:bg-primary-dim text-black font-bold uppercase tracking-wide text-sm rounded transition-colors flex items-center gap-2"
+                                onclick="startScan()">
+                                <span class="material-symbols-outlined text-[18px]">play_circle</span>INITIATE
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 flex-1 min-h-[600px]">
+                <div class="flex flex-col gap-6 lg:col-span-1">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div
+                            class="bg-surface-dark border border-surface-border p-4 rounded-lg flex flex-col gap-1 relative overflow-hidden group">
+                            <div
+                                class="absolute right-0 top-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                                <span class="material-symbols-outlined text-6xl text-primary">lan</span>
+                            </div>
+                            <span class="text-xs font-mono text-slate-400 uppercase">Open Ports</span>
+                            <span class="text-3xl font-mono font-bold text-white" id="stat-open-ports">0</span>
+                            <div class="flex items-center gap-1 text-xs text-primary mt-2">
+                                <span class="material-symbols-outlined text-[12px]">check_circle</span>
+                                <span id="stat-status">Idle</span>
+                            </div>
+                        </div>
+                        <div
+                            class="bg-surface-dark border border-surface-border p-4 rounded-lg flex flex-col gap-1 relative overflow-hidden group">
+                            <div
+                                class="absolute right-0 top-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                                <span class="material-symbols-outlined text-6xl text-danger">bug_report</span>
+                            </div>
+                            <span class="text-xs font-mono text-slate-400 uppercase">Vulns (CVEs)</span>
+                            <span class="text-3xl font-mono font-bold text-white" id="stat-vulns">0</span>
+                            <div class="flex items-center gap-1 text-xs text-danger mt-2">
+                                <span class="material-symbols-outlined text-[12px]">warning</span>
+                                <span id="stat-threat">Low Risk</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div
+                        class="flex-1 bg-surface-dark border border-surface-border rounded-lg flex flex-col overflow-hidden h-96 shadow-2xl">
+                        <div
+                            class="bg-[#0c0e12] px-4 py-2 flex items-center justify-between border-b border-surface-border">
+                            <div class="flex items-center gap-2">
+                                <div class="flex gap-1.5">
+                                    <div class="size-2.5 rounded-full bg-red-500"></div>
+                                    <div class="size-2.5 rounded-full bg-amber-500"></div>
+                                    <div class="size-2.5 rounded-full bg-green-500"></div>
+                                </div>
+                                <span class="ml-2 text-xs font-mono text-slate-400">root@allosint:~#</span>
+                            </div>
+                        </div>
+                        <div class="p-4 font-mono text-xs leading-relaxed overflow-y-auto h-full terminal-text text-slate-300"
+                            id="terminal-output">
+                            <div class="mb-2">
+                                <span class="text-primary">➜</span> <span class="text-slate-400">~</span> <span
+                                    class="text-white">System ready. Awaiting target...</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-surface-dark border border-surface-border p-4 rounded-lg">
+                        <h3 class="text-xs font-bold text-slate-400 uppercase mb-3 flex items-center gap-2">
+                            <span class="material-symbols-outlined text-primary text-[16px]">public</span> Target
+                            Location
+                        </h3>
+                        <div id="geo-info" class="space-y-2 text-sm font-mono text-white">
+                            <p class="text-slate-500 italic">No Data.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-2 flex flex-col gap-6">
+                    <div
+                        class="flex flex-col bg-surface-dark border border-surface-border rounded-lg overflow-hidden flex-1 min-h-[600px]">
+                        <div
+                            class="flex items-center justify-between px-4 py-3 border-b border-surface-border bg-surface-dark">
+                            <h3 class="font-display font-semibold text-white tracking-wide">PORT MATRIX & VULNERABILITY
+                                FEED</h3>
+                            <div class="flex gap-2">
+                                <div class="flex items-center gap-2 text-xs font-mono text-slate-500 mr-4">
+                                    <span class="size-2 bg-primary rounded-sm"></span> OPEN
+                                    <span class="size-2 bg-surface-border rounded-sm ml-2"></span> CLOSED
+                                </div>
+                                <button
+                                    class="text-xs font-mono text-primary bg-primary/10 border border-primary/20 px-3 py-1 rounded hover:bg-primary/20 transition-colors flex items-center gap-2"
+                                    onclick="exportReport()">
+                                    <span class="material-symbols-outlined text-[14px]">download</span> CSV EXPORT
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="p-6 border-b border-surface-border">
+                            <div class="grid grid-cols-8 sm:grid-cols-10 md:grid-cols-12 gap-2" id="port-grid">
+                                <p class="col-span-full text-center text-slate-500 py-10 font-mono">Initiate scan to
+                                    visualize port map.</p>
+                            </div>
+                        </div>
+
+                        <div class="overflow-x-auto flex-1">
+                            <table class="w-full text-left font-mono text-sm">
+                                <thead class="bg-[#0a0f0c] text-slate-400 text-xs uppercase tracking-wider">
+                                    <tr>
+                                        <th class="px-6 py-3 border-b border-surface-border">Port / Service</th>
+                                        <th class="px-6 py-3 border-b border-surface-border">Tags / CPEs</th>
+                                        <th class="px-6 py-3 border-b border-surface-border text-right">Vulnerabilities
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-surface-border text-slate-300" id="vuln-table">
+                                    <tr>
+                                        <td colspan="3" class="px-6 py-12 text-center text-slate-500">
+                                            No open ports detected yet.
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // --- CONFIG & STATE ---
+        const STATE = {
+            target: '',
+            ip: null,
+            openPorts: [],
+            vulns: [],
+            tags: [],
+            geo: null
+        };
+
+        // Known Service Dictionary for Mapping
+        const PORT_SERVICES = {
+            21: 'FTP', 22: 'SSH', 23: 'TELNET', 25: 'SMTP', 53: 'DNS', 80: 'HTTP',
+            110: 'POP3', 135: 'RPC', 139: 'NETBIOS', 143: 'IMAP', 443: 'HTTPS',
+            445: 'SMB', 3306: 'MYSQL', 3389: 'RDP', 5432: 'PGSQL', 5900: 'VNC',
+            8080: 'HTTP-ALT', 8443: 'HTTPS-ALT'
+        };
+
+        const COMMON_PORTS = [21, 22, 23, 25, 53, 80, 110, 135, 139, 143, 443, 445, 993, 995, 1433, 3306, 3389, 5432, 5900, 8080, 8443, 27017];
+
+        // --- CORE FUNCTIONS ---
+
+        async function startScan() {
+            const input = document.getElementById('target-input').value.trim();
+            if (!input) { alert("Please enter a target."); return; }
+
+            // 1. Terminal Init
+            const term = document.getElementById('terminal-output');
+            term.innerHTML = ''; // Clear previous
+
+            const banner = document.createElement('div');
+            banner.className = "text-primary mb-2 whitespace-pre leading-none font-bold";
+            banner.innerText = `
+  ___  _  _  ___  ___ _  _ _____ 
+ / _ \\| || |/ _ \\/ __| || |_   _|
+| (_) | || | (_) \\__ \\ || | | |  
+ \\___/|_||_|\\___/|___/_||_| |_|  
     `;
-    
-    // Simulate progressive scanning
-    let scannedPorts = 0;
-    let openPorts = 0;
-    let progress = 0;
-    
-    const scanInterval = setInterval(() => {
-        // Update progress
-        progress += Math.random() * 10 + 5;
-        scannedPorts += Math.floor(Math.random() * 1000) + 500;
-        
-        if (progress > 100) progress = 100;
-        if (scannedPorts > 65535) scannedPorts = 65535;
-        
-        document.getElementById('ports-scanned').textContent = scannedPorts.toLocaleString();
-        document.getElementById('scan-progress').textContent = Math.floor(progress) + '%';
-        
-        // Randomly discover open ports
-        if (Math.random() > 0.7 && openPorts < commonPorts.length) {
-            const port = commonPorts[openPorts];
-            openPorts++;
-            scanResults.push(port);
-            
-            document.getElementById('open-ports').textContent = openPorts;
-            document.getElementById('new-ports').textContent = `+${openPorts} NEW`;
-            
-            // Add to terminal
-            const portEntry = document.createElement('div');
-            portEntry.className = `p-2 border-l-2 ${port.dangerous ? 'border-danger bg-danger/10 text-danger-50' : 'border-primary bg-primary/5 text-primary-50'}`;
-            portEntry.innerHTML = `
-                <span class="block ${port.dangerous ? 'text-danger' : 'text-primary'} font-bold mb-1">PORT ${port.port}/tcp OPEN (${port.service})</span>
-                <span class="opacity-80">&gt; Service detected: ${port.service}</span>
-                <span class="block mt-1 text-white bg-black/50 p-1 rounded font-mono text-[10px]">Response time: ${port.latency}ms</span>
-            `;
-            terminal.appendChild(portEntry);
-            terminal.scrollTop = terminal.scrollHeight;
+            term.appendChild(banner);
+
+            addToLog("WARNING: Authorized Testing Only. Unauthorized scanning is illegal.", 'error');
+            addToLog(`Initializing Passive Scan for: ${input}...`, 'info');
+
+            // Reset UI
+            STATE.target = input;
+            STATE.openPorts = [];
+            STATE.vulns = [];
+            document.getElementById('port-grid').innerHTML = '<p class="col-span-full text-center text-primary animate-pulse py-10 font-mono">Scanning Network...</p>';
+
+            try {
+                // 2. Resolve DNS
+                await resolveDNS(input);
+
+                // 3. Get Geo Info
+                fetchGeo(STATE.ip);
+
+                // 4. Get Port Data
+                await fetchPortData(STATE.ip);
+
+            } catch (e) {
+                addToLog(`CRITICAL FAILURE: ${e.message}`, 'error');
+            }
         }
-        
-        if (progress >= 100) {
-            clearInterval(scanInterval);
-            completeScan();
+
+        async function resolveDNS(query) {
+            if (/^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/.test(query)) {
+                STATE.ip = query;
+                addToLog(`Target is already an IP: ${STATE.ip}`, 'success');
+                return;
+            }
+
+            addToLog("Connecting to Cloudflare DoH API...");
+            try {
+                const res = await fetch(`https://cloudflare-dns.com/dns-query?name=${query}&type=A`, {
+                    headers: { 'Accept': 'application/dns-json' }
+                });
+                const data = await res.json();
+
+                if (data.Answer) {
+                    STATE.ip = data.Answer[data.Answer.length - 1].data;
+                    addToLog(`DNS Resolved: ${query} -> ${STATE.ip}`, 'success');
+                } else {
+                    throw new Error("NXDOMAIN (Domain not found)");
+                }
+            } catch (e) {
+                throw new Error("DNS Resolution Failed.");
+            }
         }
-    }, 1000);
-}
 
-function completeScan() {
-    scanInProgress = false;
-    
-    // Update threat level
-    const dangerousPorts = scanResults.filter(p => p.dangerous).length;
-    let threatLevel = 'LOW';
-    let threatScore = 2.1;
-    
-    if (dangerousPorts > 2) {
-        threatLevel = 'CRITICAL';
-        threatScore = 9.8;
-    } else if (dangerousPorts > 0) {
-        threatLevel = 'MEDIUM';
-        threatScore = 5.4;
-    }
-    
-    document.getElementById('threat-level').textContent = threatLevel;
-    document.getElementById('threat-score').textContent = threatScore;
-    
-    // Update port chart
-    updatePortChart();
-    
-    // Update vulnerability feed
-    updateVulnFeed();
-    
-    // Update geographic context
-    updateGeoContext();
-    
-    // Add completion message to terminal
-    const terminal = document.getElementById('terminal-output');
-    const completion = document.createElement('div');
-    completion.className = 'text-slate-500 animate-pulse mt-4';
-    completion.innerHTML = 'Scan complete. Generating report...<br/>_';
-    terminal.appendChild(completion);
-    terminal.scrollTop = terminal.scrollHeight;
-}
+        async function fetchGeo(ip) {
+            addToLog(`Fetching Geo-Intelligence via ipapi.co...`);
+            try {
+                const res = await fetch(`https://ipapi.co/${ip}/json/`);
+                const data = await res.json();
+                STATE.geo = data;
 
-function updatePortChart() {
-    const chart = document.getElementById('port-chart');
-    chart.innerHTML = scanResults.map(port => `
-        <div class="group">
-            <div class="flex justify-between items-end mb-1">
-                <span class="font-bold ${port.dangerous ? 'text-danger' : 'text-slate-700 dark:text-slate-300'} flex items-center gap-2">
-                    ${port.dangerous ? '<span class="material-symbols-outlined text-[16px] animate-pulse">warning</span>' : ''}
-                    ${port.port} (${port.service})
-                </span>
-                <span class="text-slate-500">${port.latency}ms</span>
-            </div>
-            <div class="w-full bg-slate-100 dark:bg-black/40 rounded-full h-3 overflow-hidden">
-                <div class="${port.dangerous ? 'bg-danger' : 'bg-primary'} h-full rounded-full" style="width: ${100 - (port.latency / 150 * 100)}%;"></div>
-            </div>
-        </div>
-    `).join('');
-}
-
-function updateVulnFeed() {
-    const feed = document.getElementById('vuln-feed');
-    const relevantVulns = vulnerabilities.filter(v => scanResults.some(p => p.port === v.port));
-    
-    if (relevantVulns.length === 0) {
-        feed.innerHTML = `
-            <div class="text-center text-green-500 py-4">
-                <span class="material-symbols-outlined text-3xl mb-2 block">shield</span>
-                <p class="text-sm">No critical vulnerabilities detected</p>
-            </div>
+                const geoHTML = `
+            <div class="flex justify-between border-b border-surface-border pb-1"><span>ISP:</span> <span class="text-white">${data.org || 'N/A'}</span></div>
+            <div class="flex justify-between border-b border-surface-border pb-1"><span>Location:</span> <span class="text-white">${data.city}, ${data.country_code}</span></div>
+            <div class="flex justify-between"><span>ASN:</span> <span class="text-primary">${data.asn || 'N/A'}</span></div>
         `;
-        return;
-    }
-    
-    feed.innerHTML = relevantVulns.map(vuln => `
-        <div class="flex gap-4 items-start">
-            <div class="bg-${vuln.severity === 'high' ? 'danger' : 'warning'}/20 text-${vuln.severity === 'high' ? 'danger' : 'warning'} rounded p-1.5 shrink-0 mt-1">
-                <span class="material-symbols-outlined text-sm font-bold">bug_report</span>
-            </div>
-            <div>
-                <p class="text-sm font-bold text-slate-900 dark:text-white">${vuln.description}</p>
-                <p class="text-xs text-slate-500 mt-1">${vuln.details}</p>
-            </div>
-        </div>
-    `).join('');
-}
+                document.getElementById('geo-info').innerHTML = geoHTML;
+                addToLog(`Target located in ${data.country_name} (${data.org})`, 'info');
+            } catch (e) {
+                addToLog("Geo lookup failed (Rate limit likely).", 'warning');
+            }
+        }
 
-function updateGeoContext() {
-    const geo = document.getElementById('geo-context');
-    geo.innerHTML = `
-        <div class="w-1/3 aspect-video rounded-lg overflow-hidden relative">
-            <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-10"></div>
-            <div class="w-full h-full bg-cover bg-center" data-alt="Dark map showing server location" data-location="Seattle" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuD3eqGXjDqpqfgQkV7KKoZkxpbR9TDEvoWtnz92lT28ss6jLQ991CyxzDc9ZZcs7PaT4Ap46OoEGMX3LRXroSiI4NEO_ZJtuosDLU_xtDolqxW8rprZMVZKvcXcdVrR1v83MO76l0BaNfzWcVhE5hQLgNwpxX6bE5MynL7eRI9ZRj8A2YIuBp9NoqdTRN08-EjonMNbQOOCFZggPWSYoLXMwSFRt5F1fQBlDIQeNTo8O_kliyhmx1_Z6M3j-igWLZHDqbR2aV7lOKId");'></div>
-            <div class="absolute bottom-2 left-2 z-20 text-white text-xs font-bold">SEATTLE, WA</div>
-        </div>
-        <div class="flex-1 space-y-3">
-            <div class="flex justify-between border-b border-slate-200 dark:border-surface-border pb-2">
-                <span class="text-sm text-slate-500">ISP</span>
-                <span class="text-sm font-medium text-slate-900 dark:text-white">CloudFlare Inc.</span>
-            </div>
-            <div class="flex justify-between border-b border-slate-200 dark:border-surface-border pb-2">
-                <span class="text-sm text-slate-500">ASN</span>
-                <span class="text-sm font-medium text-slate-900 dark:text-white">AS13335</span>
-            </div>
-            <div class="flex justify-between">
-                <span class="text-sm text-slate-500">Timezone</span>
-                <span class="text-sm font-medium text-slate-900 dark:text-white">UTC -07:00</span>
-            </div>
-        </div>
+        async function fetchPortData(ip) {
+            addToLog(`Querying InternetDB (Shodan) for open ports...`);
+
+            try {
+                const res = await fetch(`https://internetdb.shodan.io/${ip}`);
+                if (res.status === 404) {
+                    addToLog("No open ports found in public database.", 'warning');
+                    renderGrid([]);
+                    printSummary();
+                    return;
+                }
+
+                const data = await res.json();
+                STATE.openPorts = data.ports || [];
+                STATE.vulns = data.vulns || [];
+                STATE.tags = data.tags || [];
+
+                addToLog(`Data Received: Found ${STATE.openPorts.length} Open Ports.`, 'success');
+                if (STATE.vulns.length > 0) addToLog(`WARNING: ${STATE.vulns.length} CVEs identified!`, 'error');
+
+                updateStats();
+                renderGrid(STATE.openPorts);
+                renderTable(data);
+                printSummary();
+
+            } catch (e) {
+                addToLog("Failed to connect to InternetDB.", 'error');
+            }
+        }
+
+        function printSummary() {
+            const term = document.getElementById('terminal-output');
+            const summary = document.createElement('div');
+            summary.className = "mt-4 p-2 border-t border-slate-700 text-slate-300";
+            summary.innerHTML = `
+        <div class="font-bold text-white mb-1">--- SCAN SUMMARY ---</div>
+        <div>> Target: <span class="text-primary">${STATE.target}</span> (${STATE.ip})</div>
+        <div>> Ports Found: ${STATE.openPorts.length}</div>
+        <div>> APIs Used: InternetDB, Cloudflare, ipapi</div>
+        <div>> Status: <span class="text-primary">COMPLETED</span></div>
     `;
-}
+            term.appendChild(summary);
+            term.scrollTop = term.scrollHeight;
+        }
 
-// Allow Enter key to trigger scan
-document.getElementById('target-input').addEventListener('keypress', function(e) {
-    if (e.key === 'Enter') {
-        startScan();
-    }
-});
-</script>
+        // --- RENDERING ---
+
+        function updateStats() {
+            document.getElementById('stat-open-ports').innerText = STATE.openPorts.length;
+            document.getElementById('stat-vulns').innerText = STATE.vulns.length;
+            document.getElementById('stat-status').innerText = "Scan Complete";
+
+            const threatLabel = document.getElementById('stat-threat');
+            if (STATE.vulns.length > 0) {
+                threatLabel.innerText = "CRITICAL RISK";
+                threatLabel.className = "text-danger font-bold animate-pulse";
+            } else if (STATE.openPorts.length > 5) {
+                threatLabel.innerText = "Medium Exposure";
+                threatLabel.className = "text-amber-400";
+            }
+        }
+
+        function renderGrid(openPorts) {
+            const grid = document.getElementById('port-grid');
+            grid.innerHTML = '';
+
+            const allPortsToShow = [...new Set([...COMMON_PORTS, ...openPorts])].sort((a, b) => a - b);
+
+            allPortsToShow.forEach(port => {
+                const isOpen = openPorts.includes(port);
+                // Map Port to Service Name (e.g., 80 -> HTTP)
+                const serviceName = PORT_SERVICES[port] || 'TCP';
+
+                const div = document.createElement('div');
+                div.className = `
+            flex flex-col items-center justify-center p-2 rounded border
+            transition-all duration-300
+            ${isOpen
+                        ? 'bg-primary/20 border-primary text-primary shadow-[0_0_10px_rgba(19,236,99,0.3)]'
+                        : 'bg-surface-dark border-surface-border text-slate-600 opacity-50'}
+        `;
+                div.innerHTML = `
+            <span class="text-[10px] font-bold">${serviceName}</span>
+            <span class="text-sm font-mono">${port}</span>
+        `;
+                grid.appendChild(div);
+            });
+        }
+
+        function renderTable(data) {
+            const tbody = document.getElementById('vuln-table');
+            if (data.ports.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="3" class="px-6 py-4 text-center">No open ports.</td></tr>';
+                return;
+            }
+
+            let html = '';
+
+            data.ports.forEach(port => {
+                const tags = data.tags ? data.tags.join(', ') : 'None';
+                const hasVulns = data.vulns && data.vulns.length > 0;
+                const serviceName = PORT_SERVICES[port] || 'TCP';
+
+                html += `
+            <tr class="hover:bg-primary/5 border-b border-surface-border/50">
+                <td class="px-6 py-4">
+                    <div class="flex items-center gap-2">
+                        <span class="text-primary font-mono font-bold">${port} / ${serviceName}</span>
+                        ${hasVulns ? '<span class="px-1.5 py-0.5 bg-danger/20 text-danger text-[10px] rounded border border-danger/30">VULN</span>' : ''}
+                    </div>
+                </td>
+                <td class="px-6 py-4 text-slate-400 text-xs">${tags}</td>
+                <td class="px-6 py-4 text-right">
+                    ${hasVulns
+                        ? `<span class="text-danger font-bold cursor-help" title="${data.vulns.join(', ')}">${data.vulns.length} CVEs Detected</span>`
+                        : '<span class="text-slate-600">Clean</span>'}
+                </td>
+            </tr>
+        `;
+            });
+            tbody.innerHTML = html;
+        }
+
+        function addToLog(msg, type = 'info') {
+            const term = document.getElementById('terminal-output');
+            const time = new Date().toLocaleTimeString('en-US', { hour12: false });
+            let color = 'text-slate-300';
+            if (type === 'success') color = 'text-primary';
+            if (type === 'error') color = 'text-danger';
+            if (type === 'warning') color = 'text-warning';
+
+            const line = document.createElement('div');
+            line.className = "mb-1";
+            line.innerHTML = `<span class="text-slate-500">[${time}]</span> <span class="${color}">${msg}</span>`;
+            term.appendChild(line);
+            term.scrollTop = term.scrollHeight;
+        }
+
+        function exportReport() {
+            if (!STATE.ip) { alert("No data."); return; }
+            const csvContent = "data:text/csv;charset=utf-8,"
+                + "IP,Port,Service,Tags,Vulns\n"
+                + STATE.openPorts.map(p => `${STATE.ip},${p},${PORT_SERVICES[p] || 'TCP'},${STATE.tags.join(' ')},${STATE.vulns.length}`).join("\n");
+            const link = document.createElement("a");
+            link.href = encodeURI(csvContent);
+            link.download = `port_scan_${STATE.ip}.csv`;
+            document.body.appendChild(link);
+            link.click();
+            addToLog("Report exported to CSV.", 'success');
+        }
+
+        // Enter Key Support
+        document.getElementById('target-input').addEventListener('keypress', function (e) { if (e.key === 'Enter') startScan(); });
+
+    </script>
 </body>
+
 </html>

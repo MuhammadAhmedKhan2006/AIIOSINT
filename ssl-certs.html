@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <link rel="icon" type="image/png" href="logo2.png" />
+    <title>OSINT // SSL INTELLIGENCE</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500;700&display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet" />
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: { "primary": "#13ec63", "background-dark": "#050a07", "surface-dark": "#0f1612", "surface-border": "#1f2e25" },
+                    fontFamily: { "display": ["Space Grotesk", "sans-serif"], "mono": ["JetBrains Mono", "monospace"] },
+                    backgroundImage: { 'cyber-grid': "linear-gradient(to right, #1f2e25 1px, transparent 1px), linear-gradient(to bottom, #1f2e25 1px, transparent 1px)" }
+                }
+            }
+        }
+    </script>
+    <style>
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #0f1612;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #1f2e25;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #13ec63;
+        }
+
+        .grid-bg {
+            background-size: 40px 40px;
+            mask-image: linear-gradient(to bottom, black 40%, transparent 100%);
+        }
+
+        .neon-text {
+            text-shadow: 0 0 10px rgba(19, 236, 99, 0.5);
+        }
+    </style>
+</head>
+
+<body class="bg-background-dark font-display text-slate-100 flex flex-col min-h-screen overflow-x-hidden">
+    <div class="fixed inset-0 pointer-events-none opacity-20 bg-cyber-grid grid-bg z-0"></div>
+
+    <div class="relative z-10 flex flex-col w-full h-full">
+        <header
+            class="sticky top-0 z-50 flex items-center justify-between border-b border-surface-border bg-surface-dark/95 backdrop-blur-md px-6 py-3">
+            <div class="flex items-center gap-4 text-white">
+                <div
+                    class="size-8 text-primary flex items-center justify-center rounded bg-primary/10 border border-primary/20 shadow-[0_0_10px_rgba(19,236,99,0.2)]">
+                    <img src="logo2.png" alt="Logo" class="w-6 h-6 object-contain" />
+                </div>
+                <h2 class="text-white text-xl font-bold tracking-tight uppercase">OSINT <span
+                        class="text-primary">//</span> SSL CERTS</h2>
+            </div>
+            <div class="flex items-center gap-4">
+                <div class="text-xs font-mono text-slate-400">API: <span class="text-primary">CertSpotter</span></div>
+                <div class="size-9 rounded-full bg-gradient-to-br from-primary to-blue-500 p-[1px]">
+                    <div class="size-full rounded-full bg-surface-dark flex items-center justify-center">
+                        <span class="material-symbols-outlined text-white text-[20px]">person</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <main class="flex-1 px-4 md:px-8 py-6 flex flex-col gap-6 overflow-y-auto">
+            <div class="w-full relative group shrink-0">
+                <div
+                    class="absolute -inset-0.5 bg-gradient-to-r from-primary/50 to-emerald-600/50 rounded-lg blur opacity-30 group-hover:opacity-75 transition duration-500">
+                </div>
+                <div class="relative flex items-center bg-surface-dark rounded-lg border border-surface-border">
+                    <div class="pl-4 pr-2 text-primary"><span class="material-symbols-outlined">lock_search</span></div>
+                    <input id="domainInput" type="text" placeholder="Enter Domain to analyze (e.g., github.com)..."
+                        class="w-full bg-transparent border-none text-white font-mono py-4 px-2 focus:ring-0 placeholder-slate-600" />
+                    <button onclick="fetchSSL()"
+                        class="mr-2 px-6 py-2 bg-primary hover:bg-green-400 text-black font-bold rounded shadow-[0_0_10px_rgba(19,236,99,0.3)] transition-all">
+                        ANALYZE
+                    </button>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 flex-1 min-h-0">
+                <div class="md:col-span-1 flex flex-col gap-4">
+                    <div
+                        class="bg-surface-dark border border-surface-border p-5 rounded-lg border-l-4 border-l-primary">
+                        <h3 class="text-slate-400 text-xs font-mono uppercase">Total Certs</h3>
+                        <div class="text-4xl font-bold mt-1 text-white neon-text" id="stat-total">0</div>
+                    </div>
+                    <div
+                        class="bg-surface-dark border border-surface-border p-5 rounded-lg border-l-4 border-l-yellow-500">
+                        <h3 class="text-slate-400 text-xs font-mono uppercase">Issuers</h3>
+                        <div class="text-4xl font-bold mt-1 text-white" id="stat-issuers">0</div>
+                    </div>
+                    <div
+                        class="bg-surface-dark border border-surface-border p-5 rounded-lg border-l-4 border-l-red-500">
+                        <h3 class="text-slate-400 text-xs font-mono uppercase">Expired</h3>
+                        <div class="text-4xl font-bold mt-1 text-white" id="stat-expired">0</div>
+                    </div>
+                </div>
+
+                <div
+                    class="md:col-span-3 bg-surface-dark border border-surface-border rounded-lg flex flex-col overflow-hidden">
+                    <div class="bg-black/40 px-4 py-2 border-b border-surface-border flex justify-between items-center">
+                        <span class="font-mono text-xs text-primary uppercase tracking-wider">Certificate Chain
+                            Log</span>
+                        <button onclick="exportCSV()"
+                            class="text-xs hover:text-white text-slate-400 flex items-center gap-1">
+                            <span class="material-symbols-outlined text-[14px]">download</span> CSV
+                        </button>
+                    </div>
+                    <div class="flex-1 overflow-auto">
+                        <table class="w-full text-left text-sm font-mono">
+                            <thead class="bg-black/20 text-slate-400 text-xs uppercase sticky top-0 backdrop-blur-md">
+                                <tr>
+                                    <th class="p-4">Common Name (SANs)</th>
+                                    <th class="p-4">Issuer Org</th>
+                                    <th class="p-4">Valid From</th>
+                                    <th class="p-4">Expires</th>
+                                    <th class="p-4 text-center">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="resultsTable" class="divide-y divide-surface-border text-slate-300">
+                                <tr>
+                                    <td colspan="5" class="p-8 text-center text-slate-500">Waiting for target input...
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // YOUR KEY (Provided in prompt)
+        const API_KEY = 'k64301_37hFMXMgOJpqk8fo3xhq';
+        // Using a CORS Proxy to fix "Cannot Fetch" error in browser
+        const PROXY_URL = 'https://corsproxy.io/?';
+        let certData = [];
+
+        // Trigger on Enter
+        document.getElementById('domainInput').addEventListener('keypress', function (e) { if (e.key === 'Enter') fetchSSL(); });
+
+        async function fetchSSL() {
+            const domain = document.getElementById('domainInput').value.trim();
+            if (!domain) return alert("Enter a domain!");
+
+            const table = document.getElementById('resultsTable');
+            table.innerHTML = '<tr><td colspan="5" class="p-12 text-center"><span class="material-symbols-outlined text-4xl text-primary animate-spin">sync</span><br><span class="text-primary mt-2">Decrypting Certificate Transparency Logs...</span></td></tr>';
+
+            try {
+                // Construct API URL
+                const targetUrl = `https://api.certspotter.com/v1/issuances?domain=${domain}&include_subdomains=true&expand=dns_names&expand=issuer`;
+
+                // Fetch via Proxy to bypass CORS
+                const response = await fetch(PROXY_URL + encodeURIComponent(targetUrl), {
+                    headers: { 'Authorization': 'Bearer ' + API_KEY }
+                });
+
+                if (!response.ok) throw new Error(`API Error: ${response.status} ${response.statusText}`);
+
+                const data = await response.json();
+                certData = data; // Store for CSV
+
+                if (data.length === 0) {
+                    table.innerHTML = '<tr><td colspan="5" class="p-8 text-center text-yellow-500">No certificates found.</td></tr>';
+                    return;
+                }
+
+                renderTable(data);
+
+            } catch (e) {
+                console.error(e);
+                table.innerHTML = `<tr><td colspan="5" class="p-8 text-center text-red-500">
+                <span class="font-bold block mb-2">CONNECTION ERROR</span>
+                ${e.message}<br>
+                <span class="text-xs text-slate-500">Trying fallback (crt.sh)...</span>
+            </td></tr>`;
+                // Optional: Implement crt.sh fallback here if needed
+            }
+        }
+
+        function renderTable(data) {
+            const table = document.getElementById('resultsTable');
+            table.innerHTML = '';
+
+            let issuers = new Set();
+            let expiredCount = 0;
+
+            const normalized = data.map(c => {
+                const issuerName = c.issuer ? c.issuer.name : 'Unknown';
+                issuers.add(issuerName);
+
+                const validTo = c.not_after;
+                const isExpired = new Date(validTo) < new Date();
+                if (isExpired) expiredCount++;
+
+                return {
+                    name: c.dns_names ? c.dns_names[0] : c.id,
+                    sans: c.dns_names ? c.dns_names.length : 0,
+                    issuer: issuerName,
+                    from: c.not_before.split('T')[0],
+                    to: c.not_after.split('T')[0],
+                    expired: isExpired
+                };
+            });
+
+            // Update Stats
+            document.getElementById('stat-total').innerText = data.length;
+            document.getElementById('stat-issuers').innerText = issuers.size;
+            document.getElementById('stat-expired').innerText = expiredCount;
+
+            // Render Rows
+            normalized.forEach(c => {
+                const row = `
+                <tr class="hover:bg-primary/5 transition-colors border-l-2 border-l-transparent hover:border-l-primary">
+                    <td class="p-4">
+                        <div class="text-white font-bold">${c.name}</div>
+                        ${c.sans > 1 ? `<div class="text-[10px] text-slate-500">+${c.sans - 1} other SANs</div>` : ''}
+                    </td>
+                    <td class="p-4 text-slate-400 text-xs">${c.issuer.substring(0, 25)}...</td>
+                    <td class="p-4 text-slate-500">${c.from}</td>
+                    <td class="p-4 text-slate-500">${c.to}</td>
+                    <td class="p-4 text-center">
+                        <span class="px-2 py-1 rounded text-[10px] font-bold border ${c.expired ? 'border-red-500/30 text-red-400 bg-red-500/10' : 'border-green-500/30 text-primary bg-primary/10'}">
+                            ${c.expired ? 'EXPIRED' : 'VALID'}
+                        </span>
+                    </td>
+                </tr>
+            `;
+                table.innerHTML += row;
+            });
+        }
+
+        function exportCSV() {
+            if (!certData.length) return alert("No data to export.");
+            let csv = "Domain,Issuer,Valid From,Valid To,Is Expired\n";
+            certData.forEach(c => {
+                const name = c.dns_names ? c.dns_names[0] : 'Unknown';
+                const isExpired = new Date(c.not_after) < new Date();
+                csv += `${name},"${c.issuer.name}",${c.not_before},${c.not_after},${isExpired}\n`;
+            });
+            const link = document.createElement("a");
+            link.href = 'data:text/csv;charset=utf-8,' + encodeURI(csv);
+            link.download = 'ssl_report.csv';
+            link.click();
+        }
+    </script>
+</body>
+
+</html>

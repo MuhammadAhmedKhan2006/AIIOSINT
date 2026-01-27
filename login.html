@@ -1,166 +1,268 @@
 <!DOCTYPE html>
 <html class="dark" lang="en">
-<head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Agent Login - System Access</title>
-<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<link href="https://fonts.googleapis.com" rel="preconnect"/>
-<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&amp;family=Orbitron:wght@400;500;700;900&amp;family=Space+Grotesk:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<script id="tailwind-config">tailwind.config = {darkMode: "class",theme: {extend: {colors: {"primary": "#06f95f","primary-dim": "rgba(6, 249, 95, 0.1)","background-light": "#f5f8f6","background-dark": "#0f1210","surface-dark": "#161b18",},fontFamily: {"display": ["Space Grotesk", "sans-serif"],"cyber": ["Orbitron", "sans-serif"],"mono": ["JetBrains Mono", "monospace"],},boxShadow: {'neon': '0 0 10px rgba(6, 249, 95, 0.5), 0 0 20px rgba(6, 249, 95, 0.3)','neon-sm': '0 0 5px rgba(6, 249, 95, 0.5)',}},},}</script>
-<style>::-webkit-scrollbar {width: 8px;}::-webkit-scrollbar-track {background: #0f1210;}::-webkit-scrollbar-thumb {background: #333;border-radius: 4px;}::-webkit-scrollbar-thumb:hover {background: #06f95f;}.glass-panel {background: rgba(15, 18, 16, 0.75);backdrop-filter: blur(16px);-webkit-backdrop-filter: blur(16px);border: 1px solid rgba(255, 255, 255, 0.08);box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);}.cyber-grid {background-size: 40px 40px;background-image:linear-gradient(to right, rgba(6, 249, 95, 0.03) 1px, transparent 1px),linear-gradient(to bottom, rgba(6, 249, 95, 0.03) 1px, transparent 1px);}@keyframes glitch-skew {0% { transform: skew(0deg); }20% { transform: skew(-10deg); }40% { transform: skew(10deg); }60% { transform: skew(-5deg); }80% { transform: skew(5deg); }100% { transform: skew(0deg); }}.glitch-hover:hover {animation: glitch-skew 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;box-shadow: 2px 2px #ff00ff, -2px -2px #00ffff;}</style>
-</head>
-<body class="font-display bg-background-light dark:bg-background-dark text-slate-900 dark:text-white antialiased overflow-hidden">
-<div class="flex min-h-screen w-full flex-col lg:flex-row">
-<div class="relative hidden lg:flex lg:w-5/12 xl:w-1/2 flex-col justify-between overflow-hidden bg-black">
-<div class="absolute inset-0 bg-cover bg-center opacity-70 z-0" data-alt="Dark noir illustration of a white wolf with glowing eyes in a rainy cyberpunk city alley" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCr0XkOn9GWfkiv7J6B99qjTUHko8cCMSMqm6MDm_7qKv1WNaHZ4CNmNj4J0nSbQR3dYI_VfU9i8z62-evuasXRBP0XGo8HHW-5KoadmIlqAI6oxuwNG1WnI1ixP2QfPIOKvJt1ud3Pvn1DilyZlpioGYjzDkd009CRCprkbi9HrKNScTy43HbnqJMrgSpgJnaWFd0fxRXxuIu-_VN2t9HKL-fD0qN8MB3_XvPnrBUezFqk_MzH0QgZUIG6eeaCyyZgFhfoPapPjY8X');"></div>
-<div class="absolute inset-0 bg-gradient-to-t from-background-dark via-background-dark/60 to-transparent z-10"></div>
-<div class="absolute inset-0 bg-[radial-gradient(circle_at_50%_30%,rgba(6,249,95,0.15)_0%,transparent_50%)] z-10 pointer-events-none mix-blend-screen"></div>
-<div class="relative z-20 p-12 h-full flex flex-col justify-between">
-<div>
-<div class="flex items-center gap-3 mb-6">
-<span class="material-symbols-outlined text-primary text-4xl shadow-neon-sm rounded-full">visibility</span>
-<h2 class="text-white font-cyber font-bold tracking-widest text-lg">OSINT // ACCESS</h2>
-</div>
-</div>
-<div class="max-w-md">
-<h1 class="text-5xl font-cyber font-black text-white leading-tight mb-4 tracking-wide">SYSTEM <span class="text-primary drop-shadow-[0_0_15px_rgba(6,249,95,1)]">ONLINE</span></h1>
-<p class="text-gray-400 text-lg leading-relaxed font-mono">Identity confirmed. The pack awaits your command. Re-establish neural link to proceed.</p>
-<div class="mt-12 flex gap-4 text-xs text-primary font-mono tracking-widest uppercase opacity-80">
-<span><span class="animate-pulse">●</span> Link: Stable</span>
-<span>//</span>
-<span>Proxy: Hidden</span>
-<span>//</span>
-<span>Threat: Zero</span>
-</div>
-</div>
-</div>
-</div>
-<div class="relative flex flex-1 flex-col items-center justify-center p-6 lg:p-12 cyber-grid bg-background-dark">
-<div class="lg:hidden absolute top-6 left-6 flex items-center gap-2">
-<span class="material-symbols-outlined text-primary">visibility</span>
-<span class="font-cyber font-bold text-white tracking-widest">OSINT // ACCESS</span>
-</div>
-<div class="absolute top-6 right-6 lg:top-8 lg:right-12">
-<p class="text-sm text-gray-400 font-mono">New recruit?
-<a class="text-primary hover:text-white transition-colors font-medium ml-1 decoration-primary underline underline-offset-4" href="signup.html">Initialize Recruitment</a>
-</p>
-</div>
-<div class="glass-panel w-full max-w-[480px] rounded-sm p-8 md:p-12 relative overflow-hidden group border-t-2 border-primary/50">
-<div class="absolute top-0 right-0 w-16 h-16 bg-gradient-to-bl from-primary/10 to-transparent"></div>
-<div class="absolute bottom-0 left-0 w-4 h-4 border-b border-l border-primary/30"></div>
-<div class="absolute top-0 right-0 w-4 h-4 border-t border-r border-primary/30"></div>
-<div class="relative z-10">
-<div class="mb-10 text-center lg:text-left">
-<h2 class="font-cyber text-3xl md:text-4xl text-white font-bold mb-2 tracking-wider">AGENT ACCESS</h2>
-<p class="text-gray-500 font-mono text-sm uppercase tracking-widest">Authenticate credentials</p>
-</div>
-<form class="space-y-6" onsubmit="handleLogin(event)">
-<div class="space-y-2">
-<label class="block text-xs font-bold text-primary font-cyber uppercase tracking-widest mb-1" for="codename">Codename / Alias</label>
-<div class="relative group/input">
-<div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-<span class="material-symbols-outlined text-gray-500 group-focus-within/input:text-primary transition-colors text-[20px]">badge</span>
-</div>
-<input autocomplete="off" class="block w-full pl-12 pr-4 py-3.5 bg-black/40 border border-gray-700 rounded-sm text-white placeholder-gray-600 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/50 transition-all duration-300 font-mono text-sm tracking-wide" id="codename" placeholder="Execute::Identify()" type="text" required/>
-</div>
-</div>
-<div class="space-y-2">
-<div class="flex justify-between items-center">
-<label class="block text-xs font-bold text-primary font-cyber uppercase tracking-widest mb-1" for="password">Master Passphrase</label>
-</div>
-<div class="relative group/pass">
-<div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-<span class="material-symbols-outlined text-gray-500 group-focus-within/pass:text-primary transition-colors text-[20px]">password</span>
-</div>
-<input class="block w-full pl-12 pr-4 py-3.5 bg-black/40 border border-gray-700 rounded-sm text-white placeholder-gray-600 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/50 transition-all duration-300 font-mono text-sm tracking-wide" id="password" placeholder="••••••••••••••••" type="password" required/>
-</div>
-<div class="flex justify-end pt-1">
-<a class="text-xs text-gray-500 hover:text-primary transition-colors font-mono" href="forgot-password.html">Forgot Codename?</a>
-</div>
-</div>
-<button class="glitch-hover relative w-full overflow-hidden rounded-sm bg-primary py-4 px-4 text-center text-sm font-bold text-background-dark shadow-[0_0_15px_rgba(6,249,95,0.3)] hover:shadow-[0_0_25px_rgba(6,249,95,0.6)] transition-all duration-100 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-background-dark mt-6" type="submit">
-<span class="relative z-10 flex items-center justify-center gap-3 font-cyber tracking-[0.2em] text-base">
-INITIALIZE SESSION
-<span class="material-symbols-outlined text-[20px]">terminal</span>
-</span>
-<div class="absolute inset-0 bg-white/20 translate-y-full hover:translate-y-0 transition-transform duration-300"></div>
-</button>
-</form>
-</div>
-</div>
-<div class="mt-8 text-center">
-<div class="flex items-center justify-center gap-2 text-xs text-gray-500 font-mono tracking-widest border border-gray-800 bg-black/30 px-4 py-2 rounded-full">
-<span class="material-symbols-outlined text-[14px] text-primary">lock</span>
-ENCRYPTED CHANNEL SECURED
-</div>
-</div>
-</div>
-</div>
 
-<script>
-function handleLogin(event) {
-    event.preventDefault();
-    
-    const codename = document.getElementById('codename').value;
-    const password = document.getElementById('password').value;
-    
-    // Check if user exists in localStorage
-    const userData = localStorage.getItem('allOSINT_user');
-    
-    const button = event.target.querySelector('button[type="submit"]');
-    const originalText = button.innerHTML;
-    
-    button.innerHTML = '<span class="flex items-center justify-center gap-2"><span class="material-symbols-outlined animate-spin">sync</span>AUTHENTICATING...</span>';
-    button.disabled = true;
-    
-    setTimeout(() => {
-        if (userData) {
-            const user = JSON.parse(userData);
-            if (user.codename === codename && user.password === password) {
-                // Successful login
-                localStorage.setItem('allOSINT_authenticated', 'true');
-                button.innerHTML = '<span class="flex items-center justify-center gap-2"><span class="material-symbols-outlined">check_circle</span>ACCESS GRANTED</span>';
-                
-                setTimeout(() => {
-                    window.location.href = 'dashboard.html';
-                }, 1500);
-                return;
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <link rel="icon" type="image/png" href="logo2.png" />
+    <title>Agent Login - System Access</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&amp;family=Orbitron:wght@400;500;700;900&amp;family=Space+Grotesk:wght@300;400;500;600;700&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script
+        id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { colors: { "primary": "#06f95f", "primary-dim": "rgba(6, 249, 95, 0.1)", "background-light": "#f5f8f6", "background-dark": "#0f1210", "surface-dark": "#161b18", }, fontFamily: { "display": ["Space Grotesk", "sans-serif"], "cyber": ["Orbitron", "sans-serif"], "mono": ["JetBrains Mono", "monospace"], }, boxShadow: { 'neon': '0 0 10px rgba(6, 249, 95, 0.5), 0 0 20px rgba(6, 249, 95, 0.3)', 'neon-sm': '0 0 5px rgba(6, 249, 95, 0.5)', } }, }, }</script>
+    <style>
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #0f1210;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #333;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #06f95f;
+        }
+
+        .glass-panel {
+            background: rgba(15, 18, 16, 0.75);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+        }
+
+        .cyber-grid {
+            background-size: 40px 40px;
+            background-image: linear-gradient(to right, rgba(6, 249, 95, 0.03) 1px, transparent 1px), linear-gradient(to bottom, rgba(6, 249, 95, 0.03) 1px, transparent 1px);
+        }
+
+        @keyframes glitch-skew {
+            0% {
+                transform: skew(0deg);
+            }
+
+            20% {
+                transform: skew(-10deg);
+            }
+
+            40% {
+                transform: skew(10deg);
+            }
+
+            60% {
+                transform: skew(-5deg);
+            }
+
+            80% {
+                transform: skew(5deg);
+            }
+
+            100% {
+                transform: skew(0deg);
             }
         }
-        
-        // Failed login - check for demo credentials
-        if (codename.toLowerCase() === 'demo' && password === 'demo123') {
-            // Demo login
-            const demoUser = {
-                codename: 'Demo Agent',
-                email: 'demo@allosint.com',
-                status: 'demo'
-            };
-            localStorage.setItem('allOSINT_user', JSON.stringify(demoUser));
-            localStorage.setItem('allOSINT_authenticated', 'true');
-            
-            button.innerHTML = '<span class="flex items-center justify-center gap-2"><span class="material-symbols-outlined">check_circle</span>DEMO ACCESS GRANTED</span>';
-            
-            setTimeout(() => {
-                window.location.href = 'dashboard.html';
-            }, 1500);
-            return;
+
+        .glitch-hover:hover {
+            animation: glitch-skew 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+            box-shadow: 2px 2px #ff00ff, -2px -2px #00ffff;
         }
-        
-        // Failed login
-        button.innerHTML = '<span class="flex items-center justify-center gap-2"><span class="material-symbols-outlined">error</span>ACCESS DENIED</span>';
-        button.style.backgroundColor = '#ef4444';
-        
-        setTimeout(() => {
-            button.innerHTML = originalText;
-            button.style.backgroundColor = '';
-            button.disabled = false;
-        }, 2000);
-    }, 2000);
-}
-</script>
+    </style>
+</head>
+
+<body class="font-display bg-background-light dark:bg-background-dark text-slate-900 dark:text-white antialiased">
+    <div class="flex min-h-screen w-full flex-col lg:flex-row">
+        <div class="relative hidden lg:flex lg:w-5/12 xl:w-1/2 flex-col justify-between overflow-hidden bg-black">
+            <div class="absolute inset-0 bg-cover bg-center opacity-70 z-0"
+                data-alt="Dark noir illustration of a white wolf with glowing eyes in a rainy cyberpunk city alley"
+                style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCr0XkOn9GWfkiv7J6B99qjTUHko8cCMSMqm6MDm_7qKv1WNaHZ4CNmNj4J0nSbQR3dYI_VfU9i8z62-evuasXRBP0XGo8HHW-5KoadmIlqAI6oxuwNG1WnI1ixP2QfPIOKvJt1ud3Pvn1DilyZlpioGYjzDkd009CRCprkbi9HrKNScTy43HbnqJMrgSpgJnaWFd0fxRXxuIu-_VN2t9HKL-fD0qN8MB3_XvPnrBUezFqk_MzH0QgZUIG6eeaCyyZgFhfoPapPjY8X');">
+            </div>
+            <div
+                class="absolute inset-0 bg-gradient-to-t from-background-dark via-background-dark/60 to-transparent z-10">
+            </div>
+            <div
+                class="absolute inset-0 bg-[radial-gradient(circle_at_50%_30%,rgba(6,249,95,0.15)_0%,transparent_50%)] z-10 pointer-events-none mix-blend-screen">
+            </div>
+            <div class="relative z-20 p-12 h-full flex flex-col justify-between">
+                <div>
+                    <div class="flex items-center gap-3 mb-6">
+                        <img src="logo2.png" alt="Logo" class="h-12 w-12 object-contain"
+                            style="filter: drop-shadow(0 0 5px rgba(6, 249, 95, 0.5));" />
+                        <h2 class="text-white font-cyber font-bold tracking-widest text-lg">OSINT // ACCESS</h2>
+                    </div>
+                </div>
+                <div class="max-w-md">
+                    <h1 class="text-5xl font-cyber font-black text-white leading-tight mb-4 tracking-wide">SYSTEM <span
+                            class="text-primary drop-shadow-[0_0_15px_rgba(6,249,95,1)]">ONLINE</span></h1>
+                    <p class="text-gray-400 text-lg leading-relaxed font-mono">Identity confirmed. The pack awaits your
+                        command. Re-establish neural link to proceed.</p>
+                    <div class="mt-12 flex gap-4 text-xs text-primary font-mono tracking-widest uppercase opacity-80">
+                        <span><span class="animate-pulse">●</span> Link: Stable</span>
+                        <span>//</span>
+                        <span>Proxy: Hidden</span>
+                        <span>//</span>
+                        <span>Threat: Zero</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div
+            class="relative flex flex-1 flex-col items-center justify-start p-4 sm:p-6 lg:p-12 cyber-grid bg-background-dark min-h-screen overflow-y-auto">
+            <div class="lg:hidden absolute top-4 sm:top-6 left-4 sm:left-6 flex items-center gap-2">
+                <img src="logo2.png" alt="Logo" class="h-8 w-8 sm:h-9 sm:w-9 object-contain" />
+                <span class="font-cyber font-bold text-white tracking-widest text-xs sm:text-sm">OSINT // ACCESS</span>
+            </div>
+            <div class="absolute top-4 sm:top-6 right-4 sm:right-6 lg:top-8 lg:right-12">
+                <p class="text-xs sm:text-sm text-gray-400 font-mono">New recruit?
+                    <a class="text-primary hover:text-white transition-colors font-medium ml-1 decoration-primary underline underline-offset-4"
+                        href="signup.html">Initialize Recruitment</a>
+                </p>
+            </div>
+            <div
+                class="glass-panel w-full max-w-[480px] rounded-sm p-6 sm:p-8 md:p-12 relative overflow-hidden group border-t-2 border-primary/50 mt-16 sm:mt-20 lg:mt-0 mb-8">
+                <div class="absolute top-0 right-0 w-16 h-16 bg-gradient-to-bl from-primary/10 to-transparent"></div>
+                <div class="absolute bottom-0 left-0 w-4 h-4 border-b border-l border-primary/30"></div>
+                <div class="absolute top-0 right-0 w-4 h-4 border-t border-r border-primary/30"></div>
+                <div class="relative z-10">
+                    <div class="mb-10 text-center lg:text-left">
+                        <h2 class="font-cyber text-3xl md:text-4xl text-white font-bold mb-2 tracking-wider">AGENT
+                            ACCESS</h2>
+                        <p class="text-gray-500 font-mono text-sm uppercase tracking-widest">Authenticate credentials
+                        </p>
+                    </div>
+                    <form class="space-y-6" onsubmit="handleLogin(event)">
+                        <div class="space-y-2">
+                            <label
+                                class="block text-xs font-bold text-primary font-cyber uppercase tracking-widest mb-1"
+                                for="codename">Codename / Alias</label>
+                            <div class="relative group/input">
+                                <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                    <span
+                                        class="material-symbols-outlined text-gray-500 group-focus-within/input:text-primary transition-colors text-[20px]">badge</span>
+                                </div>
+                                <input autocomplete="off"
+                                    class="block w-full pl-12 pr-4 py-3.5 bg-black/40 border border-gray-700 rounded-sm text-white placeholder-gray-600 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/50 transition-all duration-300 font-mono text-sm tracking-wide"
+                                    id="codename" placeholder="Execute::Identify()" type="text" required />
+                            </div>
+                        </div>
+                        <div class="space-y-2">
+                            <div class="flex justify-between items-center">
+                                <label
+                                    class="block text-xs font-bold text-primary font-cyber uppercase tracking-widest mb-1"
+                                    for="password">Master Passphrase</label>
+                            </div>
+                            <div class="relative group/pass">
+                                <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                    <span
+                                        class="material-symbols-outlined text-gray-500 group-focus-within/pass:text-primary transition-colors text-[20px]">password</span>
+                                </div>
+                                <input
+                                    class="block w-full pl-12 pr-4 py-3.5 bg-black/40 border border-gray-700 rounded-sm text-white placeholder-gray-600 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/50 transition-all duration-300 font-mono text-sm tracking-wide"
+                                    id="password" placeholder="••••••••••••••••" type="password" required />
+                            </div>
+                            <div class="flex justify-end pt-1">
+                                <a class="text-xs text-gray-500 hover:text-primary transition-colors font-mono"
+                                    href="forgot-password.html">Forgot Codename?</a>
+                            </div>
+                        </div>
+                        <button
+                            class="glitch-hover relative w-full overflow-hidden rounded-sm bg-primary py-4 px-4 text-center text-sm font-bold text-background-dark shadow-[0_0_15px_rgba(6,249,95,0.3)] hover:shadow-[0_0_25px_rgba(6,249,95,0.6)] transition-all duration-100 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-background-dark mt-6"
+                            type="submit">
+                            <span
+                                class="relative z-10 flex items-center justify-center gap-3 font-cyber tracking-[0.2em] text-base">
+                                INITIALIZE SESSION
+                                <span class="material-symbols-outlined text-[20px]">terminal</span>
+                            </span>
+                            <div
+                                class="absolute inset-0 bg-white/20 translate-y-full hover:translate-y-0 transition-transform duration-300">
+                            </div>
+                        </button>
+                    </form>
+                </div>
+            </div>
+            <div class="mt-8 text-center">
+                <div
+                    class="flex items-center justify-center gap-2 text-xs text-gray-500 font-mono tracking-widest border border-gray-800 bg-black/30 px-4 py-2 rounded-full">
+                    <span class="material-symbols-outlined text-[14px] text-primary">lock</span>
+                    ENCRYPTED CHANNEL SECURED
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function handleLogin(event) {
+            event.preventDefault();
+
+            const codename = document.getElementById('codename').value;
+            const password = document.getElementById('password').value;
+
+            // Check if user exists in localStorage
+            const userData = localStorage.getItem('allOSINT_user');
+
+            const button = event.target.querySelector('button[type="submit"]');
+            const originalText = button.innerHTML;
+
+            button.innerHTML = '<span class="flex items-center justify-center gap-2"><span class="material-symbols-outlined animate-spin">sync</span>AUTHENTICATING...</span>';
+            button.disabled = true;
+
+            setTimeout(() => {
+                if (userData) {
+                    const user = JSON.parse(userData);
+                    if (user.codename === codename && user.password === password) {
+                        // Successful login
+                        localStorage.setItem('allOSINT_authenticated', 'true');
+                        button.innerHTML = '<span class="flex items-center justify-center gap-2"><span class="material-symbols-outlined">check_circle</span>ACCESS GRANTED</span>';
+
+                        setTimeout(() => {
+                            window.location.href = 'dashboard.html';
+                        }, 1500);
+                        return;
+                    }
+                }
+
+                // Failed login - check for demo credentials
+                if (codename.toLowerCase() === 'demo' && password === 'demo123') {
+                    // Demo login
+                    const demoUser = {
+                        codename: 'Demo Agent',
+                        email: 'demo@allosint.com',
+                        status: 'demo'
+                    };
+                    localStorage.setItem('allOSINT_user', JSON.stringify(demoUser));
+                    localStorage.setItem('allOSINT_authenticated', 'true');
+
+                    button.innerHTML = '<span class="flex items-center justify-center gap-2"><span class="material-symbols-outlined">check_circle</span>DEMO ACCESS GRANTED</span>';
+
+                    setTimeout(() => {
+                        window.location.href = 'dashboard.html';
+                    }, 1500);
+                    return;
+                }
+
+                // Failed login
+                button.innerHTML = '<span class="flex items-center justify-center gap-2"><span class="material-symbols-outlined">error</span>ACCESS DENIED</span>';
+                button.style.backgroundColor = '#ef4444';
+
+                setTimeout(() => {
+                    button.innerHTML = originalText;
+                    button.style.backgroundColor = '';
+                    button.disabled = false;
+                }, 2000);
+            }, 2000);
+        }
+    </script>
 </body>
+
 </html>

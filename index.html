@@ -1,231 +1,479 @@
 <!DOCTYPE html>
 <html class="dark" lang="en">
+
 <head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>AllOSINT - Home &amp; Features</title>
-<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&amp;family=Orbitron:wght@400..900&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<script>tailwind.config = {darkMode: "class",theme: {extend: {colors: {"primary": "#21c45d","neon-green": "#39ff14","background-light": "#f6f8f7","background-dark": "#020617","surface-dark": "#0f172a",},fontFamily: {"display": ["Space Grotesk", "sans-serif"],"cyber": ["Orbitron", "sans-serif"],},backgroundImage: {'binary-rain': "linear-gradient(rgba(2, 6, 23, 0.85), rgba(2, 6, 23, 0.95)), url('https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?q=80&w=2070&auto=format&fit=crop')",},boxShadow: {'neon': '0 0 20px rgba(33, 196, 93, 0.5), 0 0 40px rgba(33, 196, 93, 0.3)','eye-glow': '0 0 8px #39ff14, 0 0 15px #39ff14, 0 0 30px rgba(57, 255, 20, 0.4)',},animation: {'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite','float': 'float 6s ease-in-out infinite',},keyframes: {float: {'0%, 100%': { transform: 'translateY(0)' },'50%': { transform: 'translateY(-10px)' },}}},},}</script>
-<style>.glass-panel {background: rgba(2, 6, 23, 0.4);backdrop-filter: blur(12px);-webkit-backdrop-filter: blur(12px);border: 1px solid rgba(255, 255, 255, 0.05);}.lens-effect {background: radial-gradient(circle at center,transparent 0%,rgba(2, 6, 23, 0.4) 40%,rgba(2, 6, 23, 0.95) 100%);}.cursor-glow {position: absolute;width: 600px;height: 600px;background: radial-gradient(circle, rgba(33, 196, 93, 0.08) 0%, transparent 70%);border-radius: 50%;top: 50%;left: 50%;transform: translate(-50%, -50%);pointer-events: none;z-index: 0;}.wireframe-grid {background-size: 40px 40px;background-image:linear-gradient(to right, rgba(33, 196, 93, 0.05) 1px, transparent 1px),linear-gradient(to bottom, rgba(33, 196, 93, 0.05) 1px, transparent 1px);}.wolf-eye {position: absolute;background-color: #39ff14;border-radius: 50%;filter: blur(0.5px);box-shadow: 0 0 10px #39ff14, 0 0 20px #39ff14, 0 0 40px rgba(57, 255, 20, 0.5);opacity: 0.9;z-index: 30;}.wolf-eye::after {content: '';position: absolute;top: 50%;left: 50%;transform: translate(-50%, -50%);width: 40%;height: 40%;background: white;border-radius: 50%;opacity: 0.8;box-shadow: 0 0 5px white;}</style>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <link rel="icon" type="image/png" href="logo2.png" />
+    <title>AllOSINT - Home & Features</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&family=Orbitron:wght@400..900&display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet" />
+    <script>tailwind.config = { darkMode: "class", theme: { extend: { colors: { "primary": "#21c45d", "neon-green": "#39ff14", "background-light": "#f6f8f7", "background-dark": "#020617", "surface-dark": "#0f172a", }, fontFamily: { "display": ["Space Grotesk", "sans-serif"], "cyber": ["Orbitron", "sans-serif"], }, backgroundImage: { 'binary-rain': "linear-gradient(rgba(2, 6, 23, 0.85), rgba(2, 6, 23, 0.95)), url('https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?q=80&w=2070&auto=format&fit=crop')", }, boxShadow: { 'neon': '0 0 20px rgba(33, 196, 93, 0.5), 0 0 40px rgba(33, 196, 93, 0.3)', 'eye-glow': '0 0 8px #39ff14, 0 0 15px #39ff14, 0 0 30px rgba(57, 255, 20, 0.4)', }, animation: { 'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite', 'float': 'float 6s ease-in-out infinite', }, keyframes: { float: { '0%, 100%': { transform: 'translateY(0)' }, '50%': { transform: 'translateY(-10px)' }, } } }, }, }</script>
+    <style>
+        .glass-panel {
+            background: rgba(2, 6, 23, 0.4);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .lens-effect {
+            background: radial-gradient(circle at center, transparent 0%, rgba(2, 6, 23, 0.4) 40%, rgba(2, 6, 23, 0.95) 100%);
+        }
+
+        .cursor-glow {
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(33, 196, 93, 0.08) 0%, transparent 70%);
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .wireframe-grid {
+            background-size: 40px 40px;
+            background-image: linear-gradient(to right, rgba(33, 196, 93, 0.05) 1px, transparent 1px), linear-gradient(to bottom, rgba(33, 196, 93, 0.05) 1px, transparent 1px);
+        }
+
+        .wolf-eye {
+            position: absolute;
+            background-color: #39ff14;
+            border-radius: 50%;
+            filter: blur(0.5px);
+            box-shadow: 0 0 10px #39ff14, 0 0 20px #39ff14, 0 0 40px rgba(57, 255, 20, 0.5);
+            opacity: 0.9;
+            z-index: 30;
+        }
+
+        .wolf-eye::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 40%;
+            height: 40%;
+            background: white;
+            border-radius: 50%;
+            opacity: 0.8;
+            box-shadow: 0 0 5px white;
+        }
+    </style>
 </head>
-<body class="bg-background-dark text-white font-display overflow-x-hidden antialiased selection:bg-primary selection:text-black">
-<div class="relative min-h-screen flex flex-col">
-<div class="fixed inset-0 z-0 bg-cover bg-center pointer-events-none" data-alt="Abstract falling green binary code matrix rain pattern in background" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAsS3C-r5_ifV2uPgdNzZmS0GFgDsDiDd4VYkLobH6MOY6Klc5QrtLzI00xqOnEzPCGbJDbAhY98Ces08j8ulFPSbD8PlSfNW0QI4xqsP-F_vVZro49AzBGhFXzU6srwGj2L1zTGbDqICjD2Dp6yz4DUtZtqj-rGUPLAMnBL9mrKtF7pMKgSLW-2EQVcFYxjVgamQVG30Nj8TrZJ_pbAsquFJIhKnMoll6aC8QvvUZLVgTYc5Rm_Rwvub_WtTDe00dR9935lu7crMYQ'); opacity: 0.15;"></div>
-<div class="fixed inset-0 z-0 lens-effect pointer-events-none"></div>
-<nav class="fixed top-0 w-full z-50 glass-panel border-b border-white/5">
-<div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-<div class="flex items-center gap-3">
-<span class="material-symbols-outlined text-primary text-3xl">visibility</span>
-<span class="font-cyber text-2xl font-bold tracking-wider text-white">AllOSINT</span>
-</div>
-<div class="hidden md:flex items-center gap-8">
-<a class="text-sm font-medium text-gray-300 hover:text-primary transition-colors" href="dashboard.html">Search</a>
-<a class="text-sm font-medium text-gray-300 hover:text-primary transition-colors" href="#features">Features</a>
-<a class="text-sm font-medium text-gray-300 hover:text-primary transition-colors" href="datasets.html">Datasets</a>
-<a class="text-sm font-medium text-gray-300 hover:text-primary transition-colors" href="api.html">API</a>
-<a class="text-sm font-medium text-gray-300 hover:text-primary transition-colors" href="docs.html">Docs</a>
-</div>
-<div class="flex items-center gap-4">
-<a class="hidden sm:block text-sm font-bold text-white hover:text-primary transition-colors" href="login.html">Login</a>
-<button onclick="window.location.href='signup.html'" class="bg-primary/10 hover:bg-primary/20 border border-primary/50 text-primary px-5 py-2 rounded text-sm font-bold transition-all duration-300 hover:shadow-[0_0_15px_rgba(33,196,93,0.3)]">Get Access</button>
-</div>
-</div>
-</nav>
-<main class="relative z-10 flex-grow pt-20">
-<section class="relative min-h-[90vh] flex items-center justify-center">
-<div class="cursor-glow"></div>
-<div class="container mx-auto px-4 flex flex-col items-center justify-center text-center relative z-20">
-<div class="mb-8 relative group">
-<div class="w-24 h-24 sm:w-32 sm:h-32 rounded-full border border-primary/30 bg-white/5 backdrop-blur-sm flex items-center justify-center mx-auto mb-6 shadow-[0_0_30px_rgba(33,196,93,0.15)] group-hover:shadow-[0_0_50px_rgba(33,196,93,0.3)] transition-all duration-500">
-<span class="material-symbols-outlined text-white/90 text-5xl sm:text-6xl">travel_explore</span>
-</div>
-<h1 class="font-cyber text-5xl sm:text-7xl md:text-8xl font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-white via-white to-gray-400 drop-shadow-[0_0_15px_rgba(255,255,255,0.1)] mb-4">AllOSINT</h1>
-<div class="h-1 w-32 mx-auto bg-gradient-to-r from-transparent via-primary to-transparent opacity-50"></div>
-</div>
-<p class="text-lg sm:text-xl md:text-2xl text-gray-400 font-light tracking-wide mb-12 max-w-2xl">Illuminating the <span class="text-primary font-medium">Digital Shadows</span>.</p>
-<button onclick="window.location.href='initialization.html'" class="group relative inline-flex items-center justify-center px-8 py-4 bg-primary text-background-dark text-lg font-bold uppercase tracking-widest rounded shadow-neon hover:bg-[#1eb053] transition-all duration-300 overflow-hidden">
-<span class="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out skew-y-12"></span>
-<span class="relative flex items-center gap-3">
-<span class="material-symbols-outlined">terminal</span>Initialize System
-</span>
-</button>
-<div class="mt-20 flex gap-8 md:gap-16 opacity-40 text-xs font-mono tracking-widest text-primary uppercase">
-<div class="flex flex-col items-center gap-2">
-<span class="material-symbols-outlined text-lg">lock</span>
-<span>Encrypted</span>
-</div>
-<div class="flex flex-col items-center gap-2">
-<span class="material-symbols-outlined text-lg">public</span>
-<span>Global Access</span>
-</div>
-<div class="flex flex-col items-center gap-2">
-<span class="material-symbols-outlined text-lg">bolt</span>
-<span>Real-time</span>
-</div>
-</div>
-</div>
-</section>
-<section id="features" class="relative py-24 border-t border-white/5 overflow-hidden">
-<div class="absolute inset-0 z-0 flex items-center justify-center pointer-events-none overflow-hidden">
-<div class="absolute inset-0 bg-background-dark mix-blend-multiply opacity-80 z-10"></div>
-<img alt="White Wolf Mascot" class="w-full h-full object-cover grayscale brightness-[0.4] contrast-[1.6]" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAC3U1EJw27tTtq1vKD2p2oncCa6RCtFjpmF2lD8SefGvDoaGe5_FQ_yY-EpLNYf4Ul7soG0QDeQCQO7ICtf9Ic_UBuYv1BXdZzTQ2ZgSJUVUmgIGHOpFKXl32obd6yxXVPQJhShuB1HGgbncelOVXN1e26ZEpmP9PEMfc19HKlRYlTscF-lynm3ReXxTgx15cnMlf_SICuu3FWJ26QMR6SUND6UjdF37lehwromv9Hl1WgAbOFunPk19twhVHY1aCtCbMgSRQ6Or8C"/>
-<div class="absolute inset-0 z-20 bg-[radial-gradient(circle_at_center,transparent_0%,#020617_80%)]"></div>
-</div>
-<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-[1200px] h-full pointer-events-none z-30 hidden lg:block">
-<div class="wolf-eye top-[41%] left-[43%] w-2 h-1.5 md:w-2.5 md:h-2"></div>
-<div class="wolf-eye top-[41%] right-[43%] w-2 h-1.5 md:w-2.5 md:h-2"></div>
-</div>
-<div class="container mx-auto px-6 relative z-40">
-<div class="text-center mb-16">
-<h2 class="font-cyber text-3xl md:text-5xl font-bold mb-4 drop-shadow-lg">System <span class="text-primary">Architecture</span></h2>
-<p class="text-gray-400 max-w-xl mx-auto drop-shadow-md">Our neural engine processes millions of data points to deliver actionable intelligence.</p>
-</div>
-<div class="grid grid-cols-1 md:grid-cols-3 gap-12 relative">
-<div class="relative group">
-<div class="absolute top-1/2 right-0 w-full h-0.5 bg-gradient-to-r from-primary/40 to-transparent hidden md:block transform translate-x-1/2 z-0"></div>
-<div class="bg-surface-dark/40 backdrop-blur-md border border-white/10 p-8 rounded-xl relative z-10 hover:border-primary/60 hover:bg-surface-dark/60 transition-all duration-300 shadow-lg group-hover:shadow-[0_0_20px_rgba(33,196,93,0.1)]">
-<div class="h-40 flex items-center justify-center mb-6 text-primary/80 group-hover:text-primary transition-colors">
-<svg class="w-32 h-32 animate-float" fill="none" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-<circle class="opacity-30" cx="50" cy="50" r="45" stroke="currentColor" stroke-dasharray="2 2" stroke-width="0.5"></circle>
-<circle cx="50" cy="50" r="25" stroke="currentColor" stroke-width="0.5"></circle>
-<circle class="animate-pulse" cx="20" cy="20" fill="currentColor" r="2"></circle>
-<circle class="animate-pulse" cx="80" cy="20" fill="currentColor" r="2" style="animation-delay: 0.5s"></circle>
-<circle class="animate-pulse" cx="20" cy="80" fill="currentColor" r="2" style="animation-delay: 1s"></circle>
-<circle class="animate-pulse" cx="80" cy="80" fill="currentColor" r="2" style="animation-delay: 1.5s"></circle>
-<path d="M22 22L40 40M78 22L60 40M22 78L40 60M78 78L60 60" stroke="currentColor" stroke-width="0.5"></path>
-<circle cx="50" cy="50" fill="currentColor" fill-opacity="0.2" r="10"></circle>
-</svg>
-</div>
-<h3 class="font-cyber text-xl font-bold mb-2 text-white">1. Ingest</h3>
-<p class="text-sm text-gray-400 leading-relaxed">The system continuously scrapes open-web and dark-web sources, converting unstructured data into normalized formats.</p>
-</div>
-</div>
-<div class="relative group">
-<div class="absolute top-1/2 right-0 w-full h-0.5 bg-gradient-to-r from-primary/40 to-transparent hidden md:block transform translate-x-1/2 z-0"></div>
-<div class="bg-surface-dark/40 backdrop-blur-md border border-white/10 p-8 rounded-xl relative z-10 hover:border-primary/60 hover:bg-surface-dark/60 transition-all duration-300 shadow-lg group-hover:shadow-[0_0_20px_rgba(33,196,93,0.1)]">
-<div class="h-40 flex items-center justify-center mb-6 text-primary/80 group-hover:text-primary transition-colors">
-<svg class="w-32 h-32 animate-float" fill="none" style="animation-delay: 1s;" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-<path class="opacity-30" d="M10 50H90M50 10V90" stroke="currentColor" stroke-width="0.5"></path>
-<rect height="40" stroke="currentColor" stroke-width="0.5" width="40" x="30" y="30"></rect>
-<rect fill="rgba(33,196,93,0.2)" height="10" stroke="currentColor" stroke-width="0.5" width="10" x="35" y="35"></rect>
-<rect height="10" stroke="currentColor" stroke-width="0.5" width="10" x="55" y="35"></rect>
-<rect height="10" stroke="currentColor" stroke-width="0.5" width="10" x="35" y="55"></rect>
-<rect fill="rgba(33,196,93,0.2)" height="10" stroke="currentColor" stroke-width="0.5" width="10" x="55" y="55"></rect>
-<circle class="animate-pulse" cx="50" cy="50" fill="currentColor" r="4"></circle>
-<line stroke="currentColor" stroke-width="0.5" x1="30" x2="10" y1="30" y2="10"></line>
-<line stroke="currentColor" stroke-width="0.5" x1="70" x2="90" y1="30" y2="10"></line>
-<line stroke="currentColor" stroke-width="0.5" x1="70" x2="90" y1="70" y2="90"></line>
-<line stroke="currentColor" stroke-width="0.5" x1="30" x2="10" y1="70" y2="90"></line>
-</svg>
-</div>
-<h3 class="font-cyber text-xl font-bold mb-2 text-white">2. Analyze</h3>
-<p class="text-sm text-gray-400 leading-relaxed">Our AI algorithms correlate identities, locations, and digital footprints to uncover hidden connections.</p>
-</div>
-</div>
-<div class="relative group">
-<div class="bg-surface-dark/40 backdrop-blur-md border border-white/10 p-8 rounded-xl relative z-10 hover:border-primary/60 hover:bg-surface-dark/60 transition-all duration-300 shadow-lg group-hover:shadow-[0_0_20px_rgba(33,196,93,0.1)]">
-<div class="h-40 flex items-center justify-center mb-6 text-primary/80 group-hover:text-primary transition-colors">
-<svg class="w-32 h-32 animate-float" fill="none" style="animation-delay: 2s;" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-<path d="M50 15 L85 35 L85 75 L50 95 L15 75 L15 35 Z" stroke="currentColor" stroke-width="0.5"></path>
-<circle cx="50" cy="55" r="15" stroke="currentColor" stroke-width="1"></circle>
-<path d="M50 40V70M35 55H65" stroke="currentColor" stroke-width="0.5"></path>
-<circle cx="50" cy="55" fill="white" r="2"></circle>
-<circle class="animate-ping" cx="50" cy="15" fill="currentColor" r="1.5"></circle>
-<circle class="animate-ping" cx="85" cy="35" fill="currentColor" r="1.5" style="animation-delay: 0.2s"></circle>
-<circle class="animate-ping" cx="85" cy="75" fill="currentColor" r="1.5" style="animation-delay: 0.4s"></circle>
-<circle class="animate-ping" cx="50" cy="95" fill="currentColor" r="1.5" style="animation-delay: 0.6s"></circle>
-<circle class="animate-ping" cx="15" cy="75" fill="currentColor" r="1.5" style="animation-delay: 0.8s"></circle>
-<circle class="animate-ping" cx="15" cy="35" fill="currentColor" r="1.5" style="animation-delay: 1.0s"></circle>
-</svg>
-</div>
-<h3 class="font-cyber text-xl font-bold mb-2 text-white">3. Intelligence</h3>
-<p class="text-sm text-gray-400 leading-relaxed">Actionable reports are generated instantly, providing a clear view of the target's digital existence.</p>
-</div>
-</div>
-</div>
-</div>
-</section>
-<section class="py-24 bg-surface-dark/30 backdrop-blur-sm border-t border-white/5 wireframe-grid relative">
-<div class="container mx-auto px-6">
-<div class="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
-<div>
-<h2 class="font-cyber text-3xl md:text-5xl font-bold mb-2">Operational <span class="text-primary">Capabilities</span></h2>
-<p class="text-gray-400">Advanced toolset for the modern investigator.</p>
-</div>
-<a class="text-primary hover:text-white transition-colors flex items-center gap-2 font-mono text-sm uppercase tracking-widest group" href="docs.html">
-View Full Documentation
-<span class="material-symbols-outlined text-lg group-hover:translate-x-1 transition-transform">arrow_forward</span>
-</a>
-</div>
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-<div class="glass-panel p-8 rounded-lg hover:bg-white/5 transition-all duration-300 group border border-white/5 hover:border-primary/50 hover:shadow-[0_0_20px_rgba(33,196,93,0.1)] cursor-pointer" onclick="window.location.href='darkweb-monitor.html'">
-<div class="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-6 text-primary group-hover:scale-110 transition-transform group-hover:bg-primary/20 group-hover:shadow-eye-glow">
-<span class="material-symbols-outlined text-2xl">travel_explore</span>
-</div>
-<h3 class="text-xl font-bold text-white mb-3">Dark Web Monitoring</h3>
-<p class="text-gray-400 text-sm leading-relaxed">Real-time indexing of TOR and I2P networks. Detect leaked credentials and marketplace chatter before it surfaces.</p>
-</div>
-<div class="glass-panel p-8 rounded-lg hover:bg-white/5 transition-all duration-300 group border border-white/5 hover:border-primary/50 hover:shadow-[0_0_20px_rgba(33,196,93,0.1)] cursor-pointer" onclick="window.location.href='social-recon.html'">
-<div class="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-6 text-primary group-hover:scale-110 transition-transform group-hover:bg-primary/20 group-hover:shadow-eye-glow">
-<span class="material-symbols-outlined text-2xl">hub</span>
-</div>
-<h3 class="text-xl font-bold text-white mb-3">Social Graphing</h3>
-<p class="text-gray-400 text-sm leading-relaxed">Visualize relationships between accounts across 300+ social media platforms. Identify hidden influencers and bots.</p>
-</div>
-<div class="glass-panel p-8 rounded-lg hover:bg-white/5 transition-all duration-300 group border border-white/5 hover:border-primary/50 hover:shadow-[0_0_20px_rgba(33,196,93,0.1)] cursor-pointer" onclick="window.location.href='exif-extractor.html'">
-<div class="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-6 text-primary group-hover:scale-110 transition-transform group-hover:bg-primary/20 group-hover:shadow-eye-glow">
-<span class="material-symbols-outlined text-2xl">photo_library</span>
-</div>
-<h3 class="text-xl font-bold text-white mb-3">EXIF Metadata Analysis</h3>
-<p class="text-gray-400 text-sm leading-relaxed">Extract hidden metadata from images including GPS coordinates, camera details, and timestamps. Analyze privacy risks in photos.</p>
-</div>
-<div class="glass-panel p-8 rounded-lg hover:bg-white/5 transition-all duration-300 group border border-white/5 hover:border-primary/50 hover:shadow-[0_0_20px_rgba(33,196,93,0.1)] cursor-pointer" onclick="window.location.href='breach-search.html'">
-<div class="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-6 text-primary group-hover:scale-110 transition-transform group-hover:bg-primary/20 group-hover:shadow-eye-glow">
-<span class="material-symbols-outlined text-2xl">lock_open</span>
-</div>
-<h3 class="text-xl font-bold text-white mb-3">Breach Data Search</h3>
-<p class="text-gray-400 text-sm leading-relaxed">Access a database of over 15 billion compromised records. Instantly verify if an email or password is compromised.</p>
-</div>
-<div class="glass-panel p-8 rounded-lg hover:bg-white/5 transition-all duration-300 group border border-white/5 hover:border-primary/50 hover:shadow-[0_0_20px_rgba(33,196,93,0.1)] cursor-pointer" onclick="window.location.href='crypto-forensics.html'">
-<div class="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-6 text-primary group-hover:scale-110 transition-transform group-hover:bg-primary/20 group-hover:shadow-eye-glow">
-<span class="material-symbols-outlined text-2xl">currency_bitcoin</span>
-</div>
-<h3 class="text-xl font-bold text-white mb-3">Crypto Forensics</h3>
-<p class="text-gray-400 text-sm leading-relaxed">Track transactions across multiple blockchains. De-anonymize wallet addresses and trace illicit fund flows.</p>
-</div>
-<div class="glass-panel p-8 rounded-lg hover:bg-white/5 transition-all duration-300 group border border-white/5 hover:border-primary/50 hover:shadow-[0_0_20px_rgba(33,196,93,0.1)] cursor-pointer" onclick="window.location.href='api.html'">
-<div class="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-6 text-primary group-hover:scale-110 transition-transform group-hover:bg-primary/20 group-hover:shadow-eye-glow">
-<span class="material-symbols-outlined text-2xl">api</span>
-</div>
-<h3 class="text-xl font-bold text-white mb-3">Robust API</h3>
-<p class="text-gray-400 text-sm leading-relaxed">Seamlessly integrate AllOSINT capabilities into your existing security stack or custom applications.</p>
-</div>
-</div>
-</div>
-</section>
-</main>
-<footer class="relative z-10 w-full border-t border-white/5 bg-background-dark/80 backdrop-blur-md">
-<div class="max-w-7xl mx-auto px-6 py-10">
-<div class="flex flex-col md:flex-row items-center justify-between gap-6">
-<div class="flex items-center gap-2 text-gray-500 text-sm">
-<span>© 2024 AllOSINT Inc.</span>
-<span class="mx-2">•</span>
-<span>v.2.0.4-beta</span>
-</div>
-<div class="flex flex-wrap justify-center gap-8">
-<a class="text-gray-400 hover:text-primary transition-colors text-sm" href="privacy.html">Privacy Protocol</a>
-<a class="text-gray-400 hover:text-primary transition-colors text-sm" href="terms.html">Terms of Service</a>
-<a class="text-gray-400 hover:text-primary transition-colors text-sm" href="status.html">System Status</a>
-</div>
-<div class="flex gap-4">
-<a class="text-gray-400 hover:text-white transition-colors" href="#"><span class="sr-only">Twitter</span><svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path></svg></a>
-<a class="text-gray-400 hover:text-white transition-colors" href="#"><span class="sr-only">GitHub</span><svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"></path></svg></a>
-</div>
-</div>
-</div>
-</footer>
-</div>
+
+<body
+    class="bg-background-dark text-white font-display antialiased selection:bg-primary selection:text-black overflow-x-hidden overflow-y-auto">
+    <div class="relative min-h-screen flex flex-col">
+        <div class="fixed inset-0 z-0 bg-cover bg-center pointer-events-none"
+            data-alt="Abstract falling green binary code matrix rain pattern in background"
+            style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAsS3C-r5_ifV2uPgdNzZmS0GFgDsDiDd4VYkLobH6MOY6Klc5QrtLzI00xqOnEzPCGbJDbAhY98Ces08j8ulFPSbD8PlSfNW0QI4xqsP-F_vVZro49AzBGhFXzU6srwGj2L1zTGbDqICjD2Dp6yz4DUtZtqj-rGUPLAMnBL9mrKtF7pMKgSLW-2EQVcFYxjVgamQVG30Nj8TrZJ_pbAsquFJIhKnMoll6aC8QvvUZLVgTYc5Rm_Rwvub_WtTDe00dR9935lu7crMYQ'); opacity: 0.15;">
+        </div>
+        <div class="fixed inset-0 z-0 lens-effect pointer-events-none"></div>
+        <nav class="fixed top-0 w-full z-50 glass-panel border-b border-white/5">
+            <div class="max-w-7xl mx-auto px-4 md:px-6 h-16 md:h-20 flex items-center justify-between">
+                <div class="flex items-center gap-2 md:gap-3">
+                    <span class="material-symbols-outlined text-primary text-2xl md:text-3xl">visibility</span>
+                    <span class="font-cyber text-xl md:text-2xl font-bold tracking-wider text-white">AllOSINT</span>
+                </div>
+                <button id="mobile-nav-btn" class="md:hidden text-white p-2" onclick="toggleMobileNav()">
+                    <span class="material-symbols-outlined">menu</span>
+                </button>
+                <div class="hidden md:flex items-center gap-8">
+                    <a class="text-sm font-medium text-gray-300 hover:text-primary transition-colors"
+                        href="initialization.html">Search</a>
+                    <a class="text-sm font-medium text-gray-300 hover:text-primary transition-colors"
+                        href="#features">Features</a>
+                    <a class="text-sm font-medium text-gray-300 hover:text-primary transition-colors"
+                        href="api.html">API</a>
+                    <a class="text-sm font-medium text-gray-300 hover:text-primary transition-colors"
+                        href="docs.html">Docs</a>
+                </div>
+                <div class="flex items-center gap-3 md:gap-4">
+                    <a class="hidden sm:block text-xs md:text-sm font-bold text-white hover:text-primary transition-colors"
+                        href="initialization.html">Login</a>
+                    <button onclick="window.location.href='initialization.html'"
+                        class="bg-primary/10 hover:bg-primary/20 border border-primary/50 text-primary px-3 md:px-5 py-1.5 md:py-2 rounded text-xs md:text-sm font-bold transition-all duration-300 hover:shadow-[0_0_15px_rgba(33,196,93,0.3)]">Get
+                        Access</button>
+                </div>
+            </div>
+            <div id="mobile-nav" class="hidden md:hidden bg-[#050b14] border-t border-white/5">
+                <div class="px-4 py-4 space-y-2">
+                    <a class="block text-sm font-medium text-gray-300 hover:text-primary transition-colors py-2"
+                        href="initialization.html">Search</a>
+                    <a class="block text-sm font-medium text-gray-300 hover:text-primary transition-colors py-2"
+                        href="#features">Features</a>
+                    <a class="block text-sm font-medium text-gray-300 hover:text-primary transition-colors py-2"
+                        href="api.html">API</a>
+                    <a class="block text-sm font-medium text-gray-300 hover:text-primary transition-colors py-2"
+                        href="docs.html">Docs</a>
+                </div>
+            </div>
+        </nav>
+        <main class="relative z-10 flex-grow pt-20">
+            <section class="relative min-h-[90vh] flex items-center justify-center px-4">
+                <div class="cursor-glow"></div>
+
+                <!-- Anonymous Face Background -->
+                <div class="absolute inset-0 flex items-center justify-center pointer-events-none overflow-hidden">
+                    <img src="bg-index.png" alt="" class="w-full h-full object-cover opacity-[0.10] select-none"
+                        style="filter: grayscale(100%);" />
+                </div>
+
+                <div class="container mx-auto px-4 flex flex-col items-center justify-center text-center relative z-20">
+
+
+                    <div class="mb-0 relative group">
+                        <div class="flex items-center justify-center mx-auto mb-0">
+                            <img src="logo2.png" alt="AllOSINT Logo"
+                                class="w-48 h-48 sm:w-56 sm:h-56 md:w-64 md:h-64 lg:w-80 lg:h-80 object-contain drop-shadow-[0_0_30px_rgba(33,196,93,0.3)] hover:drop-shadow-[0_0_50px_rgba(33,196,93,0.5)] transition-all duration-500" />
+                        </div>
+                        <h1
+                            class="font-cyber text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-white via-white to-gray-400 drop-shadow-[0_0_15px_rgba(255,255,255,0.1)] mb-3 md:mb-4">
+                            AllOSINT</h1>
+                        <div
+                            class="h-1 w-32 mx-auto bg-gradient-to-r from-transparent via-primary to-transparent opacity-50">
+                        </div>
+                    </div>
+                    <p
+                        class="text-base sm:text-lg md:text-xl lg:text-2xl text-gray-400 font-light tracking-wide mb-8 md:mb-12 max-w-2xl px-4">
+                        Illuminating the <span class="text-primary font-medium">Digital Shadows</span>.</p>
+                    <button onclick="window.location.href='initialization.html'"
+                        class="group relative inline-flex items-center justify-center px-6 py-3 md:px-8 md:py-4 bg-primary text-background-dark text-base md:text-lg font-bold uppercase tracking-widest rounded shadow-neon hover:bg-[#1eb053] transition-all duration-300 overflow-hidden">
+                        <span
+                            class="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out skew-y-12"></span>
+                        <span class="relative flex items-center gap-3">
+                            <span class="material-symbols-outlined">terminal</span>Initialize System
+                        </span>
+                    </button>
+                    <div
+                        class="mt-12 md:mt-20 flex flex-wrap justify-center gap-4 md:gap-8 lg:gap-16 opacity-40 text-xs font-mono tracking-widest text-primary uppercase">
+                        <div class="flex flex-col items-center gap-2">
+                            <span class="material-symbols-outlined text-lg">lock</span>
+                            <span>Encrypted</span>
+                        </div>
+                        <div class="flex flex-col items-center gap-2">
+                            <span class="material-symbols-outlined text-lg">public</span>
+                            <span>Global Access</span>
+                        </div>
+                        <div class="flex flex-col items-center gap-2">
+                            <span class="material-symbols-outlined text-lg">bolt</span>
+                            <span>Real-time</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section id="features" class="relative py-24 border-t border-white/5 overflow-hidden">
+                <div class="absolute inset-0 z-0 flex items-center justify-center pointer-events-none overflow-hidden">
+                    <div class="absolute inset-0 bg-background-dark mix-blend-multiply opacity-80 z-10"></div>
+                    <img alt="White Wolf Mascot"
+                        class="w-full h-full object-cover grayscale brightness-[0.4] contrast-[1.6]"
+                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuAC3U1EJw27tTtq1vKD2p2oncCa6RCtFjpmF2lD8SefGvDoaGe5_FQ_yY-EpLNYf4Ul7soG0QDeQCQO7ICtf9Ic_UBuYv1BXdZzTQ2ZgSJUVUmgIGHOpFKXl32obd6yxXVPQJhShuB1HGgbncelOVXN1e26ZEpmP9PEMfc19HKlRYlTscF-lynm3ReXxTgx15cnMlf_SICuu3FWJ26QMR6SUND6UjdF37lehwromv9Hl1WgAbOFunPk19twhVHY1aCtCbMgSRQ6Or8C" />
+                    <div
+                        class="absolute inset-0 z-20 bg-[radial-gradient(circle_at_center,transparent_0%,#020617_80%)]">
+                    </div>
+                </div>
+                <div
+                    class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-[1200px] h-full pointer-events-none z-30 hidden lg:block">
+                    <div class="wolf-eye top-[41%] left-[43%] w-2 h-1.5 md:w-2.5 md:h-2"></div>
+                    <div class="wolf-eye top-[41%] right-[43%] w-2 h-1.5 md:w-2.5 md:h-2"></div>
+                </div>
+                <div class="container mx-auto px-6 relative z-40">
+                    <div class="text-center mb-16">
+                        <h2 class="font-cyber text-3xl md:text-5xl font-bold mb-4 drop-shadow-lg">System <span
+                                class="text-primary">Architecture</span></h2>
+                        <p class="text-gray-400 max-w-xl mx-auto drop-shadow-md">Our neural engine processes millions of
+                            data points to deliver actionable intelligence.</p>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-12 relative">
+                        <div class="relative group">
+                            <div
+                                class="absolute top-1/2 right-0 w-full h-0.5 bg-gradient-to-r from-primary/40 to-transparent hidden md:block transform translate-x-1/2 z-0">
+                            </div>
+                            <div
+                                class="bg-surface-dark/40 backdrop-blur-md border border-white/10 p-8 rounded-xl relative z-10 hover:border-primary/60 hover:bg-surface-dark/60 transition-all duration-300 shadow-lg group-hover:shadow-[0_0_20px_rgba(33,196,93,0.1)]">
+                                <div
+                                    class="h-40 flex items-center justify-center mb-6 text-primary/80 group-hover:text-primary transition-colors">
+                                    <svg class="w-32 h-32 animate-float" fill="none" viewBox="0 0 100 100"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <circle class="opacity-30" cx="50" cy="50" r="45" stroke="currentColor"
+                                            stroke-dasharray="2 2" stroke-width="0.5"></circle>
+                                        <circle cx="50" cy="50" r="25" stroke="currentColor" stroke-width="0.5">
+                                        </circle>
+                                        <circle class="animate-pulse" cx="20" cy="20" fill="currentColor" r="2">
+                                        </circle>
+                                        <circle class="animate-pulse" cx="80" cy="20" fill="currentColor" r="2"
+                                            style="animation-delay: 0.5s"></circle>
+                                        <circle class="animate-pulse" cx="20" cy="80" fill="currentColor" r="2"
+                                            style="animation-delay: 1s"></circle>
+                                        <circle class="animate-pulse" cx="80" cy="80" fill="currentColor" r="2"
+                                            style="animation-delay: 1.5s"></circle>
+                                        <path d="M22 22L40 40M78 22L60 40M22 78L40 60M78 78L60 60" stroke="currentColor"
+                                            stroke-width="0.5"></path>
+                                        <circle cx="50" cy="50" fill="currentColor" fill-opacity="0.2" r="10"></circle>
+                                    </svg>
+                                </div>
+                                <h3 class="font-cyber text-xl font-bold mb-2 text-white">1. Ingest</h3>
+                                <p class="text-sm text-gray-400 leading-relaxed">The system continuously scrapes
+                                    open-web and dark-web sources, converting unstructured data into normalized formats.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="relative group">
+                            <div
+                                class="absolute top-1/2 right-0 w-full h-0.5 bg-gradient-to-r from-primary/40 to-transparent hidden md:block transform translate-x-1/2 z-0">
+                            </div>
+                            <div
+                                class="bg-surface-dark/40 backdrop-blur-md border border-white/10 p-8 rounded-xl relative z-10 hover:border-primary/60 hover:bg-surface-dark/60 transition-all duration-300 shadow-lg group-hover:shadow-[0_0_20px_rgba(33,196,93,0.1)]">
+                                <div
+                                    class="h-40 flex items-center justify-center mb-6 text-primary/80 group-hover:text-primary transition-colors">
+                                    <svg class="w-32 h-32 animate-float" fill="none" style="animation-delay: 1s;"
+                                        viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                                        <path class="opacity-30" d="M10 50H90M50 10V90" stroke="currentColor"
+                                            stroke-width="0.5"></path>
+                                        <rect height="40" stroke="currentColor" stroke-width="0.5" width="40" x="30"
+                                            y="30"></rect>
+                                        <rect fill="rgba(33,196,93,0.2)" height="10" stroke="currentColor"
+                                            stroke-width="0.5" width="10" x="35" y="35"></rect>
+                                        <rect height="10" stroke="currentColor" stroke-width="0.5" width="10" x="55"
+                                            y="35"></rect>
+                                        <rect height="10" stroke="currentColor" stroke-width="0.5" width="10" x="35"
+                                            y="55"></rect>
+                                        <rect fill="rgba(33,196,93,0.2)" height="10" stroke="currentColor"
+                                            stroke-width="0.5" width="10" x="55" y="55"></rect>
+                                        <circle class="animate-pulse" cx="50" cy="50" fill="currentColor" r="4">
+                                        </circle>
+                                        <line stroke="currentColor" stroke-width="0.5" x1="30" x2="10" y1="30" y2="10">
+                                        </line>
+                                        <line stroke="currentColor" stroke-width="0.5" x1="70" x2="90" y1="30" y2="10">
+                                        </line>
+                                        <line stroke="currentColor" stroke-width="0.5" x1="70" x2="90" y1="70" y2="90">
+                                        </line>
+                                        <line stroke="currentColor" stroke-width="0.5" x1="30" x2="10" y1="70" y2="90">
+                                        </line>
+                                    </svg>
+                                </div>
+                                <h3 class="font-cyber text-xl font-bold mb-2 text-white">2. Analyze</h3>
+                                <p class="text-sm text-gray-400 leading-relaxed">Our AI algorithms correlate identities,
+                                    locations, and digital footprints to uncover hidden connections.</p>
+                            </div>
+                        </div>
+                        <div class="relative group">
+                            <div
+                                class="bg-surface-dark/40 backdrop-blur-md border border-white/10 p-8 rounded-xl relative z-10 hover:border-primary/60 hover:bg-surface-dark/60 transition-all duration-300 shadow-lg group-hover:shadow-[0_0_20px_rgba(33,196,93,0.1)]">
+                                <div
+                                    class="h-40 flex items-center justify-center mb-6 text-primary/80 group-hover:text-primary transition-colors">
+                                    <svg class="w-32 h-32 animate-float" fill="none" style="animation-delay: 2s;"
+                                        viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M50 15 L85 35 L85 75 L50 95 L15 75 L15 35 Z" stroke="currentColor"
+                                            stroke-width="0.5"></path>
+                                        <circle cx="50" cy="55" r="15" stroke="currentColor" stroke-width="1"></circle>
+                                        <path d="M50 40V70M35 55H65" stroke="currentColor" stroke-width="0.5"></path>
+                                        <circle cx="50" cy="55" fill="white" r="2"></circle>
+                                        <circle class="animate-ping" cx="50" cy="15" fill="currentColor" r="1.5">
+                                        </circle>
+                                        <circle class="animate-ping" cx="85" cy="35" fill="currentColor" r="1.5"
+                                            style="animation-delay: 0.2s"></circle>
+                                        <circle class="animate-ping" cx="85" cy="75" fill="currentColor" r="1.5"
+                                            style="animation-delay: 0.4s"></circle>
+                                        <circle class="animate-ping" cx="50" cy="95" fill="currentColor" r="1.5"
+                                            style="animation-delay: 0.6s"></circle>
+                                        <circle class="animate-ping" cx="15" cy="75" fill="currentColor" r="1.5"
+                                            style="animation-delay: 0.8s"></circle>
+                                        <circle class="animate-ping" cx="15" cy="35" fill="currentColor" r="1.5"
+                                            style="animation-delay: 1.0s"></circle>
+                                    </svg>
+                                </div>
+                                <h3 class="font-cyber text-xl font-bold mb-2 text-white">3. Intelligence</h3>
+                                <p class="text-sm text-gray-400 leading-relaxed">Actionable reports are generated
+                                    instantly, providing a clear view of the target's digital existence.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section class="py-24 bg-surface-dark/30 backdrop-blur-sm border-t border-white/5 wireframe-grid relative">
+                <div class="container mx-auto px-6">
+                    <div class="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
+                        <div>
+                            <h2 class="font-cyber text-3xl md:text-5xl font-bold mb-2">Operational <span
+                                    class="text-primary">Capabilities</span></h2>
+                            <p class="text-gray-400">Advanced toolset for the modern investigator.</p>
+                        </div>
+                        <a class="text-primary hover:text-white transition-colors flex items-center gap-2 font-mono text-sm uppercase tracking-widest group"
+                            href="docs.html">
+                            View Full Documentation
+                            <span
+                                class="material-symbols-outlined text-lg group-hover:translate-x-1 transition-transform">arrow_forward</span>
+                        </a>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <div class="glass-panel p-8 rounded-lg hover:bg-white/5 transition-all duration-300 group border border-white/5 hover:border-primary/50 hover:shadow-[0_0_20px_rgba(33,196,93,0.1)] cursor-pointer"
+                            onclick="window.location.href='subdomain-recon.html'">
+                            <div
+                                class="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-6 text-primary group-hover:scale-110 transition-transform group-hover:bg-primary/20 group-hover:shadow-eye-glow">
+                                <span class="material-symbols-outlined text-2xl">wifi_tethering_off</span>
+                            </div>
+                            <h3 class="text-xl font-bold text-white mb-3">Subdomain Reconnaissance</h3>
+                            <p class="text-gray-400 text-sm leading-relaxed">Discover hidden subdomains using
+                                Certificate Transparency logs and DNS enumeration. Uncover the full attack surface of
+                                any domain.</p>
+                        </div>
+                        <div class="glass-panel p-8 rounded-lg hover:bg-white/5 transition-all duration-300 group border border-white/5 hover:border-primary/50 hover:shadow-[0_0_20px_rgba(33,196,93,0.1)] cursor-pointer"
+                            onclick="window.location.href='dns-lookup.html'">
+                            <div
+                                class="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-6 text-primary group-hover:scale-110 transition-transform group-hover:bg-primary/20 group-hover:shadow-eye-glow">
+                                <span class="material-symbols-outlined text-2xl">dns</span>
+                            </div>
+                            <h3 class="text-xl font-bold text-white mb-3">DNS Analysis</h3>
+                            <p class="text-gray-400 text-sm leading-relaxed">Query DNS records including A, AAAA, MX,
+                                TXT, NS, and more. Analyze domain infrastructure and mail server configurations.</p>
+                        </div>
+                        <div class="glass-panel p-8 rounded-lg hover:bg-white/5 transition-all duration-300 group border border-white/5 hover:border-primary/50 hover:shadow-[0_0_20px_rgba(33,196,93,0.1)] cursor-pointer"
+                            onclick="window.location.href='domain-threat-intel.html'">
+                            <div
+                                class="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-6 text-primary group-hover:scale-110 transition-transform group-hover:bg-primary/20 group-hover:shadow-eye-glow">
+                                <span class="material-symbols-outlined text-2xl">security</span>
+                            </div>
+                            <h3 class="text-xl font-bold text-white mb-3">WHOIS Lookup</h3>
+                            <p class="text-gray-400 text-sm leading-relaxed">Retrieve domain registration details,
+                                ownership information, nameservers, and registration dates from WHOIS databases.</p>
+                        </div>
+                        <div class="glass-panel p-8 rounded-lg hover:bg-white/5 transition-all duration-300 group border border-white/5 hover:border-primary/50 hover:shadow-[0_0_20px_rgba(33,196,93,0.1)] cursor-pointer"
+                            onclick="window.location.href='ip-geolocation.html'">
+                            <div
+                                class="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-6 text-primary group-hover:scale-110 transition-transform group-hover:bg-primary/20 group-hover:shadow-eye-glow">
+                                <span class="material-symbols-outlined text-2xl">share_location</span>
+                            </div>
+                            <h3 class="text-xl font-bold text-white mb-3">IP Geolocation</h3>
+                            <p class="text-gray-400 text-sm leading-relaxed">Locate IP addresses geographically. Get
+                                country, city, ISP, and organization details for any IP address.</p>
+                        </div>
+                        <div class="glass-panel p-8 rounded-lg hover:bg-white/5 transition-all duration-300 group border border-white/5 hover:border-primary/50 hover:shadow-[0_0_20px_rgba(33,196,93,0.1)] cursor-pointer"
+                            onclick="window.location.href='port-scanner.html'">
+                            <div
+                                class="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-6 text-primary group-hover:scale-110 transition-transform group-hover:bg-primary/20 group-hover:shadow-eye-glow">
+                                <span class="material-symbols-outlined text-2xl">hub</span>
+                            </div>
+                            <h3 class="text-xl font-bold text-white mb-3">Port Scanner</h3>
+                            <p class="text-gray-400 text-sm leading-relaxed">Scan for open ports and services. Identify
+                                running services, versions, and potential security vulnerabilities.</p>
+                        </div>
+                        <div class="glass-panel p-8 rounded-lg hover:bg-white/5 transition-all duration-300 group border border-white/5 hover:border-primary/50 hover:shadow-[0_0_20px_rgba(33,196,93,0.1)] cursor-pointer"
+                            onclick="window.location.href='ssl-certs.html'">
+                            <div
+                                class="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-6 text-primary group-hover:scale-110 transition-transform group-hover:bg-primary/20 group-hover:shadow-eye-glow">
+                                <span class="material-symbols-outlined text-2xl">lock</span>
+                            </div>
+                            <h3 class="text-xl font-bold text-white mb-3">SSL Certificate Analysis</h3>
+                            <p class="text-gray-400 text-sm leading-relaxed">Analyze SSL/TLS certificates, check
+                                validity, view certificate chains, and discover certificate transparency logs.</p>
+                        </div>
+                        <div class="glass-panel p-8 rounded-lg hover:bg-white/5 transition-all duration-300 group border border-white/5 hover:border-primary/50 hover:shadow-[0_0_20px_rgba(33,196,93,0.1)] cursor-pointer"
+                            onclick="window.location.href='breach-search.html'">
+                            <div
+                                class="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-6 text-primary group-hover:scale-110 transition-transform group-hover:bg-primary/20 group-hover:shadow-eye-glow">
+                                <span class="material-symbols-outlined text-2xl">lock_open</span>
+                            </div>
+                            <h3 class="text-xl font-bold text-white mb-3">Email Breach Search</h3>
+                            <p class="text-gray-400 text-sm leading-relaxed">Check if email addresses have been
+                                compromised in data breaches. Search through billions of leaked credentials.</p>
+                        </div>
+                        <div class="glass-panel p-8 rounded-lg hover:bg-white/5 transition-all duration-300 group border border-white/5 hover:border-primary/50 hover:shadow-[0_0_20px_rgba(33,196,93,0.1)] cursor-pointer"
+                            onclick="window.location.href='social-recon.html'">
+                            <div
+                                class="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-6 text-primary group-hover:scale-110 transition-transform group-hover:bg-primary/20 group-hover:shadow-eye-glow">
+                                <span class="material-symbols-outlined text-2xl">group</span>
+                            </div>
+                            <h3 class="text-xl font-bold text-white mb-3">Social Media Intelligence</h3>
+                            <p class="text-gray-400 text-sm leading-relaxed">Search for usernames across multiple social
+                                media platforms. Build comprehensive digital footprint profiles.</p>
+                        </div>
+                        <div class="glass-panel p-8 rounded-lg hover:bg-white/5 transition-all duration-300 group border border-white/5 hover:border-primary/50 hover:shadow-[0_0_20px_rgba(33,196,93,0.1)] cursor-pointer"
+                            onclick="window.location.href='phone-lookup.html'">
+                            <div
+                                class="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-6 text-primary group-hover:scale-110 transition-transform group-hover:bg-primary/20 group-hover:shadow-eye-glow">
+                                <span class="material-symbols-outlined text-2xl">call</span>
+                            </div>
+                            <h3 class="text-xl font-bold text-white mb-3">Phone Number Intelligence</h3>
+                            <p class="text-gray-400 text-sm leading-relaxed">Validate phone numbers, identify carriers,
+                                determine location, and check number type (mobile/landline).</p>
+                        </div>
+                        <div class="glass-panel p-8 rounded-lg hover:bg-white/5 transition-all duration-300 group border border-white/5 hover:border-primary/50 hover:shadow-[0_0_20px_rgba(33,196,93,0.1)] cursor-pointer"
+                            onclick="window.location.href='exif-extractor.html'">
+                            <div
+                                class="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-6 text-primary group-hover:scale-110 transition-transform group-hover:bg-primary/20 group-hover:shadow-eye-glow">
+                                <span class="material-symbols-outlined text-2xl">photo_library</span>
+                            </div>
+                            <h3 class="text-xl font-bold text-white mb-3">EXIF Metadata Extractor</h3>
+                            <p class="text-gray-400 text-sm leading-relaxed">Extract hidden metadata from images
+                                including GPS coordinates, camera details, timestamps, and software information.</p>
+                        </div>
+                        <div class="glass-panel p-8 rounded-lg hover:bg-white/5 transition-all duration-300 group border border-white/5 hover:border-primary/50 hover:shadow-[0_0_20px_rgba(33,196,93,0.1)] cursor-pointer"
+                            onclick="window.location.href='tech-stack-profiler.html'">
+                            <div
+                                class="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-6 text-primary group-hover:scale-110 transition-transform group-hover:bg-primary/20 group-hover:shadow-eye-glow">
+                                <span class="material-symbols-outlined text-2xl">layers</span>
+                            </div>
+                            <h3 class="text-xl font-bold text-white mb-3">Technology Stack Profiler</h3>
+                            <p class="text-gray-400 text-sm leading-relaxed">Identify technologies used by websites
+                                including frameworks, CMS, analytics tools, and server software.</p>
+                        </div>
+                        <div class="glass-panel p-8 rounded-lg hover:bg-white/5 transition-all duration-300 group border border-white/5 hover:border-primary/50 hover:shadow-[0_0_20px_rgba(33,196,93,0.1)] cursor-pointer"
+                            onclick="window.location.href='dork-generator.html'">
+                            <div
+                                class="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-6 text-primary group-hover:scale-110 transition-transform group-hover:bg-primary/20 group-hover:shadow-eye-glow">
+                                <span class="material-symbols-outlined text-2xl">manage_search</span>
+                            </div>
+                            <h3 class="text-xl font-bold text-white mb-3">Google Dork Generator</h3>
+                            <p class="text-gray-400 text-sm leading-relaxed">Create advanced Google search queries to
+                                find sensitive information, exposed files, and security vulnerabilities.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+        <footer class="relative z-10 w-full border-t border-white/5 bg-background-dark/80 backdrop-blur-md">
+            <div class="max-w-7xl mx-auto px-6 py-10">
+                <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+                    <div class="flex items-center gap-2 text-gray-500 text-sm">
+                        <span>© 2026 AllOSINT Inc.</span>
+                        <span class="mx-2">•</span>
+                        <span>v.2.0.4-beta</span>
+                    </div>
+                    <div class="flex flex-wrap justify-center gap-8">
+                        <a class="text-gray-400 hover:text-primary transition-colors text-sm"
+                            href="privacy.html">Privacy Protocol</a>
+                        <a class="text-gray-400 hover:text-primary transition-colors text-sm" href="terms.html">Terms of
+                            Service</a>
+                    </div>
+                    <div class="flex gap-4">
+                        <a class="text-gray-400 hover:text-white transition-colors"
+                            href="https://github.com/MuhammadAhmedKhan2006/AIIOSINT.git" target="_blank"
+                            rel="noopener noreferrer"><span class="sr-only">GitHub</span><svg
+                                class="w-5 h-5 fill-current" viewBox="0 0 24 24">
+                                <path
+                                    d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z">
+                                </path>
+                            </svg></a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+    <script>
+        function toggleMobileNav() {
+            const mobileNav = document.getElementById('mobile-nav');
+            mobileNav.classList.toggle('hidden');
+        }
+    </script>
 </body>
+
 </html>

@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <link rel="icon" type="image/png" href="logo2.png" />
+    <title>OSINT // DNS ANALYZER</title>
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: { "primary": "#13ec63", "primary-dim": "#0eac48", "background-light": "#f6f8f7", "background-dark": "#050a07", "surface-dark": "#0f1612", "surface-border": "#1f2e25", "danger": "#ef4444", "warning": "#eab308" },
+                    fontFamily: { "display": ["Space Grotesk", "sans-serif"], "mono": ["JetBrains Mono", "monospace"], },
+                    backgroundImage: { 'cyber-grid': "linear-gradient(to right, #1f2e25 1px, transparent 1px), linear-gradient(to bottom, #1f2e25 1px, transparent 1px)", }
+                },
+            },
+        }
+    </script>
+    <style>
+        .neon-glow {
+            box-shadow: 0 0 10px rgba(19, 236, 99, 0.2);
+        }
+
+        .grid-bg {
+            background-size: 40px 40px;
+            mask-image: linear-gradient(to bottom, black 40%, transparent 100%);
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #0f1612;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #1f2e25;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #13ec63;
+        }
+    </style>
+</head>
+
+<body
+    class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 min-h-screen flex flex-col overflow-x-hidden selection:bg-primary selection:text-black">
+    <div class="fixed inset-0 pointer-events-none opacity-20 bg-cyber-grid grid-bg z-0"></div>
+
+    <div class="relative z-10 flex flex-col h-full grow">
+        <header
+            class="sticky top-0 z-50 flex items-center justify-between border-b border-surface-border bg-surface-dark/95 backdrop-blur-md px-6 py-3">
+            <div class="flex items-center gap-4 text-white">
+                <div
+                    class="size-8 text-primary flex items-center justify-center rounded bg-primary/10 border border-primary/20 neon-glow">
+                    <img src="logo2.png" alt="Logo" class="w-6 h-6 object-contain" />
+                </div>
+                <div class="flex flex-col">
+                    <h2 class="text-white text-xl font-bold tracking-tight uppercase">OSINT <span
+                            class="text-primary">//</span> DNS RECON</h2>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-4">
+                <div class="text-xs font-mono text-slate-400 hidden md:block">API: <span class="text-primary">Cloudflare
+                        DoH</span></div>
+                <a href="dashboard.html"
+                    class="flex items-center gap-2 px-4 py-1.5 bg-surface-dark border border-surface-border hover:border-primary text-slate-300 hover:text-primary rounded transition-all text-xs font-bold font-mono group">
+                    <span
+                        class="material-symbols-outlined text-[16px] group-hover:-translate-x-1 transition-transform">arrow_back</span>
+                    DASHBOARD
+                </a>
+                <div class="size-9 rounded-full bg-gradient-to-br from-primary to-blue-500 p-[1px]">
+                    <div
+                        class="size-full rounded-full bg-surface-dark flex items-center justify-center overflow-hidden">
+                        <span class="material-symbols-outlined text-white text-[20px]">person</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <main class="flex-1 px-4 md:px-8 py-6 w-full max-w-[1600px] mx-auto flex flex-col gap-6">
+
+            <div class="w-full relative group z-20">
+                <div
+                    class="absolute -inset-0.5 bg-gradient-to-r from-primary/50 to-emerald-600/50 rounded-lg blur opacity-30 group-hover:opacity-75 transition duration-500">
+                </div>
+                <div class="relative flex items-center bg-surface-dark rounded-lg border border-surface-border">
+                    <div class="pl-4 pr-2 text-primary font-mono text-lg">>_</div>
+                    <input
+                        class="w-full bg-transparent border-none text-white font-mono py-4 px-2 focus:ring-0 placeholder-slate-600 text-sm md:text-base"
+                        placeholder="Enter Target Domain (e.g., google.com)..." type="text" id="dnsInput" />
+                    <button
+                        class="mr-2 px-6 py-2 bg-primary hover:bg-green-400 text-black font-bold rounded shadow-[0_0_15px_rgba(19,236,99,0.3)] transition-all flex items-center gap-2"
+                        onclick="startDNSScan()">
+                        <span class="material-symbols-outlined text-sm">network_check</span> QUERY
+                    </button>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 min-h-[500px]">
+
+                <div class="bg-surface-dark border border-surface-border rounded-lg p-5 flex flex-col gap-4">
+                    <h3
+                        class="text-slate-400 text-xs font-bold uppercase tracking-widest border-b border-surface-border pb-2 flex items-center gap-2">
+                        <span class="material-symbols-outlined text-sm">router</span> Infrastructure
+                    </h3>
+                    <div id="infra-results" class="space-y-2 font-mono text-xs text-slate-300">
+                        <p class="text-slate-500 italic">Waiting for input...</p>
+                    </div>
+                </div>
+
+                <div class="bg-surface-dark border border-surface-border rounded-lg p-5 flex flex-col gap-4">
+                    <h3
+                        class="text-slate-400 text-xs font-bold uppercase tracking-widest border-b border-surface-border pb-2 flex items-center gap-2">
+                        <span class="material-symbols-outlined text-sm">mark_email_read</span> Mail & Auth
+                    </h3>
+                    <div id="mail-results" class="space-y-2 font-mono text-xs text-slate-300">
+                        <p class="text-slate-500 italic">Waiting for input...</p>
+                    </div>
+                </div>
+
+                <div class="flex flex-col gap-6">
+                    <div class="bg-surface-dark border border-surface-border rounded-lg p-5 flex-1">
+                        <h3
+                            class="text-slate-400 text-xs font-bold uppercase tracking-widest border-b border-surface-border pb-2 flex items-center gap-2">
+                            <span class="material-symbols-outlined text-sm">dns</span> Name Servers
+                        </h3>
+                        <div id="ns-results" class="space-y-2 font-mono text-xs text-slate-300 mt-4">
+                            <p class="text-slate-500 italic">Waiting for input...</p>
+                        </div>
+                    </div>
+
+                    <div
+                        class="bg-[#0c0e12] border border-surface-border rounded-lg overflow-hidden flex flex-col h-48">
+                        <div
+                            class="bg-white/5 px-3 py-2 border-b border-surface-border flex justify-between items-center">
+                            <span class="text-[10px] font-mono text-slate-400">QUERY.LOG</span>
+                            <button onclick="exportCSV()"
+                                class="text-[10px] text-primary hover:text-white flex items-center gap-1">
+                                <span class="material-symbols-outlined text-[12px]">download</span> CSV
+                            </button>
+                        </div>
+                        <div class="p-3 font-mono text-xs text-slate-300 overflow-y-auto flex-1" id="scan-log">
+                            <div class="opacity-50">Ready.</div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <script>
+        let allRecords = []; // Store for CSV export
+
+        // Record Types to Scan
+        const RECORD_TYPES = ['A', 'AAAA', 'CNAME', 'MX', 'TXT', 'NS', 'SOA'];
+
+        // Trigger on Enter
+        document.getElementById('dnsInput').addEventListener('keypress', (e) => { if (e.key === 'Enter') startDNSScan(); });
+
+        async function startDNSScan() {
+            const domain = document.getElementById('dnsInput').value.trim();
+            if (!domain.includes('.')) return alert("Enter a valid domain.");
+
+            // Reset
+            allRecords = [];
+            document.getElementById('infra-results').innerHTML = '';
+            document.getElementById('mail-results').innerHTML = '';
+            document.getElementById('ns-results').innerHTML = '';
+            document.getElementById('scan-log').innerHTML = '';
+            addToLog(`Starting DNS Recon for: ${domain}...`, 'text-primary');
+
+            // Parallel Requests
+            const promises = RECORD_TYPES.map(type => fetchRecord(domain, type));
+            await Promise.all(promises);
+
+            addToLog("Scan Complete.", 'text-white font-bold');
+        }
+
+        async function fetchRecord(domain, type) {
+            addToLog(`Querying ${type} records...`);
+            try {
+                const res = await fetch(`https://cloudflare-dns.com/dns-query?name=${domain}&type=${type}`, {
+                    headers: { 'Accept': 'application/dns-json' }
+                });
+                const data = await res.json();
+
+                if (data.Answer) {
+                    data.Answer.forEach(record => {
+                        // Clean up data
+                        const cleanData = record.data.replace(/"/g, '');
+                        addRecordToUI(type, cleanData);
+                        allRecords.push({ type: type, name: record.name, data: cleanData, ttl: record.TTL });
+                    });
+                    addToLog(`Found ${data.Answer.length} ${type} records.`, 'text-green-400');
+                } else {
+                    // No records found for this type (common)
+                }
+            } catch (e) {
+                addToLog(`Error fetching ${type}: ${e.message}`, 'text-danger');
+            }
+        }
+
+        function addRecordToUI(type, content) {
+            let containerId = '';
+            let icon = '';
+            let colorClass = 'text-white';
+
+            // Categorize
+            if (['A', 'AAAA', 'CNAME'].includes(type)) {
+                containerId = 'infra-results';
+                icon = 'router';
+                if (type === 'CNAME') colorClass = 'text-warning';
+            } else if (['MX', 'TXT', 'SOA'].includes(type)) {
+                containerId = 'mail-results';
+                icon = type === 'MX' ? 'email' : 'description';
+                if (type === 'MX') colorClass = 'text-primary';
+            } else if (['NS'].includes(type)) {
+                containerId = 'ns-results';
+                icon = 'dns';
+            }
+
+            const div = document.createElement('div');
+            div.className = "flex items-start gap-2 border-b border-white/5 pb-2 last:border-0";
+            div.innerHTML = `
+            <span class="text-[10px] font-bold w-12 shrink-0 ${colorClass}">${type}</span>
+            <div class="break-all">${content}</div>
+        `;
+            document.getElementById(containerId).appendChild(div);
+        }
+
+        function addToLog(msg, colorClass = 'text-slate-400') {
+            const log = document.getElementById('scan-log');
+            const entry = document.createElement('div');
+            entry.className = `mb-1 ${colorClass}`;
+            entry.innerText = `> ${msg}`;
+            log.appendChild(entry);
+            log.scrollTop = log.scrollHeight;
+        }
+
+        function exportCSV() {
+            if (allRecords.length === 0) return alert("No records to export.");
+
+            let csv = "Type,Name,Content,TTL\n";
+            allRecords.forEach(r => {
+                csv += `${r.type},${r.name},"${r.data.replace(/,/g, ' ')}",${r.ttl}\n`;
+            });
+
+            const link = document.createElement("a");
+            link.href = 'data:text/csv;charset=utf-8,' + encodeURI(csv);
+            link.download = "dns_records.csv";
+            link.click();
+        }
+    </script>
+</body>
+
+</html>

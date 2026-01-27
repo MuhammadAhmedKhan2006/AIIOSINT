@@ -1,415 +1,389 @@
 <!DOCTYPE html>
 <html class="dark" lang="en">
+
 <head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Domain Threat Intel Gauge</title>
-<link href="https://fonts.googleapis.com" rel="preconnect"/>
-<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Noto+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<script id="tailwind-config">tailwind.config = {darkMode: "class",theme: {extend: {colors: {"primary": "#135bec","primary-glow": "#135bec80","danger": "#ef4444","success": "#10b981","background-light": "#f6f6f8","background-dark": "#101622","card-dark": "#1a202c",},fontFamily: {"display": ["Space Grotesk", "sans-serif"],"body": ["Noto Sans", "sans-serif"],},borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},backgroundImage: {'cyber-grid': "radial-gradient(circle at 50% 50%, rgba(19, 91, 236, 0.05) 0%, transparent 50%), linear-gradient(0deg, rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px)",}},},}</script>
-<style>.gauge-arc {transition: stroke-dashoffset 1s ease-out;}.bg-cyber-grid {background-size: 100% 100%, 40px 40px, 40px 40px;}.glass-panel {background: rgba(16, 22, 34, 0.7);backdrop-filter: blur(12px);-webkit-backdrop-filter: blur(12px);border: 1px solid rgba(255, 255, 255, 0.08);box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);}.neon-text {text-shadow: 0 0 10px rgba(19, 91, 236, 0.5);}.neon-border:focus-within {box-shadow: 0 0 15px rgba(19, 91, 236, 0.3);border-color: #135bec;}</style>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <link rel="icon" type="image/png" href="logo2.png" />
+    <title>OSINT // DOMAIN THREAT INTEL</title>
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: { "primary": "#13ec63", "primary-dim": "#0eac48", "background-light": "#f6f8f7", "background-dark": "#050a07", "surface-dark": "#0f1612", "surface-border": "#1f2e25", "danger": "#ef4444", "warning": "#eab308" },
+                    fontFamily: { "display": ["Space Grotesk", "sans-serif"], "mono": ["JetBrains Mono", "monospace"], },
+                    backgroundImage: { 'cyber-grid': "linear-gradient(to right, #1f2e25 1px, transparent 1px), linear-gradient(to bottom, #1f2e25 1px, transparent 1px)", }
+                },
+            },
+        }
+    </script>
+    <style>
+        .neon-glow {
+            box-shadow: 0 0 10px rgba(19, 236, 99, 0.2);
+        }
+
+        .grid-bg {
+            background-size: 40px 40px;
+            mask-image: linear-gradient(to bottom, black 40%, transparent 100%);
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #0f1612;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #1f2e25;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #13ec63;
+        }
+    </style>
 </head>
-<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-white font-display min-h-screen flex flex-col overflow-x-hidden selection:bg-primary selection:text-white">
-<header class="sticky top-0 z-50 glass-panel border-b border-white/5 px-6 py-4">
-<div class="max-w-7xl mx-auto flex items-center justify-between">
-<div class="flex items-center gap-3">
-<div class="size-8 text-primary flex items-center justify-center bg-primary/10 rounded-lg">
-<span class="material-symbols-outlined">security</span>
-</div>
-<h1 class="text-xl font-bold tracking-tight">OSINT <span class="text-primary">TERMINAL</span></h1>
-</div>
-<nav class="hidden md:flex items-center gap-8">
-<a class="text-sm font-medium text-slate-400 hover:text-white transition-colors" href="dashboard.html">Dashboard</a>
-<a class="text-sm font-medium text-white neon-text" href="domain-threat-intel.html">Threat Intel</a>
-<a class="text-sm font-medium text-slate-400 hover:text-white transition-colors" href="exif-extractor.html">EXIF Tool</a>
-<a class="text-sm font-medium text-slate-400 hover:text-white transition-colors" href="tech-stack-profiler.html">Tech Stack</a>
-<a class="text-sm font-medium text-slate-400 hover:text-white transition-colors" href="settings.html">Settings</a>
-</nav>
-<div class="flex items-center gap-4">
-<button class="relative p-2 text-slate-400 hover:text-white transition-colors">
-<span class="material-symbols-outlined">notifications</span>
-<span class="absolute top-1.5 right-1.5 size-2 bg-danger rounded-full animate-pulse"></span>
-</button>
-<div class="h-8 w-px bg-white/10"></div>
-<button class="flex items-center gap-2 pl-2" onclick="showUserMenu()">
-<div class="size-8 rounded-full bg-gradient-to-tr from-primary to-purple-500 p-[1px]">
-<div class="size-full rounded-full bg-slate-900 flex items-center justify-center">
-<span class="text-xs font-bold">JD</span>
-</div>
-</div>
-</button>
-</div>
-</div>
-</header>
-<main class="flex-1 relative bg-cyber-grid">
-<div class="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-primary/10 blur-[100px] rounded-full pointer-events-none"></div>
-<div class="max-w-7xl mx-auto px-4 py-8 md:px-6 md:py-12 flex flex-col gap-8">
-<div class="flex flex-col md:flex-row gap-6 items-end justify-between">
-<div class="flex flex-col gap-2">
-<div class="flex items-center gap-2 text-primary text-sm font-bold uppercase tracking-wider">
-<span class="material-symbols-outlined text-lg">radar</span>Domain Intelligence
-</div>
-<h2 class="text-4xl md:text-5xl font-black tracking-tighter">TARGET SCAN</h2>
-<p class="text-slate-400 max-w-lg">Real-time risk assessment and blacklist verification engine. Enter a domain to initiate deep scan analysis.</p>
-</div>
-<div class="w-full md:w-auto md:min-w-[450px]">
-<div class="glass-panel rounded-xl p-1.5 flex items-center gap-2 neon-border transition-all duration-300">
-<span class="material-symbols-outlined text-slate-500 ml-3">link</span>
-<input class="bg-transparent border-none text-white placeholder-slate-600 focus:ring-0 w-full text-base" placeholder="Enter domain (e.g., example.com)" type="text" id="domain-input"/>
-<button class="bg-primary hover:bg-blue-600 text-white px-6 py-2.5 rounded-lg font-bold text-sm tracking-wide transition-all shadow-[0_0_15px_rgba(19,91,236,0.3)] hover:shadow-[0_0_25px_rgba(19,91,236,0.5)] flex items-center gap-2" onclick="startScan()">
-<span>SCAN</span>
-<span class="material-symbols-outlined text-sm">search</span>
-</button>
-</div>
-</div>
-</div>
-<div class="grid grid-cols-1 lg:grid-cols-12 gap-6 mt-4">
-<div class="lg:col-span-5 flex flex-col gap-6">
-<div class="glass-panel rounded-xl p-8 relative overflow-hidden flex flex-col items-center justify-center min-h-[400px]">
-<div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-primary to-transparent opacity-50"></div>
-<div class="flex justify-between w-full mb-8">
-<h3 class="text-lg font-bold text-white flex items-center gap-2">
-<span class="material-symbols-outlined text-primary">speed</span>RISK SCORE
-</h3>
-<span class="bg-red-500/20 text-red-400 border border-red-500/30 px-3 py-1 rounded text-xs font-bold tracking-wider animate-pulse" id="risk-badge">SCANNING</span>
-</div>
-<div class="relative size-64 md:size-72">
-<svg class="size-full rotate-[135deg]" viewbox="0 0 100 100">
-<circle cx="50" cy="50" fill="none" r="45" stroke="#1e293b" stroke-width="8"></circle>
-<circle class="drop-shadow-[0_0_10px_rgba(239,68,68,0.5)]" cx="50" cy="50" fill="none" r="45" stroke="url(#riskGradient)" stroke-dasharray="0 283" stroke-linecap="round" stroke-width="8" id="risk-arc"></circle>
-<defs>
-<lineargradient id="riskGradient" x1="0%" x2="100%" y1="0%" y2="0%">
-<stop offset="0%" stop-color="#10b981"></stop>
-<stop offset="50%" stop-color="#f59e0b"></stop>
-<stop offset="100%" stop-color="#ef4444"></stop>
-</lineargradient>
-</defs>
-</svg>
-<div class="absolute inset-0 flex flex-col items-center justify-center rotate-[-135deg]">
-<span class="text-6xl font-black text-white tracking-tighter drop-shadow-lg" id="risk-score">--</span>
-<span class="text-sm text-slate-400 uppercase tracking-widest mt-1">out of 100</span>
-</div>
-</div>
-<div class="grid grid-cols-2 gap-4 w-full mt-8">
-<div class="bg-slate-900/50 rounded-lg p-3 border border-white/5 text-center">
-<p class="text-xs text-slate-500 uppercase mb-1">Threat Level</p>
-<p class="text-slate-400 font-bold" id="threat-level">Unknown</p>
-</div>
-<div class="bg-slate-900/50 rounded-lg p-3 border border-white/5 text-center">
-<p class="text-xs text-slate-500 uppercase mb-1">Confidence</p>
-<p class="text-white font-bold" id="confidence">--%</p>
-</div>
-</div>
-</div>
-<div class="grid grid-cols-3 gap-4">
-<button class="glass-panel rounded-lg p-4 flex flex-col items-center gap-2 hover:bg-white/5 transition-colors group">
-<span class="material-symbols-outlined text-slate-400 group-hover:text-primary transition-colors">download</span>
-<span class="text-xs font-medium text-slate-300">Export PDF</span>
-</button>
-<button class="glass-panel rounded-lg p-4 flex flex-col items-center gap-2 hover:bg-white/5 transition-colors group">
-<span class="material-symbols-outlined text-slate-400 group-hover:text-primary transition-colors">api</span>
-<span class="text-xs font-medium text-slate-300">Copy JSON</span>
-</button>
-<button class="glass-panel rounded-lg p-4 flex flex-col items-center gap-2 hover:bg-white/5 transition-colors group">
-<span class="material-symbols-outlined text-slate-400 group-hover:text-primary transition-colors">visibility</span>
-<span class="text-xs font-medium text-slate-300">Monitor</span>
-</button>
-</div>
-</div>
-<div class="lg:col-span-7 flex flex-col gap-6">
-<div class="grid grid-cols-1 md:grid-cols-3 gap-4" id="blacklist-cards">
-<div class="glass-panel rounded-xl p-5 border-l-4 border-l-slate-600 flex flex-col justify-between h-32 relative overflow-hidden group">
-<div class="absolute right-[-20px] top-[-20px] size-24 bg-slate-600/10 rounded-full blur-xl group-hover:bg-slate-600/20 transition-all"></div>
-<div class="flex items-start justify-between">
-<div class="flex flex-col">
-<span class="text-xs text-slate-400 font-bold uppercase tracking-wider">Database</span>
-<span class="text-sm font-bold text-white mt-1">Google Safe Browsing</span>
-</div>
-<span class="material-symbols-outlined text-slate-600">help</span>
-</div>
-<div class="flex items-center gap-2 mt-auto">
-<span class="size-2 rounded-full bg-slate-600"></span>
-<span class="text-slate-600 text-sm font-bold">PENDING</span>
-</div>
-</div>
-<div class="glass-panel rounded-xl p-5 border-l-4 border-l-slate-600 flex flex-col justify-between h-32 relative overflow-hidden group">
-<div class="absolute right-[-20px] top-[-20px] size-24 bg-slate-600/10 rounded-full blur-xl group-hover:bg-slate-600/20 transition-all"></div>
-<div class="flex items-start justify-between">
-<div class="flex flex-col">
-<span class="text-xs text-slate-400 font-bold uppercase tracking-wider">Database</span>
-<span class="text-sm font-bold text-white mt-1">PhishTank</span>
-</div>
-<span class="material-symbols-outlined text-slate-600">help</span>
-</div>
-<div class="flex items-center gap-2 mt-auto">
-<span class="size-2 rounded-full bg-slate-600"></span>
-<span class="text-slate-600 text-sm font-bold">PENDING</span>
-</div>
-</div>
-<div class="glass-panel rounded-xl p-5 border-l-4 border-l-slate-600 flex flex-col justify-between h-32 relative overflow-hidden group">
-<div class="absolute right-[-20px] top-[-20px] size-24 bg-slate-600/10 rounded-full blur-xl group-hover:bg-slate-600/20 transition-all"></div>
-<div class="flex items-start justify-between">
-<div class="flex flex-col">
-<span class="text-xs text-slate-400 font-bold uppercase tracking-wider">Database</span>
-<span class="text-sm font-bold text-white mt-1">Spamhaus</span>
-</div>
-<span class="material-symbols-outlined text-slate-600">help</span>
-</div>
-<div class="flex items-center gap-2 mt-auto">
-<span class="size-2 rounded-full bg-slate-600"></span>
-<span class="text-slate-600 text-sm font-bold">PENDING</span>
-</div>
-</div>
-</div>
-<div class="glass-panel rounded-xl overflow-hidden flex-1">
-<div class="bg-white/5 px-6 py-4 border-b border-white/5 flex justify-between items-center">
-<h3 class="text-base font-bold text-white">DOMAIN TELEMETRY</h3>
-<button class="text-xs text-primary hover:text-white transition-colors">VIEW FULL REPORT</button>
-</div>
-<div class="p-6" id="domain-details">
-<div class="text-center text-slate-500 py-8">
-<span class="material-symbols-outlined text-4xl mb-2 block">domain</span>
-<p>Domain analysis will appear here after scan</p>
-</div>
-</div>
-<div class="h-32 bg-slate-900 border-t border-white/5 relative group overflow-hidden">
-<div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&amp;w=2072&amp;auto=format&amp;fit=crop')] bg-cover bg-center opacity-40 mix-blend-luminosity group-hover:opacity-60 transition-opacity" data-alt="Abstract digital world map focusing on network connections"></div>
-<div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent"></div>
-<div class="absolute bottom-4 left-6 flex items-center gap-2">
-<span class="material-symbols-outlined text-primary text-sm">public</span>
-<span class="text-xs font-bold text-white tracking-wide" id="server-location">Server Location: Unknown</span>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</main>
-<footer class="border-t border-white/5 py-6 bg-slate-900/50">
-<div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-slate-500">
-<p>© 2023 OSINT Terminal. System Status: <span class="text-success">Operational</span></p>
-<div class="flex items-center gap-6">
-<span>Last scan: <span id="last-scan">Never</span></span>
-<span>API Credits: <span class="text-white">450/1000</span></span>
-<a class="hover:text-white transition-colors" href="privacy.html">Privacy</a>
-<a class="hover:text-white transition-colors" href="terms.html">Terms</a>
-</div>
-</div>
-</footer>
 
-<script>
-let scanInProgress = false;
+<body
+    class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 min-h-screen flex flex-col overflow-x-hidden selection:bg-primary selection:text-black">
+    <div class="fixed inset-0 pointer-events-none opacity-20 bg-cyber-grid grid-bg z-0"></div>
 
-// Mock domain data
-const mockDomainData = {
-    'suspicious-pay-gateway.net': {
-        riskScore: 85,
-        threatLevel: 'High Risk',
-        confidence: 98.5,
-        registrar: 'NameCheap, Inc.',
-        creationDate: '2023-10-24 (14 days ago)',
-        ip: '192.0.2.145',
-        asn: 'AS13335 (Cloudflare)',
-        ssl: 'Invalid / Self-Signed',
-        mailServer: 'mx.suspicious-pay.net',
-        location: 'KYIV, UA',
-        blacklists: {
-            'Google Safe Browsing': { status: 'clean', color: 'success' },
-            'PhishTank': { status: 'detected', color: 'danger' },
-            'Spamhaus': { status: 'clean', color: 'success' }
-        }
-    },
-    'example.com': {
-        riskScore: 15,
-        threatLevel: 'Low Risk',
-        confidence: 95.2,
-        registrar: 'IANA',
-        creationDate: '1995-08-14 (28 years ago)',
-        ip: '93.184.216.34',
-        asn: 'AS15133 (Edgecast)',
-        ssl: 'Valid (DigiCert)',
-        mailServer: 'mail.example.com',
-        location: 'NORWELL, US',
-        blacklists: {
-            'Google Safe Browsing': { status: 'clean', color: 'success' },
-            'PhishTank': { status: 'clean', color: 'success' },
-            'Spamhaus': { status: 'clean', color: 'success' }
-        }
-    }
-};
-
-document.addEventListener('DOMContentLoaded', function() {
-    // Check authentication
-    const isAuthenticated = localStorage.getItem('allOSINT_authenticated');
-    if (!isAuthenticated) {
-        window.location.href = 'login.html';
-        return;
-    }
-    
-    // Load target from localStorage if available
-    const target = localStorage.getItem('allOSINT_target');
-    if (target && target.includes('.') && !target.includes('@')) {
-        document.getElementById('domain-input').value = target;
-        // Auto-start scan after a brief delay
-        setTimeout(() => startScan(), 1000);
-    }
-});
-
-function startScan() {
-    const domain = document.getElementById('domain-input').value.trim();
-    
-    if (!domain) {
-        alert('Please enter a domain');
-        return;
-    }
-    
-    if (scanInProgress) {
-        return;
-    }
-    
-    scanInProgress = true;
-    
-    // Reset UI
-    document.getElementById('risk-score').textContent = '--';
-    document.getElementById('risk-badge').textContent = 'SCANNING';
-    document.getElementById('risk-badge').className = 'bg-primary/20 text-primary border border-primary/30 px-3 py-1 rounded text-xs font-bold tracking-wider animate-pulse';
-    document.getElementById('threat-level').textContent = 'Analyzing...';
-    document.getElementById('confidence').textContent = '--%';
-    document.getElementById('risk-arc').style.strokeDasharray = '0 283';
-    
-    // Update last scan time
-    document.getElementById('last-scan').textContent = new Date().toLocaleTimeString();
-    
-    // Simulate scanning progress
-    let progress = 0;
-    const scanInterval = setInterval(() => {
-        progress += Math.random() * 20 + 10;
-        if (progress > 100) progress = 100;
-        
-        // Update arc progress
-        const circumference = 2 * Math.PI * 45 * 0.75; // 75% of circle
-        const offset = circumference - (progress / 100) * circumference;
-        document.getElementById('risk-arc').style.strokeDasharray = `${circumference - offset} 283`;
-        
-        if (progress >= 100) {
-            clearInterval(scanInterval);
-            showResults(domain);
-        }
-    }, 500);
-}
-
-function showResults(domain) {
-    const data = mockDomainData[domain] || mockDomainData['example.com'];
-    
-    // Update risk score and gauge
-    document.getElementById('risk-score').textContent = data.riskScore;
-    document.getElementById('threat-level').textContent = data.threatLevel;
-    document.getElementById('confidence').textContent = data.confidence + '%';
-    
-    // Update risk badge
-    const riskBadge = document.getElementById('risk-badge');
-    if (data.riskScore >= 70) {
-        riskBadge.textContent = 'CRITICAL';
-        riskBadge.className = 'bg-red-500/20 text-red-400 border border-red-500/30 px-3 py-1 rounded text-xs font-bold tracking-wider animate-pulse';
-    } else if (data.riskScore >= 40) {
-        riskBadge.textContent = 'MEDIUM';
-        riskBadge.className = 'bg-yellow-500/20 text-yellow-400 border border-yellow-500/30 px-3 py-1 rounded text-xs font-bold tracking-wider';
-    } else {
-        riskBadge.textContent = 'LOW';
-        riskBadge.className = 'bg-green-500/20 text-green-400 border border-green-500/30 px-3 py-1 rounded text-xs font-bold tracking-wider';
-    }
-    
-    // Update blacklist cards
-    updateBlacklistCards(data.blacklists);
-    
-    // Update domain details
-    updateDomainDetails(data);
-    
-    // Update server location
-    document.getElementById('server-location').textContent = `Server Location: ${data.location}`;
-    
-    scanInProgress = false;
-}
-
-function updateBlacklistCards(blacklists) {
-    const container = document.getElementById('blacklist-cards');
-    container.innerHTML = Object.entries(blacklists).map(([name, info]) => `
-        <div class="glass-panel rounded-xl p-5 border-l-4 border-l-${info.color} flex flex-col justify-between h-32 relative overflow-hidden group">
-            <div class="absolute right-[-20px] top-[-20px] size-24 bg-${info.color}/10 rounded-full blur-xl group-hover:bg-${info.color}/20 transition-all"></div>
-            <div class="flex items-start justify-between">
+    <div class="relative z-10 flex flex-col h-full grow">
+        <header
+            class="sticky top-0 z-50 flex items-center justify-between border-b border-surface-border bg-surface-dark/95 backdrop-blur-md px-6 py-3">
+            <div class="flex items-center gap-4 text-white">
+                <div
+                    class="size-8 text-primary flex items-center justify-center rounded bg-primary/10 border border-primary/20 neon-glow">
+                    <img src="logo2.png" alt="Logo" class="w-6 h-6 object-contain" />
+                </div>
                 <div class="flex flex-col">
-                    <span class="text-xs text-slate-400 font-bold uppercase tracking-wider">Database</span>
-                    <span class="text-sm font-bold text-white mt-1">${name}</span>
+                    <h2 class="text-white text-xl font-bold tracking-tight uppercase">OSINT <span
+                            class="text-primary">//</span> THREAT INTEL</h2>
                 </div>
-                <span class="material-symbols-outlined text-${info.color}">${info.status === 'clean' ? 'check_circle' : 'warning'}</span>
             </div>
-            <div class="flex items-center gap-2 mt-auto">
-                <span class="size-2 rounded-full bg-${info.color} ${info.status === 'detected' ? 'animate-pulse' : ''}"></span>
-                <span class="text-${info.color} text-sm font-bold">${info.status.toUpperCase()}</span>
-            </div>
-        </div>
-    `).join('');
-}
 
-function updateDomainDetails(data) {
-    const container = document.getElementById('domain-details');
-    container.innerHTML = `
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-12">
-            <div class="flex flex-col gap-1">
-                <span class="text-xs text-slate-500 uppercase font-medium">Registrar</span>
-                <div class="flex items-center gap-2">
-                    <span class="text-white font-mono">${data.registrar}</span>
-                    <span class="material-symbols-outlined text-slate-600 text-[16px] cursor-help">info</span>
+            <div class="flex items-center gap-4">
+                <div class="text-xs font-mono text-slate-400 hidden md:block">API: <span class="text-primary">RDAP +
+                        Cloudflare</span></div>
+                <a href="dashboard.html"
+                    class="flex items-center gap-2 px-4 py-1.5 bg-surface-dark border border-surface-border hover:border-primary text-slate-300 hover:text-primary rounded transition-all text-xs font-bold font-mono group">
+                    <span
+                        class="material-symbols-outlined text-[16px] group-hover:-translate-x-1 transition-transform">arrow_back</span>
+                    DASHBOARD
+                </a>
+                <div class="size-9 rounded-full bg-gradient-to-br from-primary to-blue-500 p-[1px]">
+                    <div
+                        class="size-full rounded-full bg-surface-dark flex items-center justify-center overflow-hidden">
+                        <span class="material-symbols-outlined text-white text-[20px]">person</span>
+                    </div>
                 </div>
             </div>
-            <div class="flex flex-col gap-1">
-                <span class="text-xs text-slate-500 uppercase font-medium">Creation Date</span>
-                <span class="text-white font-mono">${data.creationDate}</span>
-            </div>
-            <div class="flex flex-col gap-1">
-                <span class="text-xs text-slate-500 uppercase font-medium">IP Address</span>
-                <div class="flex items-center gap-2">
-                    <span class="text-white font-mono">${data.ip}</span>
-                    <span class="bg-primary/20 text-primary text-[10px] px-1.5 rounded border border-primary/30">HOSTED</span>
-                </div>
-            </div>
-            <div class="flex flex-col gap-1">
-                <span class="text-xs text-slate-500 uppercase font-medium">ASN</span>
-                <span class="text-white font-mono">${data.asn}</span>
-            </div>
-            <div class="flex flex-col gap-1">
-                <span class="text-xs text-slate-500 uppercase font-medium">SSL Certificate</span>
-                <div class="flex items-center gap-2">
-                    <span class="text-${data.ssl.includes('Invalid') ? 'red-400' : 'green-400'} font-mono">${data.ssl}</span>
-                    <span class="material-symbols-outlined text-${data.ssl.includes('Invalid') ? 'red-500' : 'green-500'} text-[16px]">${data.ssl.includes('Invalid') ? 'lock_open' : 'lock'}</span>
-                </div>
-            </div>
-            <div class="flex flex-col gap-1">
-                <span class="text-xs text-slate-500 uppercase font-medium">Mail Server (MX)</span>
-                <span class="text-white font-mono">${data.mailServer}</span>
-            </div>
-        </div>
-    `;
-}
+        </header>
 
-function showUserMenu() {
-    const menu = confirm('User Menu:\n\nOK - Logout\nCancel - Stay logged in');
-    if (menu) {
-        localStorage.removeItem('allOSINT_authenticated');
-        localStorage.removeItem('allOSINT_user');
-        window.location.href = 'index.html';
-    }
-}
+        <main class="flex-1 px-4 md:px-8 py-6 w-full max-w-[1600px] mx-auto flex flex-col gap-6">
 
-// Allow Enter key to trigger scan
-document.getElementById('domain-input').addEventListener('keypress', function(e) {
-    if (e.key === 'Enter') {
-        startScan();
-    }
-});
-</script>
+            <div class="flex flex-col md:flex-row gap-6 items-end justify-between">
+                <div class="flex flex-col gap-2">
+                    <div class="flex items-center gap-2 text-primary text-xs font-mono uppercase tracking-widest">
+                        <span class="material-symbols-outlined text-[16px] animate-pulse">radar</span>System Ready
+                    </div>
+                    <h1 class="text-4xl md:text-5xl font-black tracking-tight text-white uppercase">TARGET SCAN</h1>
+                    <p class="text-slate-400 max-w-lg text-sm">Real-time Whois extraction and heuristic risk assessment
+                        engine.</p>
+                </div>
+                <div class="w-full md:w-auto md:min-w-[500px]">
+                    <div class="relative flex items-center bg-surface-dark rounded-lg border border-surface-border p-1">
+                        <span class="material-symbols-outlined text-slate-500 ml-3">link</span>
+                        <input
+                            class="bg-transparent border-none text-white placeholder-slate-600 focus:ring-0 w-full font-mono"
+                            placeholder="Enter domain (e.g., tesla.com)" type="text" id="domain-input" />
+                        <button
+                            class="bg-primary hover:bg-green-400 text-black px-6 py-2 rounded font-bold text-sm tracking-wide transition-all shadow-[0_0_15px_rgba(19,236,99,0.3)] flex items-center gap-2"
+                            onclick="startScan()">
+                            <span>SCAN</span>
+                            <span class="material-symbols-outlined text-sm">search</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-4 min-h-[500px]">
+
+                <div class="lg:col-span-1 flex flex-col gap-4">
+                    <div class="bg-surface-dark border border-surface-border rounded-lg p-5">
+                        <h3
+                            class="text-slate-400 text-xs font-bold uppercase tracking-widest mb-3 flex items-center gap-2">
+                            <span class="material-symbols-outlined text-sm">shield</span> Threat Assessment
+                        </h3>
+                        <div
+                            class="flex flex-col items-center justify-center p-6 border border-white/5 rounded bg-black/20">
+                            <span class="text-4xl font-black text-white tracking-tighter" id="risk-label">--</span>
+                            <span class="text-xs text-slate-500 mt-1 font-mono" id="risk-desc">Awaiting Scan...</span>
+                        </div>
+                        <div class="mt-4 space-y-2">
+                            <div class="flex justify-between text-xs border-b border-surface-border pb-2">
+                                <span class="text-slate-400">Domain Age</span>
+                                <span class="text-white font-mono" id="val-age">-- days</span>
+                            </div>
+                            <div class="flex justify-between text-xs border-b border-surface-border pb-2">
+                                <span class="text-slate-400">DNSSEC</span>
+                                <span class="text-white font-mono" id="val-dnssec">--</span>
+                            </div>
+                            <div class="flex justify-between text-xs">
+                                <span class="text-slate-400">IP Address</span>
+                                <span class="text-primary font-mono" id="val-ip">--</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-surface-dark border border-surface-border rounded-lg p-5">
+                        <button onclick="exportCSV()"
+                            class="w-full bg-white/5 hover:bg-white/10 text-white border border-white/10 rounded py-3 text-xs font-bold flex items-center justify-center gap-2 transition-all">
+                            <span class="material-symbols-outlined text-sm">download</span> EXPORT REPORT (CSV)
+                        </button>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-2 flex flex-col gap-4">
+
+                    <div class="bg-surface-dark border border-surface-border rounded-lg p-5">
+                        <div class="flex justify-between items-start mb-4">
+                            <h3 class="text-primary text-sm font-bold uppercase flex items-center gap-2">
+                                <span class="material-symbols-outlined text-sm">business</span> Registrar Identity
+                            </h3>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <p class="text-[10px] text-slate-500 uppercase">Registrar Name</p>
+                                <p class="text-white font-mono text-sm truncate" id="reg-name">--</p>
+                            </div>
+                            <div>
+                                <p class="text-[10px] text-slate-500 uppercase">IANA ID</p>
+                                <p class="text-white font-mono text-sm" id="reg-id">--</p>
+                            </div>
+                            <div>
+                                <p class="text-[10px] text-slate-500 uppercase">Abuse Contact</p>
+                                <p class="text-danger font-mono text-xs truncate cursor-pointer hover:underline"
+                                    id="reg-email">--</p>
+                            </div>
+                            <div>
+                                <p class="text-[10px] text-slate-500 uppercase">Whois Server</p>
+                                <p class="text-white font-mono text-xs truncate" id="reg-server">--</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="bg-surface-dark border border-surface-border rounded-lg p-5">
+                            <h3 class="text-slate-400 text-xs font-bold uppercase mb-3 flex items-center gap-2">
+                                <span class="material-symbols-outlined text-sm">event</span> Critical Dates
+                            </h3>
+                            <div class="space-y-3">
+                                <div class="flex justify-between">
+                                    <span class="text-xs text-slate-500">Created</span>
+                                    <span class="text-primary font-mono text-xs" id="date-created">--</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-xs text-slate-500">Updated</span>
+                                    <span class="text-white font-mono text-xs" id="date-updated">--</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-xs text-slate-500">Expires</span>
+                                    <span class="text-warning font-mono text-xs" id="date-expires">--</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-surface-dark border border-surface-border rounded-lg p-5">
+                            <h3 class="text-slate-400 text-xs font-bold uppercase mb-3 flex items-center gap-2">
+                                <span class="material-symbols-outlined text-sm">verified</span> Status Flags
+                            </h3>
+                            <div id="status-list" class="flex flex-wrap gap-2">
+                                <span class="text-xs text-slate-600 italic">No data loaded</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-surface-dark border border-surface-border rounded-lg p-5 flex-1">
+                        <h3 class="text-slate-400 text-xs font-bold uppercase mb-3 flex items-center gap-2">
+                            <span class="material-symbols-outlined text-sm">dns</span> Name Servers
+                        </h3>
+                        <div id="ns-list" class="font-mono text-xs text-slate-300 space-y-1">
+                            <p class="opacity-50">Waiting for target...</p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Store current data for export
+        let scanData = {};
+
+        async function startScan() {
+            const domain = document.getElementById('domain-input').value.trim();
+            if (!domain.includes('.')) return alert("Enter a valid domain (e.g., google.com)");
+
+            // Reset UI
+            document.getElementById('risk-label').innerText = "SCANNING...";
+            document.getElementById('risk-label').className = "text-2xl font-black text-primary animate-pulse";
+
+            try {
+                // 1. Resolve IP (Cloudflare DoH)
+                const dnsRes = await fetch(`https://cloudflare-dns.com/dns-query?name=${domain}&type=A`, {
+                    headers: { 'Accept': 'application/dns-json' }
+                });
+                const dnsData = await dnsRes.json();
+                const ip = dnsData.Answer ? dnsData.Answer[dnsData.Answer.length - 1].data : "Hidden/Unknown";
+                document.getElementById('val-ip').innerText = ip;
+                scanData.ip = ip;
+
+                // 2. Fetch RDAP (Whois)
+                const rdapRes = await fetch(`https://rdap.org/domain/${domain}`);
+                if (!rdapRes.ok) throw new Error("RDAP Lookup Failed (Domain might be private or invalid)");
+
+                const data = await rdapRes.json();
+                processRDAP(data);
+
+            } catch (e) {
+                alert("Error: " + e.message);
+                document.getElementById('risk-label').innerText = "ERROR";
+                document.getElementById('risk-label').className = "text-4xl font-black text-danger";
+            }
+        }
+
+        function processRDAP(data) {
+            scanData.raw = data;
+
+            // Extract Entities (Registrar)
+            let registrar = "Unknown";
+            let abuseEmail = "Not Listed";
+            let ianaId = "N/A";
+
+            if (data.entities) {
+                const regEntity = data.entities.find(e => e.roles && e.roles.includes('registrar'));
+                if (regEntity && regEntity.vcardArray) {
+                    // Parse vCard roughly
+                    const fn = regEntity.vcardArray[1].find(i => i[0] === 'fn');
+                    if (fn) registrar = fn[3];
+
+                    // Abuse contact often nested
+                    const abuse = regEntity.entities ? regEntity.entities.find(e => e.roles.includes('abuse')) : null;
+                    if (abuse && abuse.vcardArray) {
+                        const email = abuse.vcardArray[1].find(i => i[0] === 'email');
+                        if (email) abuseEmail = email[3];
+                    }
+
+                    // Public IDs
+                    if (regEntity.publicIds) ianaId = regEntity.publicIds[0].identifier;
+                }
+            }
+
+            // Extract Dates
+            let created = "Unknown", updated = "Unknown", expires = "Unknown";
+            if (data.events) {
+                data.events.forEach(e => {
+                    if (e.eventAction === 'registration') created = e.eventDate.split('T')[0];
+                    if (e.eventAction === 'last changed') updated = e.eventDate.split('T')[0];
+                    if (e.eventAction === 'expiration') expires = e.eventDate.split('T')[0];
+                });
+            }
+
+            // Store for Export
+            scanData.registrar = registrar;
+            scanData.created = created;
+            scanData.expires = expires;
+            scanData.abuse = abuseEmail;
+
+            // UI Updates
+            document.getElementById('reg-name').innerText = registrar;
+            document.getElementById('reg-id').innerText = ianaId;
+            document.getElementById('reg-email').innerText = abuseEmail;
+            document.getElementById('reg-server').innerText = data.port43 || "rdap.org";
+
+            document.getElementById('date-created').innerText = created;
+            document.getElementById('date-updated').innerText = updated;
+            document.getElementById('date-expires').innerText = expires;
+
+            // Status Flags
+            const statusDiv = document.getElementById('status-list');
+            statusDiv.innerHTML = '';
+            if (data.status) {
+                data.status.forEach(s => {
+                    const badge = document.createElement('span');
+                    badge.className = "text-[10px] bg-white/10 border border-white/20 px-2 py-1 rounded text-slate-300";
+                    badge.innerText = s;
+                    statusDiv.appendChild(badge);
+                });
+            }
+
+            // Name Servers
+            const nsDiv = document.getElementById('ns-list');
+            nsDiv.innerHTML = '';
+            if (data.nameservers) {
+                data.nameservers.forEach(ns => {
+                    const p = document.createElement('p');
+                    p.innerText = "> " + ns.ldhName;
+                    nsDiv.appendChild(p);
+                });
+            }
+
+            // Risk Calculation (Age Based)
+            const ageDays = (new Date() - new Date(created)) / (1000 * 60 * 60 * 24);
+            document.getElementById('val-age').innerText = Math.floor(ageDays) + " days";
+            document.getElementById('val-dnssec').innerText = data.secureDNS ? (data.secureDNS.delegationSigned ? "SIGNED" : "UNSIGNED") : "UNKNOWN";
+
+            let riskLabel = "SAFE";
+            let riskColor = "text-primary";
+            let riskDesc = "Domain is well established.";
+
+            if (ageDays < 30) {
+                riskLabel = "CRITICAL";
+                riskColor = "text-danger";
+                riskDesc = "Newly created domain (<30 days). High risk of phishing.";
+            } else if (ageDays < 365) {
+                riskLabel = "MODERATE";
+                riskColor = "text-warning";
+                riskDesc = "Domain is less than 1 year old.";
+            }
+
+            const rl = document.getElementById('risk-label');
+            rl.innerText = riskLabel;
+            rl.className = `text-4xl font-black ${riskColor}`;
+            document.getElementById('risk-desc').innerText = riskDesc;
+        }
+
+        function exportCSV() {
+            if (!scanData.registrar) return alert("No data to export.");
+
+            const csvContent = "data:text/csv;charset=utf-8,"
+                + "Registrar,Created,Expires,Abuse Contact,IP Address\n"
+                + `${scanData.registrar},${scanData.created},${scanData.expires},${scanData.abuse},${scanData.ip}`;
+
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", "domain_intel_report.csv");
+            document.body.appendChild(link);
+            link.click();
+        }
+
+        // Trigger on Enter
+        document.getElementById('domain-input').addEventListener('keypress', (e) => { if (e.key === 'Enter') startScan() });
+    </script>
 </body>
+
 </html>

@@ -1,278 +1,400 @@
 <!DOCTYPE html>
 <html class="dark" lang="en">
+
 <head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>OSINT Terminal - Email Breach Verification</title>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Noto+Sans:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<script id="tailwind-config">tailwind.config = {darkMode: "class",theme: {extend: {colors: {"primary": "#1dc95c","danger": "#ef4444","background-light": "#f6f8f7","background-dark": "#112117","surface-dark": "#1a2c24",},fontFamily: {"display": ["Space Grotesk", "sans-serif"],"body": ["Noto Sans", "sans-serif"],},borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},},},}</script>
-<style>.glass-panel {background: rgba(29, 201, 92, 0.03);backdrop-filter: blur(10px);border: 1px solid rgba(29, 201, 92, 0.1);}.glass-panel-danger {background: rgba(239, 68, 68, 0.05);backdrop-filter: blur(10px);border: 1px solid rgba(239, 68, 68, 0.2);}.scanline {background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0) 50%, rgba(0,0,0,0.1) 50%, rgba(0,0,0,0.1));background-size: 100% 4px;pointer-events: none;position: absolute;top: 0;left: 0;right: 0;bottom: 0;z-index: 50;opacity: 0.15;}</style>
-</head>
-<body class="bg-background-light dark:bg-background-dark min-h-screen flex flex-col font-display text-white overflow-x-hidden relative">
-<div class="scanline pointer-events-none fixed inset-0 h-full w-full"></div>
-<header class="sticky top-0 z-40 w-full border-b border-[#29382f] bg-background-dark/90 backdrop-blur-md">
-<div class="px-4 md:px-10 py-3 flex items-center justify-between">
-<div class="flex items-center gap-4 text-white">
-<div class="size-6 text-primary animate-pulse">
-<span class="material-symbols-outlined">terminal</span>
-</div>
-<h2 class="text-white text-lg font-bold leading-tight tracking-[0.05em]">OSINT_TERMINAL // V2.0</h2>
-</div>
-<div class="hidden md:flex flex-1 justify-end gap-8 items-center">
-<div class="flex items-center gap-9">
-<a class="text-white/70 hover:text-primary text-sm font-medium leading-normal transition-colors" href="dashboard.html">DASHBOARD</a>
-<a class="text-white text-sm font-medium leading-normal border-b-2 border-primary pb-0.5" href="breach-search.html">BREACH_CHECK</a>
-<a class="text-white/70 hover:text-primary text-sm font-medium leading-normal transition-colors" href="exif-extractor.html">EXIF_TOOL</a>
-<a class="text-white/70 hover:text-primary text-sm font-medium leading-normal transition-colors" href="social-recon.html">SOCIAL_RECON</a>
-<a class="text-white/70 hover:text-primary text-sm font-medium leading-normal transition-colors" href="settings.html">SETTINGS</a>
-</div>
-<button class="flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-9 px-4 bg-primary/10 hover:bg-primary/20 border border-primary/30 text-primary text-sm font-bold tracking-wider transition-all" onclick="logout()">LOGOUT</button>
-</div>
-<div class="md:hidden text-white">
-<span class="material-symbols-outlined">menu</span>
-</div>
-</div>
-</header>
-<main class="flex-1 flex flex-col items-center w-full px-4 py-8 md:px-6 relative z-10">
-<div class="w-full max-w-[960px] flex flex-col gap-10">
-<div class="flex flex-col gap-6">
-<div class="flex flex-col gap-2">
-<h1 class="text-4xl md:text-5xl font-black leading-tight tracking-[-0.033em] uppercase">Target <span class="text-primary">Identification</span></h1>
-<p class="text-[#9eb7a7] text-lg font-normal max-w-2xl">Initiate deep scan against known leak databases. System ready. Awaiting input.</p>
-</div>
-<div class="w-full">
-<div class="flex w-full flex-col sm:flex-row items-stretch rounded-lg shadow-[0_0_20px_rgba(29,201,92,0.1)]">
-<div class="relative flex-1">
-<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-<span class="material-symbols-outlined text-[#9eb7a7]">alternate_email</span>
-</div>
-<input class="form-input w-full rounded-t-lg sm:rounded-l-lg sm:rounded-tr-none bg-surface-dark border border-[#29382f] focus:border-primary focus:ring-1 focus:ring-primary text-white placeholder:text-[#5a6b61] py-4 pl-10 pr-4 text-base font-mono leading-normal transition-colors" placeholder="target_user@example.com" id="email-input"/>
-</div>
-<button class="flex cursor-pointer items-center justify-center rounded-b-lg sm:rounded-r-lg sm:rounded-bl-none h-14 sm:h-auto px-8 bg-primary hover:bg-green-500 text-background-dark text-base font-bold tracking-widest uppercase transition-colors" onclick="startScan()">
-<span class="material-symbols-outlined mr-2">radar</span>INITIATE SCAN
-</button>
-</div>
-</div>
-</div>
-<div id="results-container" class="hidden">
-<!-- Results will be inserted here -->
-</div>
-<div id="no-results" class="text-center py-12 text-gray-500">
-<span class="material-symbols-outlined text-6xl mb-4 block">email</span>
-<p class="font-mono text-sm">Enter an email address and click INITIATE SCAN to begin breach verification</p>
-</div>
-</div>
-</main>
-
-<script>
-let scanInProgress = false;
-
-// Mock breach data
-const mockBreaches = [
-    {
-        name: 'LinkedIn Scraping',
-        date: '2021-04',
-        severity: 'Medium',
-        data: 'Emails, Phone Numbers, Job Titles, Geolocation',
-        source: 'Public Scraping / API Abuse',
-        color: 'primary'
-    },
-    {
-        name: 'Verifications.io',
-        date: '2019-02',
-        severity: 'Critical',
-        data: 'Email, IP Address, Names, Genders, DOB',
-        source: 'Unsecured MongoDB Instance',
-        color: 'danger'
-    },
-    {
-        name: 'Dropbox Breach',
-        date: '2016-08',
-        severity: 'High',
-        data: 'Email, Hashed Passwords (Bcrypt)',
-        source: 'Credential Stuffing',
-        color: 'gray'
-    }
-];
-
-document.addEventListener('DOMContentLoaded', function() {
-    // Check authentication
-    const isAuthenticated = localStorage.getItem('allOSINT_authenticated');
-    if (!isAuthenticated) {
-        window.location.href = 'login.html';
-        return;
-    }
-    
-    // Load target from localStorage if available
-    const target = localStorage.getItem('allOSINT_target');
-    if (target && target.includes('@')) {
-        document.getElementById('email-input').value = target;
-        // Auto-start scan after a brief delay
-        setTimeout(() => startScan(), 1000);
-    }
-});
-
-function startScan() {
-    const email = document.getElementById('email-input').value.trim();
-    
-    if (!email) {
-        alert('Please enter an email address');
-        return;
-    }
-    
-    if (!email.includes('@')) {
-        alert('Please enter a valid email address');
-        return;
-    }
-    
-    if (scanInProgress) {
-        return;
-    }
-    
-    scanInProgress = true;
-    
-    // Hide no results message
-    document.getElementById('no-results').classList.add('hidden');
-    
-    // Show loading state
-    document.getElementById('results-container').innerHTML = `
-        <div class="text-center py-12">
-            <span class="material-symbols-outlined text-6xl mb-4 block animate-spin text-primary">sync</span>
-            <p class="font-mono text-sm text-primary">Scanning ${email} against breach databases...</p>
-            <div class="mt-4 w-64 mx-auto bg-surface-dark rounded-full h-2">
-                <div class="bg-primary h-2 rounded-full animate-pulse" style="width: 0%" id="scan-progress"></div>
-            </div>
-        </div>
-    `;
-    document.getElementById('results-container').classList.remove('hidden');
-    
-    // Simulate scanning progress
-    let progress = 0;
-    const progressInterval = setInterval(() => {
-        progress += Math.random() * 20 + 10;
-        if (progress > 100) progress = 100;
-        
-        document.getElementById('scan-progress').style.width = progress + '%';
-        
-        if (progress >= 100) {
-            clearInterval(progressInterval);
-            showResults(email);
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <link rel="icon" type="image/png" href="logo2.png" />
+    <title>OSINT // BREACH & AUTH</title>
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: { "primary": "#13ec63", "primary-dim": "#0eac48", "background-light": "#f6f8f7", "background-dark": "#050a07", "surface-dark": "#0f1612", "surface-border": "#1f2e25", "danger": "#ef4444", "warning": "#eab308" },
+                    fontFamily: { "display": ["Space Grotesk", "sans-serif"], "mono": ["JetBrains Mono", "monospace"], },
+                    backgroundImage: { 'cyber-grid': "linear-gradient(to right, #1f2e25 1px, transparent 1px), linear-gradient(to bottom, #1f2e25 1px, transparent 1px)", }
+                },
+            },
         }
-    }, 500);
-}
+    </script>
+    <style>
+        .neon-glow {
+            box-shadow: 0 0 10px rgba(19, 236, 99, 0.2);
+        }
 
-function showResults(email) {
-    const breachCount = Math.random() > 0.3 ? mockBreaches.length : 0; // 70% chance of finding breaches
-    
-    if (breachCount === 0) {
-        // No breaches found
-        document.getElementById('results-container').innerHTML = `
-            <div class="animate-in fade-in slide-in-from-bottom-4 duration-700">
-                <div class="glass-panel rounded-xl p-6 md:p-8 flex flex-col md:flex-row items-center gap-6 md:gap-10 border-l-4 border-l-primary relative overflow-hidden">
-                    <div class="absolute -right-20 -top-20 w-64 h-64 bg-primary/20 rounded-full blur-[80px] pointer-events-none"></div>
-                    <div class="relative shrink-0 flex items-center justify-center size-24 md:size-32 rounded-full bg-primary/10 border border-primary/30 text-primary shadow-[0_0_30px_rgba(29,201,92,0.2)]">
-                        <span class="material-symbols-outlined text-6xl md:text-7xl">shield</span>
-                    </div>
-                    <div class="flex flex-col items-center md:items-start text-center md:text-left z-10 w-full">
-                        <div class="flex items-center gap-3 mb-2">
-                            <span class="inline-flex items-center rounded-full bg-primary/20 px-2.5 py-0.5 text-xs font-medium text-primary ring-1 ring-inset ring-primary/30 uppercase tracking-wider">Clean</span>
-                        </div>
-                        <h3 class="text-3xl md:text-4xl font-bold text-white tracking-tight uppercase mb-2">Status: <span class="text-primary">Secure</span></h3>
-                        <p class="text-gray-300 text-base md:text-lg max-w-xl">Email address not found in any known data breaches. Your credentials appear to be secure.</p>
-                        <div class="mt-6 flex flex-wrap gap-4 justify-center md:justify-start">
-                            <button class="flex items-center justify-center rounded-lg h-10 px-6 bg-surface-dark hover:bg-[#23352d] border border-[#3d5245] text-white text-sm font-bold tracking-wide uppercase transition-colors">
-                                <span class="material-symbols-outlined text-base mr-2">download</span>Export Report
-                            </button>
-                        </div>
+        .grid-bg {
+            background-size: 40px 40px;
+            mask-image: linear-gradient(to bottom, black 40%, transparent 100%);
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #0f1612;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #1f2e25;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #13ec63;
+        }
+
+        @keyframes pulse-border {
+            0% {
+                border-color: #1f2e25;
+            }
+
+            50% {
+                border-color: #13ec63;
+            }
+
+            100% {
+                border-color: #1f2e25;
+            }
+        }
+
+        .scan-active {
+            animation: pulse-border 2s infinite;
+        }
+    </style>
+</head>
+
+<body
+    class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 min-h-screen flex flex-col overflow-x-hidden selection:bg-primary selection:text-black">
+    <div class="fixed inset-0 pointer-events-none opacity-20 bg-cyber-grid grid-bg z-0"></div>
+
+    <div class="relative z-10 flex flex-col h-full grow">
+        <header
+            class="sticky top-0 z-50 flex items-center justify-between border-b border-surface-border bg-surface-dark/95 backdrop-blur-md px-6 py-3">
+            <div class="flex items-center gap-4 text-white">
+                <div
+                    class="size-8 text-primary flex items-center justify-center rounded bg-primary/10 border border-primary/20 neon-glow">
+                    <img src="logo2.png" alt="Logo" class="w-6 h-6 object-contain" />
+                </div>
+                <div class="flex flex-col">
+                    <h2 class="text-white text-xl font-bold tracking-tight uppercase">OSINT <span
+                            class="text-primary">//</span> EMAIL INTEL</h2>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-4">
+                <a href="dashboard.html"
+                    class="flex items-center gap-2 px-4 py-1.5 bg-surface-dark border border-surface-border hover:border-primary text-slate-300 hover:text-primary rounded transition-all text-xs font-bold font-mono group">
+                    <span
+                        class="material-symbols-outlined text-[16px] group-hover:-translate-x-1 transition-transform">arrow_back</span>
+                    DASHBOARD
+                </a>
+                <div class="size-9 rounded-full bg-gradient-to-br from-primary to-blue-500 p-[1px]">
+                    <div
+                        class="size-full rounded-full bg-surface-dark flex items-center justify-center overflow-hidden">
+                        <span class="material-symbols-outlined text-white text-[20px]">person</span>
                     </div>
                 </div>
             </div>
-        `;
-    } else {
-        // Breaches found
-        document.getElementById('results-container').innerHTML = `
-            <div class="animate-in fade-in slide-in-from-bottom-4 duration-700">
-                <div class="glass-panel-danger rounded-xl p-6 md:p-8 flex flex-col md:flex-row items-center gap-6 md:gap-10 border-l-4 border-l-danger relative overflow-hidden">
-                    <div class="absolute -right-20 -top-20 w-64 h-64 bg-danger/20 rounded-full blur-[80px] pointer-events-none"></div>
-                    <div class="relative shrink-0 flex items-center justify-center size-24 md:size-32 rounded-full bg-danger/10 border border-danger/30 text-danger shadow-[0_0_30px_rgba(239,68,68,0.2)]">
-                        <span class="material-symbols-outlined text-6xl md:text-7xl">warning</span>
-                    </div>
-                    <div class="flex flex-col items-center md:items-start text-center md:text-left z-10 w-full">
-                        <div class="flex items-center gap-3 mb-2">
-                            <span class="inline-flex items-center rounded-full bg-danger/20 px-2.5 py-0.5 text-xs font-medium text-danger ring-1 ring-inset ring-danger/30 uppercase tracking-wider animate-pulse">Critical Alert</span>
-                        </div>
-                        <h3 class="text-3xl md:text-4xl font-bold text-white tracking-tight uppercase mb-2">Status: <span class="text-danger">Compromised</span></h3>
-                        <p class="text-gray-300 text-base md:text-lg max-w-xl">Target email found in <span class="font-bold text-white">${breachCount} known data breaches</span>. Password hashes and PII exposed. Immediate remediation recommended.</p>
-                        <div class="mt-6 flex flex-wrap gap-4 justify-center md:justify-start">
-                            <button class="flex items-center justify-center rounded-lg h-10 px-6 bg-surface-dark hover:bg-[#23352d] border border-[#3d5245] text-white text-sm font-bold tracking-wide uppercase transition-colors">
-                                <span class="material-symbols-outlined text-base mr-2">download</span>Export Report
-                            </button>
-                            <button class="flex items-center justify-center rounded-lg h-10 px-6 bg-transparent hover:bg-danger/10 border border-transparent text-danger text-sm font-bold tracking-wide uppercase transition-colors">
-                                <span class="material-symbols-outlined text-base mr-2">lock_reset</span>Remediation Steps
-                            </button>
-                        </div>
-                    </div>
+        </header>
+
+        <main class="flex-1 px-4 md:px-8 py-6 w-full max-w-[1200px] mx-auto flex flex-col gap-8">
+
+            <div class="flex flex-col gap-4">
+                <div class="text-center mb-2">
+                    <h1 class="text-3xl font-black text-white uppercase tracking-tight">Identity Verification</h1>
+                    <p class="text-slate-400 text-sm">Deep scan analysis of 10B+ leaked records & MX validation.</p>
+                </div>
+                <div
+                    class="relative flex items-center bg-surface-dark rounded-lg border border-surface-border p-1 shadow-lg shadow-black/50">
+                    <span class="material-symbols-outlined text-slate-500 ml-3">alternate_email</span>
+                    <input
+                        class="bg-transparent border-none text-white placeholder-slate-600 focus:ring-0 w-full font-mono text-lg"
+                        placeholder="target_email@example.com" type="text" id="email-input" />
+                    <button
+                        class="bg-primary hover:bg-green-400 text-black px-8 py-3 rounded font-bold text-sm tracking-wide transition-all flex items-center gap-2"
+                        onclick="runAllChecks()">
+                        <span>ANALYZE</span>
+                        <span class="material-symbols-outlined text-sm">search</span>
+                    </button>
                 </div>
             </div>
-            
-            <div class="flex flex-col gap-4 animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-150">
-                <div class="flex items-center justify-between pb-2 border-b border-[#29382f]">
-                    <h3 class="text-xl font-bold text-white tracking-wide flex items-center gap-2">
-                        <span class="material-symbols-outlined text-primary">history</span>LEAK_TIMELINE
+
+            <div class="bg-surface-dark border border-surface-border rounded-xl overflow-hidden" id="auth-card">
+                <div class="bg-white/5 px-6 py-3 border-b border-surface-border flex justify-between items-center">
+                    <h3 class="text-sm font-bold text-white flex items-center gap-2">
+                        <span class="material-symbols-outlined text-primary text-sm">fingerprint</span>
+                        VALIDATION & AUTH
                     </h3>
-                    <span class="text-[#9eb7a7] text-sm font-mono">${breachCount} ENTRIES FOUND</span>
+                    <span id="auth-status"
+                        class="text-[10px] font-mono font-bold bg-slate-800 px-2 py-1 rounded text-slate-500">IDLE</span>
                 </div>
-                <div class="relative pl-4 md:pl-8 space-y-8 mt-4">
-                    <div class="absolute left-[27px] md:left-[43px] top-2 bottom-2 w-px bg-gradient-to-b from-primary via-[#29382f] to-transparent"></div>
-                    ${mockBreaches.map((breach, index) => `
-                        <div class="relative grid grid-cols-[auto_1fr] gap-6 items-start group">
-                            <div class="relative z-10 flex flex-col items-center">
-                                <div class="size-6 rounded-full bg-background-dark border-2 ${breach.color === 'danger' ? 'border-danger shadow-[0_0_10px_rgba(239,68,68,0.5)]' : 'border-primary shadow-[0_0_10px_rgba(29,201,92,0.5)]'} ${breach.color === 'danger' ? 'flex items-center justify-center' : ''}">
-                                    ${breach.color === 'danger' ? '<div class="size-2 bg-danger rounded-full animate-ping opacity-75"></div>' : ''}
-                                </div>
-                            </div>
-                            <div class="${breach.color === 'danger' ? 'glass-panel-danger' : 'glass-panel'} rounded-lg p-5 hover:bg-${breach.color === 'danger' ? 'danger' : 'primary'}/10 transition-colors duration-300 -mt-2">
-                                <div class="flex flex-col md:flex-row md:items-center justify-between gap-2 mb-2">
-                                    <span class="text-${breach.color === 'danger' ? 'danger' : 'primary'} font-mono text-sm font-bold">${breach.date.toUpperCase()}</span>
-                                    <span class="inline-flex items-center rounded bg-${breach.color === 'danger' ? 'danger' : breach.color}/20 px-2 py-0.5 text-xs font-medium text-${breach.color === 'danger' ? 'danger' : breach.color} border border-${breach.color === 'danger' ? 'danger' : breach.color}/20 uppercase">Severity: ${breach.severity}</span>
-                                </div>
-                                <h4 class="text-lg font-bold text-white mb-1">${breach.name}</h4>
-                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-3">
-                                    <div>
-                                        <p class="text-[#9eb7a7] text-xs uppercase tracking-wider mb-1">Compromised Data</p>
-                                        <p class="text-white text-sm">${breach.data}</p>
-                                    </div>
-                                    <div>
-                                        <p class="text-[#9eb7a7] text-xs uppercase tracking-wider mb-1">Source Type</p>
-                                        <p class="text-white text-sm">${breach.source}</p>
-                                    </div>
-                                </div>
-                            </div>
+                <div class="p-6 grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="flex flex-col items-center gap-2">
+                        <div class="size-10 rounded-full bg-white/5 flex items-center justify-center mb-1"
+                            id="icon-syntax">
+                            <span class="material-symbols-outlined text-slate-500">code</span>
                         </div>
-                    `).join('')}
+                        <p class="text-xs text-slate-500 uppercase font-bold">Format Syntax</p>
+                        <p class="text-white font-mono text-sm" id="text-syntax">--</p>
+                    </div>
+                    <div class="flex flex-col items-center gap-2 md:border-l md:border-r border-white/10">
+                        <div class="size-10 rounded-full bg-white/5 flex items-center justify-center mb-1"
+                            id="icon-domain">
+                            <span class="material-symbols-outlined text-slate-500">domain</span>
+                        </div>
+                        <p class="text-xs text-slate-500 uppercase font-bold">Domain Type</p>
+                        <p class="text-white font-mono text-sm" id="text-domain">--</p>
+                    </div>
+                    <div class="flex flex-col items-center gap-2">
+                        <div class="size-10 rounded-full bg-white/5 flex items-center justify-center mb-1" id="icon-mx">
+                            <span class="material-symbols-outlined text-slate-500">mail_lock</span>
+                        </div>
+                        <p class="text-xs text-slate-500 uppercase font-bold">MX Reachability</p>
+                        <p class="text-white font-mono text-sm" id="text-mx">--</p>
+                    </div>
                 </div>
-                <div class="text-center mt-8 text-[#5a6b61] text-xs font-mono uppercase tracking-widest">// End of Report //</div>
             </div>
-        `;
-    }
-    
-    scanInProgress = false;
-}
 
-function logout() {
-    localStorage.removeItem('allOSINT_authenticated');
-    localStorage.removeItem('allOSINT_user');
-    window.location.href = 'index.html';
-}
+            <div id="breach-section" class="hidden flex flex-col gap-4">
+                <h3 class="text-sm font-bold text-white flex items-center gap-2 px-1">
+                    <span class="material-symbols-outlined text-danger text-sm">warning</span>
+                    BREACH DATABASES
+                </h3>
 
-// Allow Enter key to trigger scan
-document.getElementById('email-input').addEventListener('keypress', function(e) {
-    if (e.key === 'Enter') {
-        startScan();
-    }
-});
-</script>
+                <div id="breach-summary"
+                    class="bg-surface-dark border border-surface-border rounded-lg p-6 flex items-center justify-between">
+                    <div>
+                        <h4 class="text-white font-bold text-lg" id="summary-title">Scanning...</h4>
+                        <p class="text-slate-400 text-xs mt-1" id="summary-desc">Checking 10 Billion+ records via
+                            XposedOrNot...</p>
+                    </div>
+                    <div class="text-right">
+                        <button onclick="exportReport()" id="btn-export"
+                            class="hidden text-xs bg-white/10 hover:bg-white/20 text-white px-3 py-1.5 rounded transition-colors flex items-center gap-1">
+                            <span class="material-symbols-outlined text-sm">download</span> SAVE REPORT
+                        </button>
+                    </div>
+                </div>
+
+                <div id="breach-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                </div>
+
+                <div id="manual-fallback" class="hidden text-center mt-4">
+                    <p class="text-slate-500 text-xs mb-2">API Connection Timed Out? Try manual verification:</p>
+                    <a href="#" id="manual-link" target="_blank"
+                        class="text-primary hover:underline text-xs font-mono">OPEN XPOSEDORNOT REPORT ></a>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <script>
+        // --- CONFIG & LISTS ---
+        const PROXY_URL = 'https://corsproxy.io/?';
+        const API_URL = 'https://api.xposedornot.com/v1/check-email/';
+
+        // Common Burner Domains (Local Blacklist)
+        const DISPOSABLE_DOMAINS = [
+            'yopmail.com', 'mailinator.com', '10minutemail.com', 'guerrillamail.com', 'temp-mail.org',
+            'trashmail.com', 'getairmail.com', 'dispostable.com', 'sharklasers.com', 'maildrop.cc', 'tempmail.com'
+        ];
+
+        // --- MAIN FUNCTION ---
+        async function runAllChecks() {
+            const email = document.getElementById('email-input').value.trim();
+            if (!email.includes('@')) return alert("Invalid Email");
+
+            // Reset UI
+            resetUI();
+            document.getElementById('auth-status').innerText = "ANALYZING...";
+            document.getElementById('auth-status').className = "text-[10px] font-mono font-bold bg-primary/20 text-primary px-2 py-1 rounded animate-pulse";
+
+            // 1. Authenticator (Client Side + Cloudflare DNS)
+            const isAuthValid = await runAuthenticator(email);
+
+            // 2. Breach Check (XposedOrNot)
+            if (isAuthValid) {
+                document.getElementById('breach-section').classList.remove('hidden');
+                await checkBreaches(email);
+            } else {
+                document.getElementById('auth-status').innerText = "INVALID";
+                document.getElementById('auth-status').className = "text-[10px] font-mono font-bold bg-danger/20 text-danger px-2 py-1 rounded";
+            }
+        }
+
+        // --- AUTHENTICATOR ---
+        async function runAuthenticator(email) {
+            const domain = email.split('@')[1];
+            let score = 0;
+
+            // Step A: Syntax
+            const syntaxValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+            updateAuthUI('syntax', syntaxValid ? 'VALID' : 'INVALID', syntaxValid);
+            if (!syntaxValid) return false;
+
+            // Step B: Disposable
+            const isDisposable = DISPOSABLE_DOMAINS.includes(domain);
+            updateAuthUI('domain', isDisposable ? 'DISPOSABLE' : 'TRUSTED', !isDisposable);
+            if (isDisposable) return false; // Don't bother checking MX for burner phones
+
+            // Step C: MX Record Check (Via Cloudflare DoH)
+            document.getElementById('text-mx').innerText = "CHECKING...";
+            try {
+                const res = await fetch(`https://cloudflare-dns.com/dns-query?name=${domain}&type=MX`, {
+                    headers: { 'Accept': 'application/dns-json' }
+                });
+                const data = await res.json();
+                const hasMX = data.Answer && data.Answer.length > 0;
+
+                updateAuthUI('mx', hasMX ? 'VERIFIED' : 'NO RECORD', hasMX);
+                return hasMX; // Only proceed if mail server exists
+            } catch (e) {
+                updateAuthUI('mx', 'DNS ERROR', false);
+                return true; // Soft fail, assume valid to allow breach check to run anyway
+            }
+        }
+
+        function updateAuthUI(id, text, isGood) {
+            const textEl = document.getElementById(`text-${id}`);
+            const iconEl = document.getElementById(`icon-${id}`);
+
+            textEl.innerText = text;
+            textEl.className = `font-mono text-sm font-bold ${isGood ? 'text-primary' : 'text-danger'}`;
+
+            iconEl.className = `size-10 rounded-full flex items-center justify-center mb-1 ${isGood ? 'bg-primary/20 text-primary' : 'bg-danger/20 text-danger'}`;
+            iconEl.innerHTML = `<span class="material-symbols-outlined">${isGood ? 'check' : 'close'}</span>`;
+        }
+
+        // --- BREACH CHECKER ---
+        async function checkBreaches(email) {
+            const grid = document.getElementById('breach-grid');
+            const summaryTitle = document.getElementById('summary-title');
+            const summaryDesc = document.getElementById('summary-desc');
+
+            grid.innerHTML = '<div class="col-span-full text-center py-10"><span class="material-symbols-outlined text-4xl animate-spin text-primary">sync</span></div>';
+
+            try {
+                // Using Proxy to bypass CORS issues with XposedOrNot
+                const targetUrl = PROXY_URL + encodeURIComponent(API_URL + email);
+                const res = await fetch(targetUrl);
+
+                // XposedOrNot returns 404 if clean
+                if (res.status === 404) {
+                    renderCleanState(email);
+                    return;
+                }
+
+                const data = await res.json();
+
+                // Parsing Logic (XposedOrNot returns complex object structure)
+                // data.breaches is usually: [ ["BreachName", ...], ... ] or just object keys depending on version
+                // Note: Public endpoint usually returns { breaches: [ ["Name", ...], ... ] }
+
+                let breaches = [];
+                if (data.breaches && Array.isArray(data.breaches[0])) {
+                    breaches = data.breaches[0]; // Extract the array of names
+                }
+
+                if (breaches.length > 0) {
+                    renderBreachList(breaches, email);
+                } else {
+                    renderCleanState(email);
+                }
+
+            } catch (e) {
+                console.error(e);
+                grid.innerHTML = '';
+                summaryTitle.innerText = "Connection Failed";
+                summaryTitle.className = "text-danger font-bold text-lg";
+                summaryDesc.innerText = "Could not reach breach database via proxy.";
+                document.getElementById('manual-fallback').classList.remove('hidden');
+                document.getElementById('manual-link').href = `https://xposedornot.com/email-report/${email}`;
+            }
+        }
+
+        function renderBreachList(breaches, email) {
+            const grid = document.getElementById('breach-grid');
+            const summaryTitle = document.getElementById('summary-title');
+            const summaryDesc = document.getElementById('summary-desc');
+
+            grid.innerHTML = '';
+
+            // Update Summary
+            summaryTitle.innerText = `${breaches.length} DATA BREACHES FOUND`;
+            summaryTitle.className = "text-danger font-bold text-lg animate-pulse";
+            summaryDesc.innerText = `The identity ${email} appears in the following leaks.`;
+            document.getElementById('btn-export').classList.remove('hidden');
+
+            // Render Cards
+            breaches.forEach(breachName => {
+                const card = document.createElement('div');
+                card.className = "bg-surface-dark border border-danger/30 rounded-lg p-4 hover:bg-danger/5 transition-colors";
+                card.innerHTML = `
+                <div class="flex items-start justify-between mb-2">
+                    <div class="flex items-center gap-2">
+                        <span class="material-symbols-outlined text-danger text-sm">database</span>
+                        <h4 class="font-bold text-white">${breachName}</h4>
+                    </div>
+                    <span class="text-[10px] bg-danger/20 text-danger px-2 py-0.5 rounded border border-danger/20">LEAKED</span>
+                </div>
+                <p class="text-xs text-slate-400">Data exposed in this incident may include emails, passwords, and personal details.</p>
+            `;
+                grid.appendChild(card);
+            });
+        }
+
+        function renderCleanState(email) {
+            document.getElementById('breach-grid').innerHTML = '';
+            document.getElementById('summary-title').innerText = "NO BREACHES FOUND";
+            document.getElementById('summary-title').className = "text-primary font-bold text-lg";
+            document.getElementById('summary-desc').innerText = `Great! ${email} was not found in the database.`;
+        }
+
+        function resetUI() {
+            document.getElementById('breach-section').classList.add('hidden');
+            document.getElementById('manual-fallback').classList.add('hidden');
+            document.getElementById('btn-export').classList.add('hidden');
+
+            // Reset Icons
+            ['syntax', 'domain', 'mx'].forEach(id => {
+                document.getElementById(`text-${id}`).innerText = '--';
+                document.getElementById(`text-${id}`).className = 'text-slate-300 font-mono text-sm';
+                document.getElementById(`icon-${id}`).className = 'size-10 rounded-full bg-white/5 flex items-center justify-center mb-1';
+                document.getElementById(`icon-${id}`).innerHTML = `<span class="material-symbols-outlined text-slate-500">circle</span>`;
+            });
+        }
+
+        function exportReport() {
+            const email = document.getElementById('email-input').value;
+            const count = document.getElementById('breach-grid').children.length;
+            const date = new Date().toLocaleString();
+
+            let text = `OSINT BREACH REPORT\nTarget: ${email}\nDate: ${date}\nTotal Breaches: ${count}\n\n[DETECTED LEAKS]\n`;
+
+            const cards = document.querySelectorAll('#breach-grid h4');
+            cards.forEach(c => text += `- ${c.innerText}\n`);
+
+            const blob = new Blob([text], { type: 'text/plain' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = `BREACH_REPORT_${email}.txt`;
+            a.click();
+        }
+
+        // Trigger on Enter
+        document.getElementById('email-input').addEventListener('keypress', (e) => { if (e.key === 'Enter') runAllChecks(); });
+    </script>
 </body>
+
 </html>

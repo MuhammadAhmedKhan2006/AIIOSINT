@@ -1,121 +1,474 @@
 <!DOCTYPE html>
 <html class="dark" lang="en">
+
 <head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>System Initialization Overlay</title>
-<link href="https://fonts.googleapis.com" rel="preconnect"/>
-<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Noto+Sans:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<script id="tailwind-config">tailwind.config = {darkMode: "class",theme: {extend: {colors: {"primary": "#21c45d","background-light": "#f6f8f7","background-dark": "#122017","slate-dark": "#0f172a",},fontFamily: {"display": ["Space Grotesk", "sans-serif"],"mono": ["Space Grotesk", "monospace"],},backgroundImage: {'grid-pattern': "linear-gradient(to right, #21c45d05 1px, transparent 1px), linear-gradient(to bottom, #21c45d05 1px, transparent 1px)",},animation: {'pulse-fast': 'pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite',}},},}</script>
-<style>.scanlines {background: linear-gradient(to bottom,rgba(255,255,255,0),rgba(255,255,255,0) 50%,rgba(0,0,0,0.2) 50%,rgba(0,0,0,0.2));background-size: 100% 4px;pointer-events: none;}.text-glow {text-shadow: 0 0 10px rgba(33, 196, 93, 0.5), 0 0 20px rgba(33, 196, 93, 0.3);}.box-glow {box-shadow: 0 0 15px rgba(33, 196, 93, 0.15);}</style>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <link rel="icon" type="image/png" href="logo2.png" />
+    <title>System Initialization - OSINT Wolf</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet" />
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#06f95f",
+                        "background-dark": "#000000",
+                    },
+                    fontFamily: {
+                        "display": ["Space Grotesk", "sans-serif"],
+                        "cyber": ["Orbitron", "sans-serif"],
+                    },
+                },
+            },
+        }
+    </script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background: #000000;
+        }
+
+        #matrixCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            opacity: 0.15;
+        }
+
+        .wolf-background {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 600px;
+            height: 700px;
+            opacity: 0.08;
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        .wolf-background img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            filter: grayscale(100%) brightness(0.5);
+        }
+
+        .wolf-circle-container {
+            position: relative;
+            width: 200px;
+            height: 200px;
+        }
+
+        .pulse-ring {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            border: 1px solid rgba(6, 249, 95, 0.3);
+        }
+
+        .ring-1 {
+            width: 100%;
+            height: 100%;
+            animation: pulse-ring 3s ease-out infinite;
+        }
+
+        .ring-2 {
+            width: 120%;
+            height: 120%;
+            animation: pulse-ring 3s ease-out infinite 0.5s;
+            opacity: 0.6;
+        }
+
+        .ring-3 {
+            width: 140%;
+            height: 140%;
+            animation: pulse-ring 3s ease-out infinite 1s;
+            opacity: 0.3;
+        }
+
+        @keyframes pulse-ring {
+            0% {
+                transform: translate(-50%, -50%) scale(0.95);
+                opacity: 1;
+            }
+
+            50% {
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 0.7;
+            }
+
+            100% {
+                transform: translate(-50%, -50%) scale(1.05);
+                opacity: 0.3;
+            }
+        }
+
+        .wolf-circle {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, rgba(6, 249, 95, 0.1) 0%, rgba(0, 0, 0, 0.8) 100%);
+            border: 2px solid rgba(6, 249, 95, 0.4);
+            overflow: hidden;
+            box-shadow: 0 0 30px rgba(6, 249, 95, 0.3),
+                inset 0 0 30px rgba(6, 249, 95, 0.1);
+            animation: rotate-glow 10s linear infinite;
+        }
+
+        @keyframes rotate-glow {
+            0% {
+                box-shadow: 0 0 30px rgba(6, 249, 95, 0.3),
+                    inset 0 0 30px rgba(6, 249, 95, 0.1);
+            }
+
+            50% {
+                box-shadow: 0 0 50px rgba(6, 249, 95, 0.5),
+                    inset 0 0 50px rgba(6, 249, 95, 0.2);
+            }
+
+            100% {
+                box-shadow: 0 0 30px rgba(6, 249, 95, 0.3),
+                    inset 0 0 30px rgba(6, 249, 95, 0.1);
+            }
+        }
+
+        .wolf-circle img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.9;
+            mix-blend-mode: luminosity;
+            transition: all 0.5s ease;
+        }
+
+        .wolf-circle:hover img {
+            mix-blend-mode: normal;
+            opacity: 1;
+        }
+
+        .wolf-circle::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at center, transparent 40%, rgba(6, 249, 95, 0.1) 100%);
+            pointer-events: none;
+        }
+
+        .status-badge {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(6, 249, 95, 0.5);
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 10px;
+            color: #06f95f;
+            font-family: 'Orbitron', monospace;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            box-shadow: 0 0 10px rgba(6, 249, 95, 0.3);
+        }
+
+        .status-badge::before {
+            content: '⚡';
+            animation: pulse 1s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.5;
+            }
+        }
+
+        .grid-overlay {
+            position: fixed;
+            inset: 0;
+            background-image: linear-gradient(rgba(6, 249, 95, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(6, 249, 95, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            z-index: 1;
+            pointer-events: none;
+            opacity: 0.5;
+        }
+
+        .scanlines {
+            position: fixed;
+            inset: 0;
+            background: linear-gradient(to bottom,
+                    rgba(255, 255, 255, 0) 0%,
+                    rgba(255, 255, 255, 0) 50%,
+                    rgba(0, 0, 0, 0.1) 50%,
+                    rgba(0, 0, 0, 0.1) 100%);
+            background-size: 100% 4px;
+            z-index: 3;
+            pointer-events: none;
+            opacity: 0.1;
+            animation: scanline-move 8s linear infinite;
+        }
+
+        @keyframes scanline-move {
+            0% {
+                background-position: 0 0;
+            }
+
+            100% {
+                background-position: 0 100%;
+            }
+        }
+
+        .loading-bar-container {
+            width: 400px;
+            height: 4px;
+            background: rgba(6, 249, 95, 0.2);
+            border-radius: 2px;
+            overflow: hidden;
+            box-shadow: 0 0 10px rgba(6, 249, 95, 0.3);
+        }
+
+        .loading-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #06f95f 0%, #04d94f 50%, #06f95f 100%);
+            background-size: 200% 100%;
+            animation: shimmer 2s linear infinite;
+            width: 0%;
+            transition: width 0.1s linear;
+            box-shadow: 0 0 20px #06f95f;
+        }
+
+        @keyframes shimmer {
+            0% {
+                background-position: -200% 0;
+            }
+
+            100% {
+                background-position: 200% 0;
+            }
+        }
+
+        .status-text {
+            font-family: 'Orbitron', monospace;
+            color: #06f95f;
+            text-shadow: 0 0 10px #06f95f, 0 0 20px #06f95f;
+            letter-spacing: 0.1em;
+            animation: textGlow 1.5s ease-in-out infinite;
+        }
+
+        @keyframes textGlow {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.7;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .wolf-background {
+                width: 400px;
+                height: 500px;
+            }
+
+            .loading-bar-container {
+                width: 280px;
+            }
+        }
+
+        .info-footer {
+            font-family: 'Orbitron', monospace;
+            font-size: 10px;
+            color: rgba(6, 249, 95, 0.5);
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+        }
+
+        .divider-line {
+            height: 1px;
+            width: 100px;
+            background: linear-gradient(90deg, transparent, rgba(6, 249, 95, 0.5), transparent);
+        }
+    </style>
 </head>
-<body class="bg-background-light dark:bg-background-dark font-display min-h-screen flex flex-col overflow-hidden selection:bg-primary selection:text-black">
-<div class="relative flex h-full grow flex-col bg-[#0f172a] text-white overflow-hidden">
-<div class="absolute inset-0 z-0">
-<div class="absolute inset-0 bg-grid-pattern bg-[size:40px_40px]"></div>
-<div class="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_10%,#0f172a_90%)]"></div>
-<div class="absolute inset-0 scanlines z-10 opacity-30"></div>
-<div class="absolute top-0 left-0 w-full h-full opacity-[0.03] z-0" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCMyIG4Omo_jUBtHdT2oEh0Z42iEVPQ7-HLSXdsT-5RlnXURaXHivhgJZzFAqb-P9f9_CJfKP-YeHKmCVMyLa--Quk0AqHKevYogpxJ9TzN739oEdGg-7DVLk9ltJezLB_D9CXaJQAN2mY_6DSShcCu-aBQihrH3UIFIGw5vHQrRXACD0FGzQaXSOgC-pU74NoZn7s7g2xspynVs2AEPeombv3iHKnpj7FwPTamC7clPCOG3aQ9uOnHOnKwSZwsNkYNis4e1I65T4xt'); background-repeat: repeat; filter: blur(1px);"></div>
-</div>
-<div class="layout-container flex h-full w-full flex-col items-center justify-center relative z-20">
-<div class="flex flex-col items-center justify-center w-full max-w-[600px] px-6 gap-10">
-<div class="relative group">
-<div class="absolute inset-0 rounded-full border border-primary/20 scale-150 opacity-20"></div>
-<div class="absolute inset-0 rounded-full border border-primary/10 scale-[1.8] opacity-10"></div>
-<div class="relative w-48 h-48 rounded-full bg-[#122017] border border-primary/40 flex items-center justify-center box-glow overflow-hidden">
-<div class="w-full h-full bg-center bg-cover opacity-90 mix-blend-luminosity hover:mix-blend-normal transition-all duration-500" data-alt="Stylized illustration of a white wolf running in a cyber noir style" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAYkKpV_YS2dPY_YZ8AAzbkuKUZYvfITDcUiIhUD1pUC6CtUDutur1B52SECL_Raazd77hFJA_007ks-1ULkawumnU3dJgHKUSF2Qqp2hhTOgacwsUxbkA2ywT-CDPwo4U10PjT1vLZsY1KLR_xrmxF7MrOJAPlYgsRaUuPE8pjsv2ZvtF6QqME9VKIU5eG06wyRnVqRm6v4lXajKMU_JsS0XWozBw5mK07tsP1Efc7x1McoYVcTxe-qhGxNWFPB7h_soQDG7BnKlrv');"></div>
-<div class="absolute inset-0 bg-primary/5 mix-blend-overlay"></div>
-</div>
-<div class="absolute bottom-2 right-4 bg-black/80 backdrop-blur border border-primary/50 px-2 py-0.5 rounded text-[10px] text-primary font-mono flex items-center gap-1">
-<span class="material-symbols-outlined text-[12px] animate-pulse">bolt</span>LIVE
-</div>
-</div>
-<div class="flex flex-col items-center w-full gap-6">
-<div class="flex flex-col items-center gap-1 min-h-[80px]">
-<h2 class="text-white text-2xl md:text-3xl font-bold tracking-widest uppercase text-glow text-center">System Initialization</h2>
-<div class="flex flex-col items-center gap-1 mt-2 font-mono text-sm md:text-base">
-<p class="text-primary font-medium tracking-wider flex items-center gap-2">
-<span class="material-symbols-outlined text-[16px]">terminal</span>
-<span id="status-text">&gt; DECRYPTING PACKETS...</span>
-</p>
-<p class="text-primary/60 text-xs tracking-wide">&gt; HANDSHAKING WITH NODES [45.2.19.0]</p>
-<p class="text-primary/40 text-xs tracking-wide animate-pulse-fast">&gt; TRIANGULATING SIGNAL_</p>
-</div>
-</div>
-<div class="w-full max-w-sm flex flex-col gap-2">
-<div class="flex justify-between items-end px-1">
-<span class="text-xs text-primary/70 font-mono tracking-widest">LOADING MODULES</span>
-<span id="progress-text" class="text-xs text-primary font-bold font-mono">0%</span>
-</div>
-<div class="h-1.5 w-full bg-[#1e293b] rounded-full overflow-hidden border border-primary/20 relative">
-<div id="progress-bar" class="h-full bg-primary relative w-[0%] shadow-[0_0_15px_#21c45d] transition-all duration-300">
-<div class="absolute top-0 right-0 h-full w-[2px] bg-white opacity-50 shadow-[0_0_5px_white]"></div>
-</div>
-</div>
-<div class="flex justify-between text-[10px] text-[#9fb7a8] font-mono opacity-60 mt-1">
-<span>MEMORY_ALLOC: OK</span>
-<span>SECURITY_PROTOCOL: ENFORCED</span>
-</div>
-</div>
-</div>
-</div>
-<div class="absolute bottom-8 w-full flex flex-col items-center gap-3">
-<div class="h-px w-24 bg-gradient-to-r from-transparent via-primary/30 to-transparent"></div>
-<p class="text-[#9fb7a8] text-xs font-mono tracking-[0.2em] text-center uppercase opacity-70">
-<span class="inline-flex items-center align-middle mx-2">
-<span class="material-symbols-outlined text-[12px]">verified_user</span>
-</span>v.2.0.4 | MEM: 64TB | SECURE CONNECTION
-</p>
-</div>
-</div>
-</div>
 
-<script>
-let progress = 0;
-const statusTexts = [
-    '&gt; DECRYPTING PACKETS...',
-    '&gt; INITIALIZING NEURAL NETWORKS...',
-    '&gt; CONNECTING TO DARK WEB NODES...',
-    '&gt; LOADING THREAT INTELLIGENCE...',
-    '&gt; CALIBRATING SENSORS...',
-    '&gt; ESTABLISHING SECURE CHANNELS...',
-    '&gt; SYSTEM READY FOR DEPLOYMENT'
-];
+<body>
+    <!-- Matrix Rain Canvas -->
+    <canvas id="matrixCanvas"></canvas>
 
-let currentStatusIndex = 0;
+    <!-- Grid Overlay -->
+    <div class="grid-overlay"></div>
 
-function updateProgress() {
-    if (progress < 100) {
-        progress += Math.random() * 15 + 5;
-        if (progress > 100) progress = 100;
-        
-        document.getElementById('progress-bar').style.width = progress + '%';
-        document.getElementById('progress-text').textContent = Math.floor(progress) + '%';
-        
-        // Update status text occasionally
-        if (Math.random() > 0.7 && currentStatusIndex < statusTexts.length - 1) {
-            currentStatusIndex++;
-            document.getElementById('status-text').innerHTML = statusTexts[currentStatusIndex];
+    <!-- Scanlines Effect -->
+    <div class="scanlines"></div>
+
+    <!-- Wolf Background (Low Opacity) -->
+    <div class="wolf-background">
+        <img src="https://images.unsplash.com/photo-1590423985392-cb8a94635db5?q=80&w=1000&auto=format&fit=crop"
+            alt="Wolf" />
+    </div>
+
+    <!-- Main Content -->
+    <div class="fixed inset-0 z-10 flex flex-col items-center justify-center gap-10">
+        <!-- Anonymous Logo -->
+        <div class="flex flex-col items-center gap-6">
+            <img src="logo3.png" alt="Anonymous Logo" class="w-48 h-48 sm:w-64 sm:h-64 object-contain opacity-90"
+                style="filter: drop-shadow(0 0 20px rgba(6, 249, 95, 0.5));" />
+        </div>
+
+        <!-- Loading Bar -->
+        <div class="flex flex-col items-center gap-4">
+            <div class="loading-bar-container">
+                <div class="loading-bar" id="loadingBar"></div>
+            </div>
+
+            <!-- Status Text -->
+            <div class="status-text text-sm sm:text-base font-bold" id="statusText">
+                INITIALIZING SYSTEM...
+            </div>
+
+            <!-- Progress Percentage -->
+            <div class="font-cyber text-2xl font-bold" style="color: #06f95f; text-shadow: 0 0 10px #06f95f;"
+                id="progressText">0%</div>
+        </div>
+
+        <!-- Footer Info -->
+        <div class="absolute bottom-8 flex flex-col items-center gap-3">
+            <div class="divider-line"></div>
+            <div class="info-footer flex items-center gap-4 flex-wrap justify-center px-4">
+                <span class="flex items-center gap-1">
+                    <span style="font-size: 12px;">🔒</span> ENCRYPTED
+                </span>
+                <span>•</span>
+                <span>v.2.0.4</span>
+                <span>•</span>
+                <span>MEM: 64TB</span>
+                <span>•</span>
+                <span class="flex items-center gap-1">
+                    <span style="font-size: 12px;">✓</span> SECURE
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Matrix Rain Effect
+        const canvas = document.getElementById('matrixCanvas');
+        const ctx = canvas.getContext('2d');
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*()_+-=[]{}|;:,.<>?/~`';
+        const fontSize = 14;
+        const columns = canvas.width / fontSize;
+        const drops = [];
+
+        for (let i = 0; i < columns; i++) {
+            drops[i] = Math.random() * -100;
         }
-        
-        if (progress >= 100) {
-            setTimeout(() => {
-                document.getElementById('status-text').innerHTML = statusTexts[statusTexts.length - 1];
+
+        function drawMatrix() {
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            ctx.fillStyle = '#06f95f';
+            ctx.font = fontSize + 'px monospace';
+
+            for (let i = 0; i < drops.length; i++) {
+                const text = chars[Math.floor(Math.random() * chars.length)];
+                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+                if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                    drops[i] = 0;
+                }
+
+                drops[i]++;
+            }
+        }
+
+        setInterval(drawMatrix, 35);
+
+        // Resize canvas on window resize
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+
+        // Loading Animation
+        const loadingBar = document.getElementById('loadingBar');
+        const statusText = document.getElementById('statusText');
+        const progressText = document.getElementById('progressText');
+
+        const statusMessages = [
+            'INITIALIZING SYSTEM...',
+            'ESTABLISHING UPLINK...',
+            'BYPASSING FIREWALLS...',
+            'DECRYPTING PROTOCOLS...',
+            'ACCESSING NEURAL NETWORK...',
+            'HANDSHAKE COMPLETE...',
+            'SYSTEM ONLINE'
+        ];
+
+        let progress = 0;
+        const duration = 5000; // 5 seconds
+        const interval = 50; // Update every 50ms
+        const increment = (100 / duration) * interval;
+
+        const loadingInterval = setInterval(() => {
+            progress += increment;
+
+            if (progress >= 100) {
+                progress = 100;
+                clearInterval(loadingInterval);
+
+                // Final status
+                statusText.textContent = 'SYSTEM ONLINE';
+                progressText.textContent = '100%';
+
+                // Redirect after a brief pause
                 setTimeout(() => {
-                    window.location.href = 'dashboard.html';
-                }, 1500);
-            }, 500);
-        } else {
-            setTimeout(updateProgress, Math.random() * 800 + 400);
-        }
-    }
-}
+                    window.location.href = 'login.html';
+                }, 800);
+            }
 
-// Start the initialization process
-setTimeout(updateProgress, 1000);
-</script>
+            // Update UI
+            loadingBar.style.width = progress + '%';
+            progressText.textContent = Math.floor(progress) + '%';
+
+            // Update status message based on progress
+            const messageIndex = Math.min(
+                Math.floor((progress / 100) * statusMessages.length),
+                statusMessages.length - 1
+            );
+            statusText.textContent = statusMessages[messageIndex];
+        }, interval);
+    </script>
 </body>
+
 </html>

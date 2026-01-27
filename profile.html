@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <link rel="icon" type="image/png" href="logo2.png" />
+    <title>User Profile - AllOSINT</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500;700&display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet" />
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#21c45d",
+                        "background-dark": "#020617",
+                        "surface-dark": "#0f172a",
+                    },
+                    fontFamily: {
+                        "display": ["Space Grotesk", "sans-serif"],
+                        "mono": ["JetBrains Mono", "monospace"],
+                    },
+                },
+            },
+        }
+    </script>
+</head>
+
+<body class="bg-background-dark text-white font-display">
+    <div class="min-h-screen">
+        <nav class="border-b border-white/10 bg-background-dark/80 backdrop-blur-md sticky top-0 z-50">
+            <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+                <a href="dashboard.html"
+                    class="text-primary hover:text-white transition-colors text-sm font-bold flex items-center gap-2">
+                    <span class="material-symbols-outlined text-[20px]">arrow_back</span>
+                    Back to Dashboard
+                </a>
+                <button onclick="logout()"
+                    class="text-red-400 hover:text-red-300 transition-colors text-sm font-bold">Logout</button>
+            </div>
+        </nav>
+
+        <div class="max-w-6xl mx-auto px-6 py-12">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Profile Card -->
+                <div class="lg:col-span-1">
+                    <div class="bg-surface-dark border border-white/10 rounded-lg p-6 sticky top-24">
+                        <div class="flex flex-col items-center">
+                            <div
+                                class="relative size-32 rounded-full bg-slate-800 overflow-hidden border-4 border-primary/30 mb-4">
+                                <div class="absolute inset-0 bg-cover bg-center"
+                                    style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCjqRGMMqCQRNLS15d6waom9isQd6FFer_dwQdYgeybRf5eT6R0SgCkusZlh8e9ilU4Xft0pPlrx8luR3ukGp5gwAmUSTcP1l8VPm8cZx00AAyDat4OVcRdORxc6hcqGKo42RuM5BZ3NeKjr-FKunOr5rgTGzbr6vyArF1i8nMCbHriE3BwDEtRmdF1DMhSQAjhA70of7p7bcvUoicJrYm4TOvPcv-7UizJr9a3IMfKFV8h7PmDnEfFCoVWK1UoTKepjEw-xXLbA_AK");'>
+                                </div>
+                                <div
+                                    class="absolute bottom-2 right-2 size-4 bg-primary border-2 border-surface-dark rounded-full">
+                                </div>
+                            </div>
+                            <h2 class="text-2xl font-bold text-white mb-1" id="profile-name">System Guardian</h2>
+                            <p class="text-primary text-sm font-mono mb-4" id="profile-email">agent@allosint.com</p>
+                            <div class="flex items-center gap-2 text-xs text-slate-400 font-mono">
+                                <span class="material-symbols-outlined text-[16px]">schedule</span>
+                                <span>Member since <span id="member-since">Jan 2025</span></span>
+                            </div>
+                        </div>
+
+                        <div class="mt-6 pt-6 border-t border-white/10">
+                            <div class="space-y-4">
+                                <div class="flex items-center justify-between">
+                                    <span class="text-sm text-slate-400">Account Status</span>
+                                    <span
+                                        class="px-2 py-1 bg-primary/20 text-primary text-xs font-bold rounded">ACTIVE</span>
+                                </div>
+                                <div class="flex items-center justify-between">
+                                    <span class="text-sm text-slate-400">Security Level</span>
+                                    <span class="text-sm text-white font-mono">Level 5</span>
+                                </div>
+                                <div class="flex items-center justify-between">
+                                    <span class="text-sm text-slate-400">Total Scans</span>
+                                    <span class="text-sm text-white font-mono">1,247</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Main Content -->
+                <div class="lg:col-span-2 space-y-6">
+                    <!-- Credits Card -->
+                    <div
+                        class="bg-gradient-to-br from-primary/20 to-emerald-900/20 border border-primary/30 rounded-lg p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-xl font-bold text-white">API Credits</h3>
+                            <span class="material-symbols-outlined text-primary text-3xl">token</span>
+                        </div>
+                        <div class="flex items-baseline gap-2 mb-2">
+                            <span class="text-5xl font-black text-white font-mono">2,500</span>
+                            <span class="text-slate-400 text-sm">credits remaining</span>
+                        </div>
+                        <div class="w-full bg-slate-800 rounded-full h-2 mb-4">
+                            <div class="bg-primary h-2 rounded-full" style="width: 50%"></div>
+                        </div>
+                        <p class="text-sm text-slate-300">You have used 2,500 out of 5,000 credits this month.</p>
+                        <button
+                            class="mt-4 px-4 py-2 bg-primary text-background-dark font-bold rounded hover:bg-primary/80 transition-all">
+                            Purchase More Credits
+                        </button>
+                    </div>
+
+                    <!-- Account Details -->
+                    <div class="bg-surface-dark border border-white/10 rounded-lg p-6">
+                        <h3 class="text-xl font-bold text-white mb-6">Account Details</h3>
+                        <div class="space-y-4">
+                            <div>
+                                <label class="text-sm text-slate-400 mb-1 block">Codename</label>
+                                <input type="text" id="input-codename"
+                                    class="w-full bg-background-dark border border-white/10 rounded px-4 py-2 text-white focus:border-primary focus:outline-none"
+                                    value="System Guardian" />
+                            </div>
+                            <div>
+                                <label class="text-sm text-slate-400 mb-1 block">Email Address</label>
+                                <input type="email" id="input-email"
+                                    class="w-full bg-background-dark border border-white/10 rounded px-4 py-2 text-white focus:border-primary focus:outline-none"
+                                    value="agent@allosint.com" />
+                            </div>
+                            <div>
+                                <label class="text-sm text-slate-400 mb-1 block">Country</label>
+                                <input type="text" id="input-country"
+                                    class="w-full bg-background-dark border border-white/10 rounded px-4 py-2 text-white focus:border-primary focus:outline-none"
+                                    value="United States" />
+                            </div>
+                            <div>
+                                <label class="text-sm text-slate-400 mb-1 block">City</label>
+                                <input type="text" id="input-city"
+                                    class="w-full bg-background-dark border border-white/10 rounded px-4 py-2 text-white focus:border-primary focus:outline-none"
+                                    value="New York" />
+                            </div>
+                        </div>
+                        <button
+                            class="mt-6 px-6 py-2 bg-primary text-background-dark font-bold rounded hover:bg-primary/80 transition-all">
+                            Save Changes
+                        </button>
+                    </div>
+
+                    <!-- Usage Statistics -->
+                    <div class="bg-surface-dark border border-white/10 rounded-lg p-6">
+                        <h3 class="text-xl font-bold text-white mb-6">Usage Statistics</h3>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="bg-background-dark border border-white/10 rounded-lg p-4">
+                                <div class="flex items-center gap-2 mb-2">
+                                    <span class="material-symbols-outlined text-primary">search</span>
+                                    <span class="text-sm text-slate-400">DNS Lookups</span>
+                                </div>
+                                <span class="text-2xl font-bold text-white font-mono">342</span>
+                            </div>
+                            <div class="bg-background-dark border border-white/10 rounded-lg p-4">
+                                <div class="flex items-center gap-2 mb-2">
+                                    <span class="material-symbols-outlined text-primary">wifi_tethering_off</span>
+                                    <span class="text-sm text-slate-400">Subdomain Scans</span>
+                                </div>
+                                <span class="text-2xl font-bold text-white font-mono">156</span>
+                            </div>
+                            <div class="bg-background-dark border border-white/10 rounded-lg p-4">
+                                <div class="flex items-center gap-2 mb-2">
+                                    <span class="material-symbols-outlined text-primary">lock_open</span>
+                                    <span class="text-sm text-slate-400">Breach Searches</span>
+                                </div>
+                                <span class="text-2xl font-bold text-white font-mono">89</span>
+                            </div>
+                            <div class="bg-background-dark border border-white/10 rounded-lg p-4">
+                                <div class="flex items-center gap-2 mb-2">
+                                    <span class="material-symbols-outlined text-primary">hub</span>
+                                    <span class="text-sm text-slate-400">Port Scans</span>
+                                </div>
+                                <span class="text-2xl font-bold text-white font-mono">234</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Security Settings -->
+                    <div class="bg-surface-dark border border-white/10 rounded-lg p-6">
+                        <h3 class="text-xl font-bold text-white mb-6">Security Settings</h3>
+                        <div class="space-y-4">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-white font-medium">Two-Factor Authentication</p>
+                                    <p class="text-sm text-slate-400">Add an extra layer of security</p>
+                                </div>
+                                <button
+                                    class="px-4 py-2 bg-primary/20 text-primary border border-primary/30 rounded hover:bg-primary/30 transition-all">
+                                    Enable
+                                </button>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-white font-medium">Change Password</p>
+                                    <p class="text-sm text-slate-400">Update your master passphrase</p>
+                                </div>
+                                <button
+                                    class="px-4 py-2 bg-white/10 text-white border border-white/10 rounded hover:bg-white/20 transition-all">
+                                    Change
+                                </button>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-white font-medium">API Key</p>
+                                    <p class="text-sm text-slate-400">Manage your API access</p>
+                                </div>
+                                <button
+                                    class="px-4 py-2 bg-white/10 text-white border border-white/10 rounded hover:bg-white/20 transition-all">
+                                    View
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Load user data
+        document.addEventListener('DOMContentLoaded', function () {
+            const userData = localStorage.getItem('allOSINT_user');
+            if (userData) {
+                const user = JSON.parse(userData);
+                document.getElementById('profile-name').textContent = user.codename || 'System Guardian';
+                document.getElementById('profile-email').textContent = user.email || 'agent@allosint.com';
+                document.getElementById('input-codename').value = user.codename || 'System Guardian';
+                document.getElementById('input-email').value = user.email || 'agent@allosint.com';
+                document.getElementById('input-country').value = user.country || 'United States';
+                document.getElementById('input-city').value = user.city || 'New York';
+
+                if (user.registrationDate) {
+                    const date = new Date(user.registrationDate);
+                    document.getElementById('member-since').textContent = date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+                }
+            }
+        });
+
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                localStorage.removeItem('allOSINT_authenticated');
+                localStorage.removeItem('allOSINT_user');
+                window.location.href = 'index.html';
+            }
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,48 @@
+# Environment variables
+.env
+
+# API Keys and Secrets
+*.key
+*.pem
+secrets/
+
+# Node modules (if using Node.js backend)
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# IDE and Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs
+logs/
+*.log
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# Build outputs
+dist/
+build/
+*.min.js
+*.min.css
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+
+# Backup files
+*.bak
+*.backup

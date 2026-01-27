@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <link rel="icon" type="image/png" href="logo2.png" />
+    <title>OSINT // IP GEO-INT</title>
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: { "primary": "#13ec63", "primary-dim": "#0eac48", "background-light": "#f6f8f7", "background-dark": "#050a07", "surface-dark": "#0f1612", "surface-border": "#1f2e25", },
+                    fontFamily: { "display": ["Space Grotesk", "sans-serif"], "mono": ["JetBrains Mono", "monospace"], },
+                    backgroundImage: { 'cyber-grid': "linear-gradient(to right, #1f2e25 1px, transparent 1px), linear-gradient(to bottom, #1f2e25 1px, transparent 1px)", }
+                },
+            },
+        }
+    </script>
+    <style>
+        .neon-glow {
+            box-shadow: 0 0 10px rgba(19, 236, 99, 0.2);
+        }
+
+        .grid-bg {
+            background-size: 40px 40px;
+            mask-image: linear-gradient(to bottom, black 40%, transparent 100%);
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #0f1612;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #1f2e25;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #13ec63;
+        }
+
+        /* MAP STYLING */
+        #map {
+            height: 100%;
+            width: 100%;
+            z-index: 1;
+            background: #050a07;
+        }
+
+        /* CUSTOM LEAFLET POPUP */
+        .leaflet-popup-content-wrapper {
+            background: #0f1612 !important;
+            /* Dark Surface */
+            color: white !important;
+            border: 1px solid #13ec63;
+            border-radius: 4px;
+            font-family: 'JetBrains Mono', monospace;
+            box-shadow: 0 0 15px rgba(19, 236, 99, 0.2);
+        }
+
+        .leaflet-popup-tip {
+            background: #0f1612 !important;
+            border-left: 1px solid #13ec63;
+            border-top: 1px solid #13ec63;
+        }
+
+        .leaflet-container a.leaflet-popup-close-button {
+            color: #13ec63 !important;
+        }
+    </style>
+</head>
+
+<body
+    class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 min-h-screen flex flex-col overflow-x-hidden selection:bg-primary selection:text-black">
+    <div class="fixed inset-0 pointer-events-none opacity-20 bg-cyber-grid grid-bg z-0"></div>
+
+    <div class="relative z-10 flex flex-col h-full grow">
+        <header
+            class="sticky top-0 z-50 flex items-center justify-between border-b border-surface-border bg-surface-dark/95 backdrop-blur-md px-6 py-3">
+            <div class="flex items-center gap-4 text-white">
+                <div
+                    class="size-8 text-primary flex items-center justify-center rounded bg-primary/10 border border-primary/20 neon-glow">
+                    <img src="logo2.png" alt="Logo" class="w-6 h-6 object-contain" />
+                </div>
+                <div class="flex flex-col">
+                    <h2 class="text-white text-xl font-bold tracking-tight uppercase">OSINT <span
+                            class="text-primary">//</span> IP GEO-INT</h2>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-4">
+                <div class="text-xs font-mono text-slate-400 hidden md:block">API: <span
+                        class="text-primary">ipapi.co</span></div>
+
+                <a href="dashboard.html"
+                    class="flex items-center gap-2 px-4 py-1.5 bg-surface-dark border border-surface-border hover:border-primary text-slate-300 hover:text-primary rounded transition-all text-xs font-bold font-mono group">
+                    <span
+                        class="material-symbols-outlined text-[16px] group-hover:-translate-x-1 transition-transform">arrow_back</span>
+                    DASHBOARD
+                </a>
+
+                <div class="size-9 rounded-full bg-gradient-to-br from-primary to-blue-500 p-[1px]">
+                    <div
+                        class="size-full rounded-full bg-surface-dark flex items-center justify-center overflow-hidden">
+                        <span class="material-symbols-outlined text-white text-[20px]">person</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <main class="flex-1 px-4 md:px-8 py-6 w-full max-w-[1600px] mx-auto flex flex-col gap-6">
+            <div class="w-full relative group z-20">
+                <div
+                    class="absolute -inset-0.5 bg-gradient-to-r from-primary/50 to-blue-600/50 rounded-lg blur opacity-30 group-hover:opacity-75 transition duration-500">
+                </div>
+                <div class="relative flex items-center bg-surface-dark rounded-lg border border-surface-border">
+                    <div class="pl-4 pr-2 text-primary">
+                        <span class="material-symbols-outlined">satellite_alt</span>
+                    </div>
+                    <input
+                        class="w-full bg-transparent border-none text-white font-mono py-4 px-2 focus:ring-0 placeholder-slate-600 text-sm md:text-base"
+                        placeholder="Enter IP Address (8.8.8.8) or Domain (google.com)..." type="text" id="geoInput" />
+                    <button
+                        class="mr-2 px-4 py-2 bg-primary/10 text-primary border border-primary/20 rounded hover:bg-primary hover:text-black transition-all font-bold text-xs"
+                        onclick="locateTarget()">
+                        TRACK SIGNAL
+                    </button>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 flex-1 min-h-[600px]">
+
+                <div class="flex flex-col gap-4 lg:col-span-1">
+                    <div class="bg-surface-dark border border-surface-border p-5 rounded-lg relative overflow-hidden">
+                        <div class="absolute top-0 right-0 p-3 opacity-10"><span
+                                class="material-symbols-outlined text-6xl text-primary">router</span></div>
+                        <h3 class="text-xs font-mono text-slate-400 uppercase mb-1">Target Identity</h3>
+                        <div class="text-2xl font-bold text-white mb-2" id="res-ip">---.---.---.---</div>
+                        <div class="text-sm text-primary font-mono" id="res-type">Type: Unknown</div>
+                    </div>
+
+                    <div class="bg-surface-dark border border-surface-border p-5 rounded-lg">
+                        <h3 class="text-xs font-mono text-slate-400 uppercase mb-3 flex items-center gap-2">
+                            <span class="material-symbols-outlined text-sm">public</span> Physical Location
+                        </h3>
+                        <div class="space-y-3">
+                            <div class="flex justify-between border-b border-surface-border pb-2">
+                                <span class="text-slate-500 text-sm">City</span>
+                                <span class="text-white font-mono text-sm" id="res-city">-</span>
+                            </div>
+                            <div class="flex justify-between border-b border-surface-border pb-2">
+                                <span class="text-slate-500 text-sm">Region</span>
+                                <span class="text-white font-mono text-sm" id="res-region">-</span>
+                            </div>
+                            <div class="flex justify-between border-b border-surface-border pb-2">
+                                <span class="text-slate-500 text-sm">Country</span>
+                                <span class="text-white font-mono text-sm" id="res-country">-</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-slate-500 text-sm">Coordinates</span>
+                                <span class="text-primary font-mono text-xs" id="res-coords">0.00, 0.00</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-surface-dark border border-surface-border p-5 rounded-lg flex-1">
+                        <h3 class="text-xs font-mono text-slate-400 uppercase mb-3 flex items-center gap-2">
+                            <span class="material-symbols-outlined text-sm">dns</span> Network Data
+                        </h3>
+                        <div class="space-y-3">
+                            <div class="flex justify-between border-b border-surface-border pb-2">
+                                <span class="text-slate-500 text-sm">ISP / Org</span>
+                                <span class="text-white font-mono text-sm text-right" id="res-isp">-</span>
+                            </div>
+                            <div class="flex justify-between border-b border-surface-border pb-2">
+                                <span class="text-slate-500 text-sm">ASN</span>
+                                <span class="text-white font-mono text-sm" id="res-asn">-</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-slate-500 text-sm">Timezone</span>
+                                <span class="text-white font-mono text-sm" id="res-tz">-</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div
+                    class="lg:col-span-2 bg-surface-dark border border-surface-border rounded-lg overflow-hidden relative shadow-lg h-[600px] lg:h-auto">
+                    <div id="map"></div>
+                    <div
+                        class="absolute top-4 right-4 bg-black/80 backdrop-blur p-2 rounded border border-primary/30 z-[1000]">
+                        <div class="flex items-center gap-2 text-primary text-xs font-bold px-2">
+                            <span class="size-2 bg-primary rounded-full animate-pulse"></span>
+                            LIVE SATELLITE FEED
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Initialize Map with Dark Matter Tiles (Natively Dark)
+        const map = L.map('map').setView([20, 0], 2);
+
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+            subdomains: 'abcd',
+            maxZoom: 19
+        }).addTo(map);
+
+        let marker;
+
+        // Trigger on Enter
+        document.getElementById('geoInput').addEventListener('keypress', function (e) { if (e.key === 'Enter') locateTarget(); });
+
+        async function locateTarget() {
+            let input = document.getElementById('geoInput').value.trim();
+            if (!input) return alert("Enter an IP or Domain");
+
+            // UI Feedback
+            const btn = document.querySelector('button');
+            const originalText = btn.innerText;
+            btn.innerText = "TRIANGULATING...";
+
+            try {
+                // 1. Check if Domain -> Resolve to IP
+                const isIP = /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/.test(input);
+
+                if (!isIP) {
+                    const dnsRes = await fetch(`https://cloudflare-dns.com/dns-query?name=${input}&type=A`, {
+                        headers: { 'Accept': 'application/dns-json' }
+                    });
+                    const dnsData = await dnsRes.json();
+                    if (dnsData.Answer) {
+                        input = dnsData.Answer[dnsData.Answer.length - 1].data; // Get last IP
+                    } else {
+                        throw new Error("Could not resolve domain to IP.");
+                    }
+                }
+
+                // 2. Fetch Geo Data
+                const res = await fetch(`https://ipapi.co/${input}/json/`);
+                const data = await res.json();
+
+                if (data.error) throw new Error(data.reason);
+
+                // 3. Update UI Cards
+                document.getElementById('res-ip').innerText = data.ip;
+                document.getElementById('res-type').innerText = isIP ? "Direct IP Input" : "Resolved from Domain";
+                document.getElementById('res-city').innerText = data.city || 'N/A';
+                document.getElementById('res-region').innerText = data.region || 'N/A';
+                document.getElementById('res-country').innerText = `${data.country_name} (${data.country_code})`;
+                document.getElementById('res-coords').innerText = `${data.latitude}, ${data.longitude}`;
+                document.getElementById('res-isp').innerText = data.org || 'N/A';
+                document.getElementById('res-asn').innerText = data.asn || 'N/A';
+                document.getElementById('res-tz').innerText = data.timezone || 'UTC';
+
+                // 4. Update Map & Marker
+                const lat = data.latitude;
+                const lon = data.longitude;
+                map.flyTo([lat, lon], 13, { duration: 1.5 });
+
+                if (marker) map.removeLayer(marker);
+
+                // Custom Neon Green Icon
+                const customIcon = L.divIcon({
+                    className: 'custom-div-icon',
+                    html: "<div style='background-color:#13ec63; width:12px; height:12px; border-radius:50%; box-shadow:0 0 10px #13ec63, 0 0 20px #13ec63; border:2px solid white;'></div>",
+                    iconSize: [12, 12],
+                    iconAnchor: [6, 6]
+                });
+
+                // Popup with White Text
+                marker = L.marker([lat, lon], { icon: customIcon }).addTo(map)
+                    .bindPopup(`
+                    <div style='font-size:13px; line-height:1.5;'>
+                        <b style='color:#13ec63; font-size:14px;'>TARGET ACQUIRED</b><br>
+                        <span style='color:white;'>IP: ${data.ip}</span><br>
+                        <span style='color:white;'>ISP: ${data.org}</span><br>
+                        <span style='color:#94a3b8;'>${data.city}, ${data.country_code}</span>
+                    </div>
+                `)
+                    .openPopup();
+
+            } catch (e) {
+                alert("Geo-Location Failed: " + e.message);
+            } finally {
+                btn.innerText = originalText;
+            }
+        }
+    </script>
+</body>
+
+</html>
