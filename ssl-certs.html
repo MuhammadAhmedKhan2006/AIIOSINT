@@ -7,6 +7,9 @@
     <link rel="icon" type="image/png" href="logo2.png" />
     <title>OSINT // SSL INTELLIGENCE</title>
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <!-- Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="config.js"></script>
     <link
         href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500;700&display=swap"
         rel="stylesheet" />
@@ -254,11 +257,24 @@
             try {
                 const { createClient } = supabase;
                 const supabaseClient = createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_ANON_KEY);
-                const { data: { user } } = await supabaseClient.auth.getUser();
-                if (!user) return;
+                const { data: { user }, error: authError } = await supabaseClient.auth.getUser();
+                
+                if (authError || !user) {
+                    console.log('User not authenticated:', authError);
+                    return;
+                }
 
-                const { data: userProfile } = await supabaseClient.from('users').select('credits').eq('id', user.id).single();
-                if (!userProfile || userProfile.credits < 1) return;
+                const { data: userProfile, error: profileError } = await supabaseClient.from('users').select('credits').eq('id', user.id).single();
+                
+                if (profileError) {
+                    console.error('Profile error:', profileError);
+                    return;
+                }
+                
+                if (!userProfile || userProfile.credits < 1) {
+                    console.log('Insufficient credits');
+                    return;
+                }
 
                 const expiredCount = certResults.filter(c => new Date(c.not_after) < new Date()).length;
                 const issuers = new Set(certResults.map(c => c.issuer?.name || 'Unknown'));
@@ -271,6 +287,8 @@
                     status: 'completed'
                 };
 
+                console.log('Saving SSL cert scan:', summary);
+
                 const { data: searchData, error } = await supabaseClient.from('search_history').insert({
                     user_id: user.id,
                     module_type: 'ssl_certs',
@@ -281,13 +299,23 @@
                     credits_used: 1
                 }).select().single();
 
-                if (!error) {
-                    await supabaseClient.rpc('deduct_credits', {
-                        p_user_id: user.id,
-                        p_amount: 1,
-                        p_module_type: 'ssl_certs',
-                        p_search_id: searchData.id
-                    });
+                if (error) {
+                    console.error('Failed to save search history:', error);
+                    return;
+                }
+
+                console.log('Search saved, deducting credits...');
+
+                const { error: creditError } = await supabaseClient.rpc('deduct_credits', {
+                    p_user_id: user.id,
+                    p_amount: 1,
+                    p_module_type: 'ssl_certs',
+                    p_search_id: searchData.id
+                });
+
+                if (creditError) {
+                    console.error('Credit deduction failed:', creditError);
+                } else {
                     console.log('✓ SSL cert scan saved (-1 credit)');
                 }
             } catch (err) {
