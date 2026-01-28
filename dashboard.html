@@ -219,16 +219,16 @@
                 <div class="hidden md:flex items-center gap-3 px-3 py-1.5 rounded border border-white/5 bg-white/5">
                     <span class="text-xs text-slate-400 font-mono">THREATS</span>
                     <div class="w-16 h-1 bg-slate-700 rounded-full overflow-hidden">
-                        <div class="w-[23%] h-full bg-yellow-500 shadow-[0_0_5px_#eab308] animate-pulse"></div>
+                        <div id="threats-bar" class="w-0 h-full bg-yellow-500 shadow-[0_0_5px_#eab308] transition-all duration-500"></div>
                     </div>
-                    <span class="text-xs text-yellow-500 font-mono">23</span>
+                    <span id="threats-count" class="text-xs text-yellow-500 font-mono">0</span>
                 </div>
                 <div class="hidden md:flex items-center gap-3 px-3 py-1.5 rounded border border-white/5 bg-white/5">
                     <span class="text-xs text-slate-400 font-mono">SCANS</span>
                     <div class="w-16 h-1 bg-slate-700 rounded-full overflow-hidden">
-                        <div class="w-[45%] h-full bg-primary shadow-[0_0_5px_#21c45d]"></div>
+                        <div id="scans-bar" class="w-0 h-full bg-primary shadow-[0_0_5px_#21c45d] transition-all duration-500"></div>
                     </div>
-                    <span class="text-xs text-primary font-mono">45</span>
+                    <span id="scans-count" class="text-xs text-primary font-mono">0</span>
                 </div>
                 <div class="flex items-center gap-4 border-l border-white/10 pl-6">
                     <button class="relative text-slate-400 hover:text-white transition-colors"
@@ -493,9 +493,24 @@
 
                 if (dashStats && dashStats.length > 0) {
                     const stats = dashStats[0];
-                    document.getElementById('active-scans').textContent = stats.total_scans || 0;
-                    document.getElementById('vulns-found').textContent = stats.vulnerabilities_found || 0;
+                    const totalScans = stats.total_scans || 0;
+                    const vulnsFound = stats.vulnerabilities_found || 0;
+                    
+                    // Update main stats cards
+                    document.getElementById('active-scans').textContent = totalScans;
+                    document.getElementById('vulns-found').textContent = vulnsFound;
                     document.getElementById('user-credits').textContent = (stats.current_credits || 0).toLocaleString();
+                    
+                    // Update header indicators
+                    document.getElementById('threats-count').textContent = vulnsFound;
+                    document.getElementById('scans-count').textContent = totalScans;
+                    
+                    // Update progress bars (max 100 for percentage calculation)
+                    const threatsPercent = Math.min((vulnsFound / 100) * 100, 100);
+                    const scansPercent = Math.min((totalScans / 100) * 100, 100);
+                    
+                    document.getElementById('threats-bar').style.width = threatsPercent + '%';
+                    document.getElementById('scans-bar').style.width = scansPercent + '%';
                 }
             } catch (error) {
                 console.error('Auth error:', error);
