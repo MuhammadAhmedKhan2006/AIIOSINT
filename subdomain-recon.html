@@ -15,6 +15,9 @@
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
         rel="stylesheet" />
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <!-- Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="config.js"></script>
     <script id="tailwind-config">
         tailwind.config = {
             darkMode: "class",
@@ -551,10 +554,55 @@
                 updateStats();
                 drawGraph();
                 STATE.isScanning = false;
+                
+                // Save to database
+                await saveToDatabase(domain, processed);
             } catch (error) {
                 addToLog(`Scan Failed: ${error.message}`, 'error');
                 STATE.isScanning = false;
                 renderTable();
+            }
+        }
+
+        async function saveToDatabase(domain, subdomains) {
+            try {
+                const { createClient } = supabase;
+                const supabaseClient = createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_ANON_KEY);
+                const { data: { user } } = await supabaseClient.auth.getUser();
+                if (!user) return;
+
+                const { data: userProfile } = await supabaseClient.from('users').select('credits').eq('id', user.id).single();
+                if (!userProfile || userProfile.credits < 1) return;
+
+                const summary = {
+                    domain: domain,
+                    subdomain_count: subdomains.length,
+                    environments: [...new Set(subdomains.map(s => s.environment))],
+                    high_risk_count: subdomains.filter(s => s.risk.level === 'HIGH').length,
+                    status: 'completed'
+                };
+
+                const { data: searchData, error } = await supabaseClient.from('search_history').insert({
+                    user_id: user.id,
+                    module_type: 'subdomain_recon',
+                    query_input: domain,
+                    result_summary: summary,
+                    full_result: subdomains,
+                    status: 'completed',
+                    credits_used: 1
+                }).select().single();
+
+                if (!error) {
+                    await supabaseClient.rpc('deduct_credits', {
+                        p_user_id: user.id,
+                        p_amount: 1,
+                        p_module_type: 'subdomain_recon',
+                        p_search_id: searchData.id
+                    });
+                    console.log('✓ Subdomain scan saved (-1 credit)');
+                }
+            } catch (err) {
+                console.error('Error saving:', err);
             }
         }
 

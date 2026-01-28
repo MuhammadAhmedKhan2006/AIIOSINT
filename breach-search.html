@@ -14,6 +14,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
         rel="stylesheet" />
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <!-- Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="config.js"></script>
     <script id="tailwind-config">
         tailwind.config = {
             darkMode: "class",
@@ -308,8 +311,10 @@
 
                 if (breaches.length > 0) {
                     renderBreachList(breaches, email);
+                    await saveToDatabase(email, breaches, 'found');
                 } else {
                     renderCleanState(email);
+                    await saveToDatabase(email, [], 'clean');
                 }
 
             } catch (e) {
@@ -359,6 +364,48 @@
             document.getElementById('summary-title').innerText = "NO BREACHES FOUND";
             document.getElementById('summary-title').className = "text-primary font-bold text-lg";
             document.getElementById('summary-desc').innerText = `Great! ${email} was not found in the database.`;
+        }
+
+        async function saveToDatabase(email, breaches, status) {
+            try {
+                const { createClient } = supabase;
+                const supabaseClient = createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_ANON_KEY);
+                const { data: { user } } = await supabaseClient.auth.getUser();
+                if (!user) return;
+
+                const { data: userProfile } = await supabaseClient.from('users').select('credits').eq('id', user.id).single();
+                if (!userProfile || userProfile.credits < 1) return;
+
+                const summary = {
+                    email: email,
+                    breach_count: breaches.length,
+                    breaches: breaches,
+                    result: status,
+                    status: 'completed'
+                };
+
+                const { data: searchData, error } = await supabaseClient.from('search_history').insert({
+                    user_id: user.id,
+                    module_type: 'breach_search',
+                    query_input: email,
+                    result_summary: summary,
+                    full_result: { breaches: breaches, clean: status === 'clean' },
+                    status: 'completed',
+                    credits_used: 1
+                }).select().single();
+
+                if (!error) {
+                    await supabaseClient.rpc('deduct_credits', {
+                        p_user_id: user.id,
+                        p_amount: 1,
+                        p_module_type: 'breach_search',
+                        p_search_id: searchData.id
+                    });
+                    console.log('✓ Breach search saved (-1 credit)');
+                }
+            } catch (err) {
+                console.error('Error saving:', err);
+            }
         }
 
         function resetUI() {

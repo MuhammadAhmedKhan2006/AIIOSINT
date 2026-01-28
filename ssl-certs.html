@@ -183,6 +183,9 @@
                 }
 
                 renderTable(data);
+                
+                // Save to database
+                await saveToDatabase(domain, data);
 
             } catch (e) {
                 console.error(e);
@@ -245,6 +248,51 @@
             `;
                 table.innerHTML += row;
             });
+        }
+
+        async function saveToDatabase(domain, certResults) {
+            try {
+                const { createClient } = supabase;
+                const supabaseClient = createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_ANON_KEY);
+                const { data: { user } } = await supabaseClient.auth.getUser();
+                if (!user) return;
+
+                const { data: userProfile } = await supabaseClient.from('users').select('credits').eq('id', user.id).single();
+                if (!userProfile || userProfile.credits < 1) return;
+
+                const expiredCount = certResults.filter(c => new Date(c.not_after) < new Date()).length;
+                const issuers = new Set(certResults.map(c => c.issuer?.name || 'Unknown'));
+
+                const summary = {
+                    domain: domain,
+                    total_certs: certResults.length,
+                    expired_count: expiredCount,
+                    issuer_count: issuers.size,
+                    status: 'completed'
+                };
+
+                const { data: searchData, error } = await supabaseClient.from('search_history').insert({
+                    user_id: user.id,
+                    module_type: 'ssl_certs',
+                    query_input: domain,
+                    result_summary: summary,
+                    full_result: certResults,
+                    status: 'completed',
+                    credits_used: 1
+                }).select().single();
+
+                if (!error) {
+                    await supabaseClient.rpc('deduct_credits', {
+                        p_user_id: user.id,
+                        p_amount: 1,
+                        p_module_type: 'ssl_certs',
+                        p_search_id: searchData.id
+                    });
+                    console.log('✓ SSL cert scan saved (-1 credit)');
+                }
+            } catch (err) {
+                console.error('Error saving:', err);
+            }
         }
 
         function exportCSV() {
