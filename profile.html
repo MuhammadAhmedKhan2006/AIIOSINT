@@ -101,13 +101,13 @@
                             <span class="material-symbols-outlined text-primary text-3xl">token</span>
                         </div>
                         <div class="flex items-baseline gap-2 mb-2">
-                            <span class="text-5xl font-black text-white font-mono">2,500</span>
+                            <span id="credits-remaining" class="text-5xl font-black text-white font-mono">0</span>
                             <span class="text-slate-400 text-sm">credits remaining</span>
                         </div>
                         <div class="w-full bg-slate-800 rounded-full h-2 mb-4">
-                            <div class="bg-primary h-2 rounded-full" style="width: 50%"></div>
+                            <div id="credits-progress-bar" class="bg-primary h-2 rounded-full" style="width: 0%"></div>
                         </div>
-                        <p class="text-sm text-slate-300">You have used 2,500 out of 5,000 credits this month.</p>
+                        <p id="credits-usage-text" class="text-sm text-slate-300">Loading credit usage...</p>
                         <button
                             class="mt-4 px-4 py-2 bg-primary text-background-dark font-bold rounded hover:bg-primary/80 transition-all">
                             Purchase More Credits
@@ -127,8 +127,9 @@
                             <div>
                                 <label class="text-sm text-slate-400 mb-1 block">Email Address</label>
                                 <input type="email" id="input-email"
-                                    class="w-full bg-background-dark border border-white/10 rounded px-4 py-2 text-white focus:border-primary focus:outline-none"
-                                    value="agent@allosint.com" />
+                                    class="w-full bg-background-dark border border-white/10 rounded px-4 py-2 text-slate-500 cursor-not-allowed"
+                                    value="agent@allosint.com" disabled readonly />
+                                <p class="text-xs text-slate-500 mt-1">Email cannot be changed for security reasons</p>
                             </div>
                             <div>
                                 <label class="text-sm text-slate-400 mb-1 block">Country</label>
@@ -203,7 +204,7 @@
                                     <p class="text-white font-medium">Change Password</p>
                                     <p class="text-sm text-slate-400">Update your master passphrase</p>
                                 </div>
-                                <button
+                                <button onclick="openChangePasswordModal(event)"
                                     class="px-4 py-2 bg-white/10 text-white border border-white/10 rounded hover:bg-white/20 transition-all">
                                     Change
                                 </button>
@@ -222,6 +223,44 @@
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <!-- Change Password Modal -->
+    <div id="changePasswordModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div class="bg-surface-dark border border-white/10 rounded-lg p-6 max-w-md w-full">
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="text-xl font-bold text-white">Change Password</h3>
+                <button onclick="closeChangePasswordModal()" class="text-slate-400 hover:text-white">
+                    <span class="material-symbols-outlined">close</span>
+                </button>
+            </div>
+            <form onsubmit="handleChangePassword(event)" class="space-y-4">
+                <div>
+                    <label class="text-sm text-slate-400 mb-1 block">New Password</label>
+                    <input type="password" id="new-password" required minlength="6"
+                        class="w-full bg-background-dark border border-white/10 rounded px-4 py-2 text-white focus:border-primary focus:outline-none"
+                        placeholder="Enter new password (min 6 characters)" />
+                </div>
+                <div>
+                    <label class="text-sm text-slate-400 mb-1 block">Confirm New Password</label>
+                    <input type="password" id="confirm-password" required minlength="6"
+                        class="w-full bg-background-dark border border-white/10 rounded px-4 py-2 text-white focus:border-primary focus:outline-none"
+                        placeholder="Confirm new password" />
+                </div>
+                <div id="password-error" class="hidden text-sm text-red-400"></div>
+                <div id="password-success" class="hidden text-sm text-primary"></div>
+                <div class="flex gap-3 mt-6">
+                    <button type="button" onclick="closeChangePasswordModal()"
+                        class="flex-1 px-4 py-2 bg-white/10 text-white border border-white/10 rounded hover:bg-white/20 transition-all">
+                        Cancel
+                    </button>
+                    <button type="submit"
+                        class="flex-1 px-4 py-2 bg-primary text-background-dark font-bold rounded hover:bg-primary/80 transition-all">
+                        Update Password
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 
@@ -296,10 +335,15 @@
                     }
 
                     // Update credits display
-                    const creditElement = document.querySelector('.text-3xl.font-bold.text-primary');
-                    if (creditElement) {
-                        creditElement.textContent = (userData.credits || 0).toLocaleString();
-                    }
+                    const creditsRemaining = userData.credits || 0;
+                    const defaultCredits = 2500; // Default starting credits
+                    const creditsUsed = defaultCredits - creditsRemaining;
+                    const creditsPercentage = (creditsRemaining / defaultCredits) * 100;
+                    
+                    document.getElementById('credits-remaining').textContent = creditsRemaining.toLocaleString();
+                    document.getElementById('credits-progress-bar').style.width = `${Math.max(0, creditsPercentage)}%`;
+                    document.getElementById('credits-usage-text').textContent = 
+                        `You have used ${creditsUsed.toLocaleString()} out of ${defaultCredits.toLocaleString()} credits.`;
                 }
             } catch (error) {
                 console.error('Error loading profile:', error);
@@ -316,6 +360,66 @@
                     console.error('Logout error:', error);
                     window.location.href = 'index.html';
                 }
+            }
+        }
+
+        function openChangePasswordModal(event) {
+            event.preventDefault();
+            document.getElementById('changePasswordModal').classList.remove('hidden');
+            document.getElementById('new-password').value = '';
+            document.getElementById('confirm-password').value = '';
+            document.getElementById('password-error').classList.add('hidden');
+            document.getElementById('password-success').classList.add('hidden');
+        }
+
+        function closeChangePasswordModal() {
+            document.getElementById('changePasswordModal').classList.add('hidden');
+        }
+
+        async function handleChangePassword(event) {
+            event.preventDefault();
+            
+            const newPassword = document.getElementById('new-password').value;
+            const confirmPassword = document.getElementById('confirm-password').value;
+            const errorDiv = document.getElementById('password-error');
+            const successDiv = document.getElementById('password-success');
+            
+            // Hide previous messages
+            errorDiv.classList.add('hidden');
+            successDiv.classList.add('hidden');
+            
+            // Validate passwords match
+            if (newPassword !== confirmPassword) {
+                errorDiv.textContent = 'Passwords do not match';
+                errorDiv.classList.remove('hidden');
+                return;
+            }
+            
+            // Validate password length
+            if (newPassword.length < 6) {
+                errorDiv.textContent = 'Password must be at least 6 characters';
+                errorDiv.classList.remove('hidden');
+                return;
+            }
+            
+            try {
+                const { data, error } = await supabaseClient.auth.updateUser({
+                    password: newPassword
+                });
+                
+                if (error) throw error;
+                
+                successDiv.textContent = '✓ Password updated successfully!';
+                successDiv.classList.remove('hidden');
+                
+                // Close modal after 2 seconds
+                setTimeout(() => {
+                    closeChangePasswordModal();
+                }, 2000);
+            } catch (error) {
+                console.error('Password update error:', error);
+                errorDiv.textContent = error.message || 'Failed to update password';
+                errorDiv.classList.remove('hidden');
             }
         }
     </script>
