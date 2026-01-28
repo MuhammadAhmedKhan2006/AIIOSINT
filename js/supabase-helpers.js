@@ -1,11 +1,8 @@
 /**
  * Supabase Helper Functions for AIIOSINT
  * Contains reusable functions for database operations
+ * Note: Assumes supabaseClient is already initialized globally
  */
-
-// Initialize Supabase client
-const { createClient } = supabase;
-const supabaseClient = createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_ANON_KEY);
 
 /**
  * Save search to history and deduct credits
