@@ -226,13 +226,14 @@
 
     <script>
         // Initialize Supabase
-        const supabase = supabase.createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_ANON_KEY);
+        const { createClient } = supabase;
+        const supabaseClient = createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_ANON_KEY);
 
         // Load user data
         document.addEventListener('DOMContentLoaded', async function () {
             try {
                 // Get current user session
-                const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+                const { data: { session }, error: sessionError } = await supabaseClient.auth.getSession();
                 
                 if (sessionError || !session) {
                     // Not logged in, redirect to login
@@ -241,7 +242,7 @@
                 }
 
                 // Get user data from database
-                const { data: userData, error: userError } = await supabase
+                const { data: userData, error: userError } = await supabaseClient
                     .from('users')
                     .select('*')
                     .eq('id', session.user.id)
@@ -250,7 +251,7 @@
                 if (userError) throw userError;
 
                 // Get user stats
-                const { data: stats, error: statsError } = await supabase
+                const { data: stats, error: statsError } = await supabaseClient
                     .rpc('get_user_stats', { user_id: session.user.id });
 
                 if (statsError) console.error('Error fetching stats:', statsError);
@@ -295,7 +296,7 @@
         async function logout() {
             if (confirm('Are you sure you want to logout?')) {
                 try {
-                    await supabase.auth.signOut();
+                    await supabaseClient.auth.signOut();
                     window.location.href = 'index.html';
                 } catch (error) {
                     console.error('Logout error:', error);

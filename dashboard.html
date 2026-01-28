@@ -457,13 +457,14 @@
 
     <script>
         // Initialize Supabase
-        const supabase = supabase.createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_ANON_KEY);
+        const { createClient } = supabase;
+        const supabaseClient = createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_ANON_KEY);
 
         // Check authentication on page load
         document.addEventListener('DOMContentLoaded', async function () {
             try {
                 // Get current user session
-                const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+                const { data: { session }, error: sessionError } = await supabaseClient.auth.getSession();
                 
                 if (sessionError || !session) {
                     window.location.href = 'login.html';
@@ -471,7 +472,7 @@
                 }
 
                 // Get user data from database
-                const { data: userData, error: userError } = await supabase
+                const { data: userData, error: userError } = await supabaseClient
                     .from('users')
                     .select('codename')
                     .eq('id', session.user.id)

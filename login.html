@@ -204,7 +204,8 @@
 
     <script>
         // Initialize Supabase
-        const supabase = supabase.createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_ANON_KEY);
+        const { createClient } = supabase;
+        const supabaseClient = createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_ANON_KEY);
 
         async function handleLogin(event) {
             event.preventDefault();
@@ -220,7 +221,7 @@
 
             try {
                 // First, try to find user by codename to get their email
-                const { data: users, error: fetchError } = await supabase
+                const { data: users, error: fetchError } = await supabaseClient
                     .from('users')
                     .select('email, codename')
                     .eq('codename', codename)
@@ -240,7 +241,7 @@
                 }
 
                 // Sign in with email and password
-                const { data: authData, error: signInError } = await supabase.auth.signInWithPassword({
+                const { data: authData, error: signInError } = await supabaseClient.auth.signInWithPassword({
                     email: users.email,
                     password: password
                 });

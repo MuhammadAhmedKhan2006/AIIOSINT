@@ -340,7 +340,8 @@
         }
 
         // Initialize Supabase
-        const supabase = supabase.createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_ANON_KEY);
+        const { createClient } = supabase;
+        const supabaseClient = createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_ANON_KEY);
 
         async function handleSignup() {
             // Get step 2 data
@@ -358,7 +359,7 @@
 
             try {
                 // Sign up with Supabase Auth
-                const { data: authData, error: signUpError } = await supabase.auth.signUp({
+                const { data: authData, error: signUpError } = await supabaseClient.auth.signUp({
                     email: formData.email,
                     password: formData.password,
                     options: {
