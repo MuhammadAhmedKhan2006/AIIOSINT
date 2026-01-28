@@ -14,6 +14,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
         rel="stylesheet" />
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <!-- Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="config.js"></script>
     <script id="tailwind-config">
         tailwind.config = {
             darkMode: "class",
@@ -265,6 +268,10 @@
     </div>
 
     <script>
+        // Initialize Supabase
+        const { createClient } = supabase;
+        const supabaseClient = createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_ANON_KEY);
+
         // --- CONFIG & STATE ---
         const STATE = {
             target: '',
@@ -416,6 +423,112 @@
     `;
             term.appendChild(summary);
             term.scrollTop = term.scrollHeight;
+            
+            // Save to database
+            saveToDatabase();
+        }
+
+        async function saveToDatabase() {
+            try {
+                // Step 1: Get authenticated user
+                const { data: { user }, error: authError } = await supabaseClient.auth.getUser();
+                
+                if (authError || !user) {
+                    console.log('User not authenticated:', authError);
+                    addToLog('⚠ Not logged in - scan not saved', 'warning');
+                    return;
+                }
+
+                console.log('Authenticated user:', user.id);
+
+                // Step 2: Verify user exists in public.users table
+                const { data: userProfile, error: profileError } = await supabaseClient
+                    .from('users')
+                    .select('id, credits, codename')
+                    .eq('id', user.id)
+                    .single();
+
+                if (profileError || !userProfile) {
+                    console.error('User profile not found:', profileError);
+                    addToLog('⚠ User profile not found - please re-login', 'error');
+                    return;
+                }
+
+                console.log('User profile found:', userProfile);
+
+                // Step 3: Check if user has enough credits
+                if (userProfile.credits < 1) {
+                    addToLog('⚠ Insufficient credits (need 1)', 'error');
+                    alert('Insufficient credits! You need at least 1 credit to perform this scan.');
+                    return;
+                }
+
+                // Step 4: Create result summary
+                const summary = {
+                    target: STATE.target,
+                    ip: STATE.ip,
+                    open_port_count: STATE.openPorts.length,
+                    open_ports: STATE.openPorts,
+                    vulnerability_count: STATE.vulns.length,
+                    vulnerabilities: STATE.vulns,
+                    tags: STATE.tags,
+                    location: STATE.geo ? `${STATE.geo.country_name} - ${STATE.geo.city}` : 'Unknown',
+                    isp: STATE.geo ? STATE.geo.org : 'Unknown',
+                    status: 'completed'
+                };
+
+                console.log('Saving scan with summary:', summary);
+
+                // Step 5: Insert into search_history
+                const { data: searchData, error: searchError } = await supabaseClient
+                    .from('search_history')
+                    .insert({
+                        user_id: user.id,
+                        module_type: 'port_scanner',
+                        query_input: STATE.target,
+                        result_summary: summary,
+                        full_result: {
+                            ip: STATE.ip,
+                            ports: STATE.openPorts,
+                            vulns: STATE.vulns,
+                            tags: STATE.tags,
+                            geo: STATE.geo
+                        },
+                        status: 'completed',
+                        credits_used: 1
+                    })
+                    .select()
+                    .single();
+
+                if (searchError) {
+                    console.error('Failed to save search history:', searchError);
+                    addToLog('❌ Error saving scan: ' + searchError.message, 'error');
+                    return;
+                }
+
+                console.log('Scan saved successfully:', searchData);
+
+                // Step 6: Deduct credits
+                const { data: creditResult, error: creditError } = await supabaseClient
+                    .rpc('deduct_credits', {
+                        p_user_id: user.id,
+                        p_amount: 1,
+                        p_module_type: 'port_scanner',
+                        p_search_id: searchData.id
+                    });
+
+                if (creditError) {
+                    console.error('Credit deduction failed:', creditError);
+                    addToLog('⚠ Credits not deducted: ' + creditError.message, 'warning');
+                } else {
+                    console.log('Credits deducted successfully');
+                    addToLog('✓ Scan saved to history (-1 credit)', 'success');
+                }
+
+            } catch (err) {
+                console.error('Unexpected error in saveToDatabase:', err);
+                addToLog('❌ Error: ' + err.message, 'error');
+            }
         }
 
         // --- RENDERING ---
