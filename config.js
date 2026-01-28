@@ -3,6 +3,10 @@
 // In production, these should be loaded from environment variables
 
 const CONFIG = {
+    // Supabase Configuration
+    SUPABASE_URL: 'https://bueyuchjtypfctvtpvrp.supabase.co',
+    SUPABASE_ANON_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ1ZXl1Y2hqdHlwZmN0dnRwdnJwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njk1NjA5NjcsImV4cCI6MjA4NTEzNjk2N30.pI1G7g17J9fd0BVgHpecAQ0I_LI4KFw1Rgnb3FuuMIw',
+
     // API Endpoints
     CLOUDFLARE_DOH_API: 'https://cloudflare-dns.com/dns-query',
     CERTSPOTTER_API: 'https://api.certspotter.com/v1',

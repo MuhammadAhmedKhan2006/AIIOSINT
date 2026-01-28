@@ -16,8 +16,9 @@
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
         rel="stylesheet" />
     <script
-        id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { colors: { "primary": "#06f95f", "primary-dim": "rgba(6, 249, 95, 0.1)", "background-light": "#f5f8f6", "background-dark": "#0f1210", "surface-dark": "#161b18", }, fontFamily: { "display": ["Space Grotesk", "sans-serif"], "cyber": ["Orbitron", "sans-serif"], }, boxShadow: { 'neon': '0 0 10px rgba(6, 249, 95, 0.5), 0 0 20px rgba(6, 249, 95, 0.3)', 'neon-sm': '0 0 5px rgba(6, 249, 95, 0.5)', } }, }, }</script>
-    <style>
+        id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { colors: { "primary": "#06f95f", "primary-dim": "rgba(6, 249, 95, 0.1)", "background-light": "#f5f8f6", "background-dark": "#0f1210", "surface-dark": "#161b18", }, fontFamily: { "display": ["Space Grotesk", "sans-serif"], "cyber": ["Orbitron", "sans-serif"], }, boxShadow: { 'neon': '0 0 10px rgba(6, 249, 95, 0.5), 0 0 20px rgba(6, 249, 95, 0.3)', 'neon-sm': '0 0 5px rgba(6, 249, 95, 0.5)', } }, }, }</script>    <!-- Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="config.js"></script>    <style>
         ::-webkit-scrollbar {
             width: 8px;
         }
@@ -338,7 +339,10 @@
             }
         }
 
-        function handleSignup() {
+        // Initialize Supabase
+        const supabase = supabase.createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_ANON_KEY);
+
+        async function handleSignup() {
             // Get step 2 data
             formData.country = document.getElementById('country').value;
             formData.phone = document.getElementById('phone').value;
@@ -346,37 +350,50 @@
             formData.postal = document.getElementById('postal').value;
             formData.reason = document.getElementById('reason').value;
 
-            // Simulate registration process
             const button = document.querySelector('button[type="submit"]');
             const originalText = button.innerHTML;
 
             button.innerHTML = '<span class="flex items-center justify-center gap-2"><span class="material-symbols-outlined animate-spin">sync</span>PROCESSING...</span>';
             button.disabled = true;
 
-            // Store user data in localStorage (mock database)
-            const userData = {
-                codename: formData.codename,
-                email: formData.email,
-                password: formData.password, // In real app, this would be hashed
-                country: formData.country,
-                phone: formData.phone,
-                city: formData.city,
-                postal: formData.postal,
-                reason: formData.reason,
-                registrationDate: new Date().toISOString(),
-                status: 'active'
-            };
+            try {
+                // Sign up with Supabase Auth
+                const { data: authData, error: signUpError } = await supabase.auth.signUp({
+                    email: formData.email,
+                    password: formData.password,
+                    options: {
+                        data: {
+                            codename: formData.codename,
+                            country: formData.country,
+                            phone: formData.phone,
+                            city: formData.city,
+                            postal_code: formData.postal,
+                            reason: formData.reason
+                        }
+                    }
+                });
 
-            localStorage.setItem('allOSINT_user', JSON.stringify(userData));
-            localStorage.setItem('allOSINT_authenticated', 'true');
+                if (signUpError) throw signUpError;
 
-            setTimeout(() => {
                 button.innerHTML = '<span class="flex items-center justify-center gap-2"><span class="material-symbols-outlined">check_circle</span>AGENT ACTIVATED</span>';
 
                 setTimeout(() => {
                     window.location.href = 'dashboard.html';
                 }, 1500);
-            }, 2000);
+
+            } catch (error) {
+                console.error('Signup error:', error);
+                button.innerHTML = '<span class="flex items-center justify-center gap-2"><span class="material-symbols-outlined">error</span>REGISTRATION FAILED</span>';
+                button.style.backgroundColor = '#ef4444';
+
+                setTimeout(() => {
+                    button.innerHTML = originalText;
+                    button.style.backgroundColor = '';
+                    button.disabled = false;
+                }, 2000);
+
+                alert('Registration failed: ' + (error.message || 'Unknown error'));
+            }
         }
 
         // Initialize progress on page load

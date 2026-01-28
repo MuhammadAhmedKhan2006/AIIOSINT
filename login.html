@@ -16,8 +16,9 @@
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
         rel="stylesheet" />
     <script
-        id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { colors: { "primary": "#06f95f", "primary-dim": "rgba(6, 249, 95, 0.1)", "background-light": "#f5f8f6", "background-dark": "#0f1210", "surface-dark": "#161b18", }, fontFamily: { "display": ["Space Grotesk", "sans-serif"], "cyber": ["Orbitron", "sans-serif"], "mono": ["JetBrains Mono", "monospace"], }, boxShadow: { 'neon': '0 0 10px rgba(6, 249, 95, 0.5), 0 0 20px rgba(6, 249, 95, 0.3)', 'neon-sm': '0 0 5px rgba(6, 249, 95, 0.5)', } }, }, }</script>
-    <style>
+        id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { colors: { "primary": "#06f95f", "primary-dim": "rgba(6, 249, 95, 0.1)", "background-light": "#f5f8f6", "background-dark": "#0f1210", "surface-dark": "#161b18", }, fontFamily: { "display": ["Space Grotesk", "sans-serif"], "cyber": ["Orbitron", "sans-serif"], "mono": ["JetBrains Mono", "monospace"], }, boxShadow: { 'neon': '0 0 10px rgba(6, 249, 95, 0.5), 0 0 20px rgba(6, 249, 95, 0.3)', 'neon-sm': '0 0 5px rgba(6, 249, 95, 0.5)', } }, }, }</script>    <!-- Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="config.js"></script>    <style>
         ::-webkit-scrollbar {
             width: 8px;
         }
@@ -202,14 +203,14 @@
     </div>
 
     <script>
-        function handleLogin(event) {
+        // Initialize Supabase
+        const supabase = supabase.createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_ANON_KEY);
+
+        async function handleLogin(event) {
             event.preventDefault();
 
             const codename = document.getElementById('codename').value;
             const password = document.getElementById('password').value;
-
-            // Check if user exists in localStorage
-            const userData = localStorage.getItem('allOSINT_user');
 
             const button = event.target.querySelector('button[type="submit"]');
             const originalText = button.innerHTML;
@@ -217,41 +218,44 @@
             button.innerHTML = '<span class="flex items-center justify-center gap-2"><span class="material-symbols-outlined animate-spin">sync</span>AUTHENTICATING...</span>';
             button.disabled = true;
 
-            setTimeout(() => {
-                if (userData) {
-                    const user = JSON.parse(userData);
-                    if (user.codename === codename && user.password === password) {
-                        // Successful login
-                        localStorage.setItem('allOSINT_authenticated', 'true');
-                        button.innerHTML = '<span class="flex items-center justify-center gap-2"><span class="material-symbols-outlined">check_circle</span>ACCESS GRANTED</span>';
+            try {
+                // First, try to find user by codename to get their email
+                const { data: users, error: fetchError } = await supabase
+                    .from('users')
+                    .select('email, codename')
+                    .eq('codename', codename)
+                    .single();
 
+                if (fetchError || !users) {
+                    // Check for demo credentials
+                    if (codename.toLowerCase() === 'demo' && password === 'demo123') {
+                        button.innerHTML = '<span class="flex items-center justify-center gap-2"><span class="material-symbols-outlined">check_circle</span>DEMO ACCESS GRANTED</span>';
                         setTimeout(() => {
                             window.location.href = 'dashboard.html';
                         }, 1500);
                         return;
                     }
+
+                    throw new Error('Invalid credentials');
                 }
 
-                // Failed login - check for demo credentials
-                if (codename.toLowerCase() === 'demo' && password === 'demo123') {
-                    // Demo login
-                    const demoUser = {
-                        codename: 'Demo Agent',
-                        email: 'demo@allosint.com',
-                        status: 'demo'
-                    };
-                    localStorage.setItem('allOSINT_user', JSON.stringify(demoUser));
-                    localStorage.setItem('allOSINT_authenticated', 'true');
+                // Sign in with email and password
+                const { data: authData, error: signInError } = await supabase.auth.signInWithPassword({
+                    email: users.email,
+                    password: password
+                });
 
-                    button.innerHTML = '<span class="flex items-center justify-center gap-2"><span class="material-symbols-outlined">check_circle</span>DEMO ACCESS GRANTED</span>';
+                if (signInError) throw signInError;
 
-                    setTimeout(() => {
-                        window.location.href = 'dashboard.html';
-                    }, 1500);
-                    return;
-                }
+                // Successful login
+                button.innerHTML = '<span class="flex items-center justify-center gap-2"><span class="material-symbols-outlined">check_circle</span>ACCESS GRANTED</span>';
 
-                // Failed login
+                setTimeout(() => {
+                    window.location.href = 'dashboard.html';
+                }, 1500);
+
+            } catch (error) {
+                console.error('Login error:', error);
                 button.innerHTML = '<span class="flex items-center justify-center gap-2"><span class="material-symbols-outlined">error</span>ACCESS DENIED</span>';
                 button.style.backgroundColor = '#ef4444';
 
@@ -260,7 +264,7 @@
                     button.style.backgroundColor = '';
                     button.disabled = false;
                 }, 2000);
-            }, 2000);
+            }
         }
     </script>
 </body>

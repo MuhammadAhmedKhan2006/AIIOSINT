@@ -13,8 +13,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
         rel="stylesheet" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script>tailwind.config = { darkMode: "class", theme: { extend: { colors: { "primary": "#21c45d", "primary-dark": "#16a34a", "background-light": "#f6f8f7", "background-dark": "#020617", "surface-dark": "#0f172a", "surface-glass": "rgba(15, 23, 42, 0.7)", "border-neon": "rgba(33, 196, 93, 0.2)", }, fontFamily: { "display": ["Space Grotesk", "sans-serif"], "mono": ["JetBrains Mono", "monospace"], }, boxShadow: { 'neon': '0 0 10px rgba(33, 196, 93, 0.15)', 'neon-strong': '0 0 20px rgba(33, 196, 93, 0.3)', } }, }, }</script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>    <!-- Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="config.js"></script>    <script>tailwind.config = { darkMode: "class", theme: { extend: { colors: { "primary": "#21c45d", "primary-dark": "#16a34a", "background-light": "#f6f8f7", "background-dark": "#020617", "surface-dark": "#0f172a", "surface-glass": "rgba(15, 23, 42, 0.7)", "border-neon": "rgba(33, 196, 93, 0.2)", }, fontFamily: { "display": ["Space Grotesk", "sans-serif"], "mono": ["JetBrains Mono", "monospace"], }, boxShadow: { 'neon': '0 0 10px rgba(33, 196, 93, 0.15)', 'neon-strong': '0 0 20px rgba(33, 196, 93, 0.3)', } }, }, }</script>
     <style>
         ::-webkit-scrollbar {
             width: 6px;
@@ -455,19 +456,34 @@
     </main>
 
     <script>
+        // Initialize Supabase
+        const supabase = supabase.createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_ANON_KEY);
+
         // Check authentication on page load
-        document.addEventListener('DOMContentLoaded', function () {
-            const isAuthenticated = localStorage.getItem('allOSINT_authenticated');
-            if (!isAuthenticated) {
+        document.addEventListener('DOMContentLoaded', async function () {
+            try {
+                // Get current user session
+                const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+                
+                if (sessionError || !session) {
+                    window.location.href = 'login.html';
+                    return;
+                }
+
+                // Get user data from database
+                const { data: userData, error: userError } = await supabase
+                    .from('users')
+                    .select('codename')
+                    .eq('id', session.user.id)
+                    .single();
+
+                if (userData) {
+                    document.getElementById('user-name').textContent = userData.codename || 'Agent';
+                }
+            } catch (error) {
+                console.error('Auth error:', error);
                 window.location.href = 'login.html';
                 return;
-            }
-
-            // Load user data
-            const userData = localStorage.getItem('allOSINT_user');
-            if (userData) {
-                const user = JSON.parse(userData);
-                document.getElementById('user-name').textContent = user.codename || 'System Guardian';
             }
 
             // Initialize Threat Map (Leaflet)

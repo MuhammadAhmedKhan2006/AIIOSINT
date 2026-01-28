@@ -11,8 +11,9 @@
         href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500;700&display=swap"
         rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
-        rel="stylesheet" />
-    <script>
+        rel="stylesheet" />    <!-- Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="config.js"></script>    <script>
         tailwind.config = {
             darkMode: "class",
             theme: {
@@ -224,30 +225,82 @@
     </div>
 
     <script>
-        // Load user data
-        document.addEventListener('DOMContentLoaded', function () {
-            const userData = localStorage.getItem('allOSINT_user');
-            if (userData) {
-                const user = JSON.parse(userData);
-                document.getElementById('profile-name').textContent = user.codename || 'System Guardian';
-                document.getElementById('profile-email').textContent = user.email || 'agent@allosint.com';
-                document.getElementById('input-codename').value = user.codename || 'System Guardian';
-                document.getElementById('input-email').value = user.email || 'agent@allosint.com';
-                document.getElementById('input-country').value = user.country || 'United States';
-                document.getElementById('input-city').value = user.city || 'New York';
+        // Initialize Supabase
+        const supabase = supabase.createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_ANON_KEY);
 
-                if (user.registrationDate) {
-                    const date = new Date(user.registrationDate);
-                    document.getElementById('member-since').textContent = date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+        // Load user data
+        document.addEventListener('DOMContentLoaded', async function () {
+            try {
+                // Get current user session
+                const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+                
+                if (sessionError || !session) {
+                    // Not logged in, redirect to login
+                    window.location.href = 'login.html';
+                    return;
                 }
+
+                // Get user data from database
+                const { data: userData, error: userError } = await supabase
+                    .from('users')
+                    .select('*')
+                    .eq('id', session.user.id)
+                    .single();
+
+                if (userError) throw userError;
+
+                // Get user stats
+                const { data: stats, error: statsError } = await supabase
+                    .rpc('get_user_stats', { user_id: session.user.id });
+
+                if (statsError) console.error('Error fetching stats:', statsError);
+
+                // Populate profile fields
+                if (userData) {
+                    document.getElementById('profile-name').textContent = userData.codename || 'Agent';
+                    document.getElementById('profile-email').textContent = session.user.email || 'agent@allosint.com';
+                    document.getElementById('input-codename').value = userData.codename || '';
+                    document.getElementById('input-email').value = session.user.email || '';
+                    document.getElementById('input-country').value = userData.country || '';
+                    document.getElementById('input-city').value = userData.city || '';
+
+                    if (userData.created_at) {
+                        const date = new Date(userData.created_at);
+                        document.getElementById('member-since').textContent = date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+                    }
+
+                    // Update stats if available
+                    if (stats) {
+                        const statElements = document.querySelectorAll('.text-4xl.font-bold.text-primary');
+                        if (statElements.length >= 4) {
+                            statElements[0].textContent = stats.dns_lookups || 0;
+                            statElements[1].textContent = stats.total_scans || 0;
+                            statElements[2].textContent = stats.breach_searches || 0;
+                            statElements[3].textContent = stats.port_scans || 0;
+                        }
+
+                        // Update credits
+                        const creditElement = document.querySelector('.text-3xl.font-bold.text-primary');
+                        if (creditElement) {
+                            creditElement.textContent = userData.credits || 0;
+                        }
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading profile:', error);
+                alert('Error loading profile data. Please try again.');
             }
         });
 
-        function logout() {
+        async function logout() {
             if (confirm('Are you sure you want to logout?')) {
-                localStorage.removeItem('allOSINT_authenticated');
-                localStorage.removeItem('allOSINT_user');
-                window.location.href = 'index.html';
+                try {
+                    await supabase.auth.signOut();
+                    window.location.href = 'index.html';
+                } catch (error) {
+                    console.error('Logout error:', error);
+                    window.location.href = 'index.html';
+                }
             }
         }
     </script>
