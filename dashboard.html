@@ -484,8 +484,15 @@
                 }
 
                 // Load dashboard statistics
-                const stats = await getDashboardStats();
-                if (stats) {
+                const { data: dashStats, error: statsError } = await supabaseClient
+                    .rpc('get_dashboard_stats', { p_user_id: session.user.id });
+
+                if (statsError) {
+                    console.error('Error fetching dashboard stats:', statsError);
+                }
+
+                if (dashStats && dashStats.length > 0) {
+                    const stats = dashStats[0];
                     document.getElementById('active-scans').textContent = stats.total_scans || 0;
                     document.getElementById('vulns-found').textContent = stats.vulnerabilities_found || 0;
                     document.getElementById('user-credits').textContent = (stats.current_credits || 0).toLocaleString();

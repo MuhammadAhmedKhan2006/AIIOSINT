@@ -251,12 +251,6 @@
 
                 if (userError) throw userError;
 
-                // Get user stats
-                const { data: stats, error: statsError } = await supabaseClient
-                    .rpc('get_user_stats', { user_id: session.user.id });
-
-                if (statsError) console.error('Error fetching stats:', statsError);
-
                 // Populate profile fields
                 if (userData) {
                     document.getElementById('profile-name').textContent = userData.codename || 'Agent';
@@ -271,15 +265,22 @@
                         document.getElementById('member-since').textContent = date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
                     }
 
-                    // Get and update user stats
-                    const userStats = await getUserStats();
-                    if (userStats) {
+                    // Get and display user stats
+                    const { data: userStats, error: statsError } = await supabaseClient
+                        .rpc('get_user_stats', { p_user_id: session.user.id });
+
+                    if (statsError) {
+                        console.error('Error fetching stats:', statsError);
+                    }
+
+                    if (userStats && userStats.length > 0) {
+                        const stats = userStats[0];
                         const statElements = document.querySelectorAll('.text-4xl.font-bold.text-primary');
                         if (statElements.length >= 4) {
-                            statElements[0].textContent = userStats.dns_lookups || 0;
-                            statElements[1].textContent = userStats.subdomain_scans || 0;
-                            statElements[2].textContent = userStats.breach_searches || 0;
-                            statElements[3].textContent = userStats.port_scans || 0;
+                            statElements[0].textContent = stats.dns_lookups || 0;
+                            statElements[1].textContent = stats.subdomain_scans || 0;
+                            statElements[2].textContent = stats.breach_searches || 0;
+                            statElements[3].textContent = stats.port_scans || 0;
                         }
                     }
 
