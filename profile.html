@@ -13,7 +13,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
         rel="stylesheet" />    <!-- Supabase -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="config.js"></script>    <script>
+    <script src="config.js"></script>
+    <script src="js/supabase-helpers.js"></script>    <script>
         tailwind.config = {
             darkMode: "class",
             theme: {
@@ -270,21 +271,22 @@
                         document.getElementById('member-since').textContent = date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
                     }
 
-                    // Update stats if available
-                    if (stats) {
+                    // Get and update user stats
+                    const userStats = await getUserStats();
+                    if (userStats) {
                         const statElements = document.querySelectorAll('.text-4xl.font-bold.text-primary');
                         if (statElements.length >= 4) {
-                            statElements[0].textContent = stats.dns_lookups || 0;
-                            statElements[1].textContent = stats.total_scans || 0;
-                            statElements[2].textContent = stats.breach_searches || 0;
-                            statElements[3].textContent = stats.port_scans || 0;
+                            statElements[0].textContent = userStats.dns_lookups || 0;
+                            statElements[1].textContent = userStats.subdomain_scans || 0;
+                            statElements[2].textContent = userStats.breach_searches || 0;
+                            statElements[3].textContent = userStats.port_scans || 0;
                         }
+                    }
 
-                        // Update credits
-                        const creditElement = document.querySelector('.text-3xl.font-bold.text-primary');
-                        if (creditElement) {
-                            creditElement.textContent = userData.credits || 0;
-                        }
+                    // Update credits display
+                    const creditElement = document.querySelector('.text-3xl.font-bold.text-primary');
+                    if (creditElement) {
+                        creditElement.textContent = (userData.credits || 0).toLocaleString();
                     }
                 }
             } catch (error) {

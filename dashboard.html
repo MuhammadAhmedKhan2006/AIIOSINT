@@ -15,7 +15,8 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>    <!-- Supabase -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="config.js"></script>    <script>tailwind.config = { darkMode: "class", theme: { extend: { colors: { "primary": "#21c45d", "primary-dark": "#16a34a", "background-light": "#f6f8f7", "background-dark": "#020617", "surface-dark": "#0f172a", "surface-glass": "rgba(15, 23, 42, 0.7)", "border-neon": "rgba(33, 196, 93, 0.2)", }, fontFamily: { "display": ["Space Grotesk", "sans-serif"], "mono": ["JetBrains Mono", "monospace"], }, boxShadow: { 'neon': '0 0 10px rgba(33, 196, 93, 0.15)', 'neon-strong': '0 0 20px rgba(33, 196, 93, 0.3)', } }, }, }</script>
+    <script src="config.js"></script>
+    <script src="js/supabase-helpers.js"></script>    <script>tailwind.config = { darkMode: "class", theme: { extend: { colors: { "primary": "#21c45d", "primary-dark": "#16a34a", "background-light": "#f6f8f7", "background-dark": "#020617", "surface-dark": "#0f172a", "surface-glass": "rgba(15, 23, 42, 0.7)", "border-neon": "rgba(33, 196, 93, 0.2)", }, fontFamily: { "display": ["Space Grotesk", "sans-serif"], "mono": ["JetBrains Mono", "monospace"], }, boxShadow: { 'neon': '0 0 10px rgba(33, 196, 93, 0.15)', 'neon-strong': '0 0 20px rgba(33, 196, 93, 0.3)', } }, }, }</script>
     <style>
         ::-webkit-scrollbar {
             width: 6px;
@@ -256,7 +257,7 @@
                             <span class="text-xs font-mono text-slate-400 bg-black/20 px-2 py-0.5 rounded">LIVE</span>
                         </div>
                         <div>
-                            <div class="text-3xl font-bold text-white font-mono tracking-tighter">3</div>
+                            <div id="active-scans" class="text-3xl font-bold text-white font-mono tracking-tighter">0</div>
                             <div class="text-sm text-slate-400 mt-1">Active Scans</div>
                         </div>
                         <div class="mt-3 w-full h-1 bg-slate-800 rounded-full overflow-hidden">
@@ -274,7 +275,7 @@
                             </span>
                         </div>
                         <div>
-                            <div class="text-3xl font-bold text-white font-mono tracking-tighter">127</div>
+                            <div id="vulns-found" class="text-3xl font-bold text-white font-mono tracking-tighter">0</div>
                             <div class="text-sm text-slate-400 mt-1">Vulns Found</div>
                         </div>
                     </div>
@@ -298,7 +299,7 @@
                             </div>
                         </div>
                         <div>
-                            <div class="text-3xl font-bold text-white font-mono tracking-tighter">2,500</div>
+                            <div id="user-credits" class="text-3xl font-bold text-white font-mono tracking-tighter">0</div>
                             <div class="text-sm text-slate-400 mt-1">Credits</div>
                         </div>
                     </div>
@@ -480,6 +481,14 @@
 
                 if (userData) {
                     document.getElementById('user-name').textContent = userData.codename || 'Agent';
+                }
+
+                // Load dashboard statistics
+                const stats = await getDashboardStats();
+                if (stats) {
+                    document.getElementById('active-scans').textContent = stats.total_scans || 0;
+                    document.getElementById('vulns-found').textContent = stats.vulnerabilities_found || 0;
+                    document.getElementById('user-credits').textContent = (stats.current_credits || 0).toLocaleString();
                 }
             } catch (error) {
                 console.error('Auth error:', error);
