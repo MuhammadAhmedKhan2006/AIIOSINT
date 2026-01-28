@@ -13,10 +13,11 @@
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
         rel="stylesheet" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>    <!-- Supabase -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script> <!-- Supabase -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="config.js"></script>
-    <script src="js/supabase-helpers.js"></script>    <script>tailwind.config = { darkMode: "class", theme: { extend: { colors: { "primary": "#21c45d", "primary-dark": "#16a34a", "background-light": "#f6f8f7", "background-dark": "#020617", "surface-dark": "#0f172a", "surface-glass": "rgba(15, 23, 42, 0.7)", "border-neon": "rgba(33, 196, 93, 0.2)", }, fontFamily: { "display": ["Space Grotesk", "sans-serif"], "mono": ["JetBrains Mono", "monospace"], }, boxShadow: { 'neon': '0 0 10px rgba(33, 196, 93, 0.15)', 'neon-strong': '0 0 20px rgba(33, 196, 93, 0.3)', } }, }, }</script>
+    <script src="js/supabase-helpers.js"></script>
+    <script>tailwind.config = { darkMode: "class", theme: { extend: { colors: { "primary": "#21c45d", "primary-dark": "#16a34a", "background-light": "#f6f8f7", "background-dark": "#020617", "surface-dark": "#0f172a", "surface-glass": "rgba(15, 23, 42, 0.7)", "border-neon": "rgba(33, 196, 93, 0.2)", }, fontFamily: { "display": ["Space Grotesk", "sans-serif"], "mono": ["JetBrains Mono", "monospace"], }, boxShadow: { 'neon': '0 0 10px rgba(33, 196, 93, 0.15)', 'neon-strong': '0 0 20px rgba(33, 196, 93, 0.3)', } }, }, }</script>
     <style>
         ::-webkit-scrollbar {
             width: 6px;
@@ -88,6 +89,12 @@
                         <span class="text-sm font-medium font-mono">Dashboard</span>
                         <div class="ml-auto size-1.5 rounded-full bg-primary animate-pulse shadow-[0_0_8px_#21c45d]">
                         </div>
+                    </a>
+                    <a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-400 hover:text-white hover:bg-white/5 transition-all group"
+                        href="history.html">
+                        <span
+                            class="material-symbols-outlined text-[20px] group-hover:text-primary transition-colors">history</span>
+                        <span class="text-sm font-medium font-mono">Search History</span>
                     </a>
                 </nav>
             </div>
@@ -219,22 +226,23 @@
                 <div class="hidden md:flex items-center gap-3 px-3 py-1.5 rounded border border-white/5 bg-white/5">
                     <span class="text-xs text-slate-400 font-mono">THREATS</span>
                     <div class="w-16 h-1 bg-slate-700 rounded-full overflow-hidden">
-                        <div id="threats-bar" class="w-0 h-full bg-yellow-500 shadow-[0_0_5px_#eab308] transition-all duration-500"></div>
+                        <div id="threats-bar"
+                            class="w-0 h-full bg-yellow-500 shadow-[0_0_5px_#eab308] transition-all duration-500"></div>
                     </div>
                     <span id="threats-count" class="text-xs text-yellow-500 font-mono">0</span>
                 </div>
                 <div class="hidden md:flex items-center gap-3 px-3 py-1.5 rounded border border-white/5 bg-white/5">
                     <span class="text-xs text-slate-400 font-mono">SCANS</span>
                     <div class="w-16 h-1 bg-slate-700 rounded-full overflow-hidden">
-                        <div id="scans-bar" class="w-0 h-full bg-primary shadow-[0_0_5px_#21c45d] transition-all duration-500"></div>
+                        <div id="scans-bar"
+                            class="w-0 h-full bg-primary shadow-[0_0_5px_#21c45d] transition-all duration-500"></div>
                     </div>
                     <span id="scans-count" class="text-xs text-primary font-mono">0</span>
                 </div>
                 <div class="flex items-center gap-4 border-l border-white/10 pl-6">
                     <button class="relative text-slate-400 hover:text-white transition-colors"
-                        onclick="showNotifications()">
-                        <span class="material-symbols-outlined">notifications</span>
-                        <span class="absolute top-0 right-0 size-2 bg-red-500 rounded-full border border-black"></span>
+                        onclick="window.location.href='history.html'" title="Search History">
+                        <span class="material-symbols-outlined">history</span>
                     </button>
                 </div>
             </div>
@@ -257,7 +265,8 @@
                             <span class="text-xs font-mono text-slate-400 bg-black/20 px-2 py-0.5 rounded">LIVE</span>
                         </div>
                         <div>
-                            <div id="active-scans" class="text-3xl font-bold text-white font-mono tracking-tighter">0</div>
+                            <div id="active-scans" class="text-3xl font-bold text-white font-mono tracking-tighter">0
+                            </div>
                             <div class="text-sm text-slate-400 mt-1">Active Scans</div>
                         </div>
                         <div class="mt-3 w-full h-1 bg-slate-800 rounded-full overflow-hidden">
@@ -275,7 +284,8 @@
                             </span>
                         </div>
                         <div>
-                            <div id="vulns-found" class="text-3xl font-bold text-white font-mono tracking-tighter">0</div>
+                            <div id="vulns-found" class="text-3xl font-bold text-white font-mono tracking-tighter">0
+                            </div>
                             <div class="text-sm text-slate-400 mt-1">Vulns Found</div>
                         </div>
                     </div>
@@ -299,7 +309,8 @@
                             </div>
                         </div>
                         <div>
-                            <div id="user-credits" class="text-3xl font-bold text-white font-mono tracking-tighter">0</div>
+                            <div id="user-credits" class="text-3xl font-bold text-white font-mono tracking-tighter">0
+                            </div>
                             <div class="text-sm text-slate-400 mt-1">Credits</div>
                         </div>
                     </div>
@@ -466,7 +477,7 @@
             try {
                 // Get current user session
                 const { data: { session }, error: sessionError } = await supabaseClient.auth.getSession();
-                
+
                 if (sessionError || !session) {
                     window.location.href = 'login.html';
                     return;
@@ -495,20 +506,20 @@
                     const stats = dashStats[0];
                     const totalScans = stats.total_scans || 0;
                     const vulnsFound = stats.vulnerabilities_found || 0;
-                    
+
                     // Update main stats cards
                     document.getElementById('active-scans').textContent = totalScans;
                     document.getElementById('vulns-found').textContent = vulnsFound;
                     document.getElementById('user-credits').textContent = (stats.current_credits || 0).toLocaleString();
-                    
+
                     // Update header indicators
                     document.getElementById('threats-count').textContent = vulnsFound;
                     document.getElementById('scans-count').textContent = totalScans;
-                    
+
                     // Update progress bars (max 100 for percentage calculation)
                     const threatsPercent = Math.min((vulnsFound / 100) * 100, 100);
                     const scansPercent = Math.min((totalScans / 100) * 100, 100);
-                    
+
                     document.getElementById('threats-bar').style.width = threatsPercent + '%';
                     document.getElementById('scans-bar').style.width = scansPercent + '%';
                 }

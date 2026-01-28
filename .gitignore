@@ -2,7 +2,7 @@
 .env
 .env.local
 .env.production
-
+.env.example
 # Analysis and documentation
 Analysis.md
 SEARCH_HISTORY_PLAN.md

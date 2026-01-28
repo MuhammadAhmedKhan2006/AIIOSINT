@@ -114,6 +114,9 @@
         <header
             class="sticky top-0 z-50 flex items-center justify-between border-b border-surface-border bg-surface-dark/95 backdrop-blur-md px-6 py-3">
             <div class="flex items-center gap-4 text-white">
+                <a href="dashboard.html" class="mr-4 text-slate-400 hover:text-white transition-colors">
+                    <span class="material-symbols-outlined">arrow_back</span>
+                </a>
                 <div
                     class="size-8 text-primary flex items-center justify-center rounded bg-primary/10 border border-primary/20 neon-glow">
                     <img src="logo2.png" alt="Logo" class="w-6 h-6 object-contain" />
@@ -554,7 +557,7 @@
                 updateStats();
                 drawGraph();
                 STATE.isScanning = false;
-                
+
                 // Save to database
                 await saveToDatabase(domain, processed);
             } catch (error) {

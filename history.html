@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <link rel="icon" type="image/png" href="logo2.png" />
+    <title>Search History - AllOSINT</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500;700&display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet" />
+    
+    <!-- Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="config.js"></script>
+    <!-- We can include supabase-helpers if needed, but the prompt gave specific code -->
+    
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#21c45d",
+                        "primary-dark": "#16a34a",
+                        "background-light": "#f6f8f7",
+                        "background-dark": "#020617",
+                        "surface-dark": "#0f172a",
+                        "surface-glass": "rgba(15, 23, 42, 0.7)",
+                        "border-neon": "rgba(33, 196, 93, 0.2)",
+                    },
+                    fontFamily: {
+                        "display": ["Space Grotesk", "sans-serif"],
+                        "mono": ["JetBrains Mono", "monospace"],
+                    },
+                    boxShadow: {
+                        'neon': '0 0 10px rgba(33, 196, 93, 0.15)',
+                        'neon-strong': '0 0 20px rgba(33, 196, 93, 0.3)',
+                    }
+                },
+            },
+        }
+    </script>
+    <style>
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #1e293b;
+            border-radius: 3px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #21c45d;
+        }
+
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(33, 196, 93, 0.1);
+        }
+    </style>
+</head>
+
+<body class="bg-background-dark text-white font-display min-h-screen flex flex-col">
+    <!-- Navbar -->
+    <nav class="border-b border-white/10 bg-background-dark/80 backdrop-blur-md sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+            <a href="dashboard.html" class="text-primary hover:text-white transition-colors flex items-center gap-2">
+                <span class="material-symbols-outlined">arrow_back</span>
+                Back to Dashboard
+            </a>
+            <h1 class="text-xl font-bold text-white">Search History</h1>
+            <button onclick="logout()" class="text-red-400 hover:text-red-300">Logout</button>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="max-w-7xl mx-auto px-6 py-8 flex-1 w-full">
+        <!-- Stats Cards Row -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+            <!-- Total Scans Card -->
+            <div class="bg-surface-dark border border-white/10 rounded-lg p-6">
+                <div class="flex items-center gap-3 mb-2">
+                    <span class="material-symbols-outlined text-primary">history</span>
+                    <h3 class="text-slate-400 text-sm">Total Scans</h3>
+                </div>
+                <p id="stat-total-scans" class="text-2xl font-bold font-mono text-white">Loading...</p>
+            </div>
+            
+            <!-- This Week Card -->
+            <div class="bg-surface-dark border border-white/10 rounded-lg p-6">
+                <div class="flex items-center gap-3 mb-2">
+                    <span class="material-symbols-outlined text-primary">date_range</span>
+                    <h3 class="text-slate-400 text-sm">This Week</h3>
+                </div>
+                <p id="stat-week-scans" class="text-2xl font-bold font-mono text-white">Loading...</p>
+            </div>
+
+            <!-- Most Used Module Card -->
+            <div class="bg-surface-dark border border-white/10 rounded-lg p-6">
+                <div class="flex items-center gap-3 mb-2">
+                    <span class="material-symbols-outlined text-primary">extension</span>
+                    <h3 class="text-slate-400 text-sm">Most Used</h3>
+                </div>
+                <p id="stat-most-used" class="text-xl font-bold font-mono text-white truncate" title="Loading...">Loading...</p>
+            </div>
+
+            <!-- Credits Used Card -->
+            <div class="bg-surface-dark border border-white/10 rounded-lg p-6">
+                <div class="flex items-center gap-3 mb-2">
+                    <span class="material-symbols-outlined text-primary">token</span>
+                    <h3 class="text-slate-400 text-sm">Credits Used</h3>
+                </div>
+                <p id="stat-credits-used" class="text-2xl font-bold font-mono text-white">Loading...</p>
+            </div>
+        </div>
+
+        <!-- Filters Section -->
+        <div class="bg-surface-dark border border-white/10 rounded-lg p-6 mb-6">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <!-- Module Filter Dropdown -->
+                <div>
+                    <label class="block text-xs text-slate-400 mb-1">Module</label>
+                    <select id="filter-module" onchange="applyFilters()" class="w-full bg-[#020617] border border-white/10 rounded px-3 py-2 text-sm text-white focus:outline-none focus:border-primary">
+                        <option value="">All Modules</option>
+                        <!-- Options will be populated by JS -->
+                    </select>
+                </div>
+                
+                <!-- Date Range Picker -->
+                <div>
+                    <label class="block text-xs text-slate-400 mb-1">Date Range (Start)</label>
+                    <input type="date" id="filter-date-start" onchange="applyFilters()" class="w-full bg-[#020617] border border-white/10 rounded px-3 py-2 text-sm text-white focus:outline-none focus:border-primary placeholder-slate-600">
+                </div>
+                 <div>
+                    <label class="block text-xs text-slate-400 mb-1">Date Range (End)</label>
+                    <input type="date" id="filter-date-end" onchange="applyFilters()" class="w-full bg-[#020617] border border-white/10 rounded px-3 py-2 text-sm text-white focus:outline-none focus:border-primary placeholder-slate-600">
+                </div>
+
+                <!-- Search Input -->
+                <div class="flex items-end gap-2">
+                    <div class="flex-1">
+                         <label class="block text-xs text-slate-400 mb-1">Search</label>
+                        <input type="text" id="search-input" placeholder="Search queries..." oninput="debounceSearch()" class="w-full bg-[#020617] border border-white/10 rounded px-3 py-2 text-sm text-white focus:outline-none focus:border-primary">
+                    </div>
+                     <button onclick="clearFilters()" class="px-3 py-2 bg-white/5 border border-white/10 rounded hover:bg-white/10 text-white transition-colors" title="Clear Filters">
+                        <span class="material-symbols-outlined text-[20px]">filter_alt_off</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- History Cards Grid -->
+        <div id="history-container" class="grid grid-cols-1 gap-4">
+            <!-- History cards will be inserted here -->
+            <div class="text-center py-12">
+                <span class="material-symbols-outlined text-slate-600 text-4xl animate-spin">refresh</span>
+                <p class="text-slate-500 mt-2">Loading history...</p>
+            </div>
+        </div>
+        
+        <!-- Pagination / Load More -->
+        <div class="mt-8 text-center hidden" id="load-more-container">
+             <button onclick="loadMore()" class="px-6 py-2 bg-primary/10 border border-primary/30 text-primary rounded hover:bg-primary/20 transition-all">
+                Load More
+            </button>
+        </div>
+    </div>
+
+    <!-- Details Modal -->
+    <div id="details-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-[100] hidden flex items-center justify-center p-4">
+        <div class="bg-surface-dark border border-white/10 rounded-lg w-full max-w-3xl max-h-[90vh] flex flex-col shadow-2xl">
+            <div class="flex items-center justify-between p-6 border-b border-white/10">
+                <h3 class="text-xl font-bold text-white">Scan Details</h3>
+                <button onclick="closeModal()" class="text-slate-400 hover:text-white transition-colors">
+                    <span class="material-symbols-outlined">close</span>
+                </button>
+            </div>
+            <div class="p-6 overflow-y-auto custom-scrollbar" id="modal-content">
+                <!-- Content injected by JS -->
+            </div>
+            <div class="p-6 border-t border-white/10 flex justify-end gap-3 bg-[#020617]/50">
+                <button onclick="closeModal()" class="px-4 py-2 bg-white/10 text-white border border-white/10 rounded hover:bg-white/20 transition-all">Close</button>
+                <button id="modal-export-btn" class="px-4 py-2 bg-primary text-background-dark font-bold rounded hover:bg-primary/90 transition-all">Export JSON</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Constants & Config
+        const { createClient } = supabase;
+        const supabaseClient = createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_ANON_KEY);
+        
+        const MODULE_TYPES = {
+            'dns_lookup': 'DNS Lookup',
+            'port_scanner': 'Port Scanner',
+            'ip_geolocation': 'IP Geolocation',
+            'subdomain_recon': 'Subdomain Recon',
+            'domain_threat_intel': 'Domain Threat Intel',
+            'ssl_certs': 'SSL Certificates',
+            'breach_search': 'Breach Search',
+            'social_recon': 'Social Recon',
+            'phone_lookup': 'Phone Lookup',
+            'tech_profiler': 'Tech Stack Profiler',
+            'exif_extractor': 'EXIF Extractor',
+            'dork_generator': 'Dork Generator'
+        };
+
+        const MODULE_ICONS = {
+            'dns_lookup': 'dns',
+            'port_scanner': 'security',
+            'ip_geolocation': 'location_on',
+            'subdomain_recon': 'account_tree',
+            'domain_threat_intel': 'shield',
+            'ssl_certs': 'verified_user',
+            'breach_search': 'lock_open',
+            'social_recon': 'groups',
+            'phone_lookup': 'phone',
+            'tech_profiler': 'code',
+            'exif_extractor': 'image',
+            'dork_generator': 'manage_search'
+        };
+
+        // State
+        let currentHistory = [];
+        let currentPage = 1;
+        const itemsPerPage = 20;
+        let debounceTimer;
+
+        // Initialization
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Populate module filter
+            const moduleSelect = document.getElementById('filter-module');
+            Object.entries(MODULE_TYPES).forEach(([key, value]) => {
+                const option = document.createElement('option');
+                option.value = key;
+                option.textContent = value;
+                moduleSelect.appendChild(option);
+            });
+
+            await loadSearchHistory();
+            await loadStats(); // Attempt to load stats
+        });
+
+        // Core Functions
+        async function loadSearchHistory() {
+            try {
+                const { data: { user }, error: authError } = await supabaseClient.auth.getUser();
+                if (authError || !user) {
+                    window.location.href = 'login.html';
+                    return;
+                }
+
+                document.getElementById('history-container').innerHTML = `
+                    <div class="text-center py-12">
+                        <span class="material-symbols-outlined text-slate-600 text-4xl animate-spin">refresh</span>
+                        <p class="text-slate-500 mt-2">Loading history...</p>
+                    </div>`;
+
+                // Build query
+                let query = supabaseClient
+                    .from('search_history')
+                    .select('*')
+                    .order('created_at', { ascending: false })
+                    .limit(100); // Load latest 100 initially as requested
+
+                // Note: Real pagination with RLS could be done with range(), but for this task "limit(100)" was in the prompt example.
+                // We will filter client-side for the search/date/module for now as the prompt snippets suggested simplified individual functions.
+                // To support ALL filters at once, it's better to compose the query or filter client-side if dataset is small (100).
+                // Given "Load latest 100", let's stick to fetching 100 and filtering client-side for immediate responsiveness, 
+                // OR compose a query. The prompt gave separate functions. I will implement a composed fetch.
+
+                const moduleFilter = document.getElementById('filter-module').value;
+                const startDate = document.getElementById('filter-date-start').value;
+                const endDate = document.getElementById('filter-date-end').value;
+                const searchTerm = document.getElementById('search-input').value.trim();
+
+                let dbQuery = supabaseClient
+                    .from('search_history')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+
+                if (moduleFilter) {
+                    dbQuery = dbQuery.eq('module_type', moduleFilter);
+                }
+                if (startDate) {
+                    dbQuery = dbQuery.gte('created_at', startDate);
+                }
+                if (endDate) {
+                    // unexpected behavior if time not included, so add time to include the whole day
+                    const endDateTime = new Date(endDate);
+                    endDateTime.setHours(23, 59, 59, 999);
+                    dbQuery = dbQuery.lte('created_at', endDateTime.toISOString());
+                }
+                if (searchTerm) {
+                    dbQuery = dbQuery.ilike('query_input', `%${searchTerm}%`);
+                }
+
+                dbQuery = dbQuery.limit(100);
+
+                const { data: searches, error } = await dbQuery;
+
+                if (error) throw error;
+
+                currentHistory = searches || [];
+                displaySearchHistory(currentHistory);
+                
+                // Update stats if we have data and haven't loaded detailed stats
+                if (!document.getElementById('stat-total-scans').textContent.includes('Loading')) {
+                     // Keep existing stats
+                } else {
+                     calculateClientSideStats(currentHistory);
+                }
+
+            } catch (error) {
+                console.error('Error loading history:', error);
+                document.getElementById('history-container').innerHTML = `
+                    <div class="text-center py-12">
+                        <span class="material-symbols-outlined text-red-500 text-4xl">error</span>
+                        <p class="text-red-400 mt-2">Failed to load history</p>
+                        <p class="text-xs text-slate-500 mt-1">${error.message}</p>
+                    </div>`;
+            }
+        }
+
+        function displaySearchHistory(searches) {
+            const container = document.getElementById('history-container');
+            container.innerHTML = '';
+
+            if (!searches || searches.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-16">
+                        <span class="material-symbols-outlined text-slate-600 text-6xl mb-4">history</span>
+                        <h3 class="text-xl text-slate-400 mb-2">No Search History Found</h3>
+                        <p class="text-slate-500 mb-6">Try adjusting your filters or start a new scan.</p>
+                        <a href="dashboard.html" class="px-6 py-3 bg-primary text-background-dark font-bold rounded hover:bg-primary-dark transition-colors">
+                            Go to Dashboard
+                        </a>
+                    </div>`;
+                return;
+            }
+
+            searches.forEach(scan => {
+                const date = new Date(scan.created_at);
+                const timeAgo = getTimeAgo(date);
+                const moduleName = MODULE_TYPES[scan.module_type] || scan.module_type;
+                const icon = MODULE_ICONS[scan.module_type] || 'search';
+                
+                // Result summary handling
+                let resultsText = 'Scan Complete';
+                if (scan.result_summary) {
+                    // Try to extract a meaningful count or summary depending on structure
+                    // Assuming simplified logic or just showing "Results available"
+                    if (typeof scan.result_summary === 'object') {
+                        const keys = Object.keys(scan.result_summary);
+                         if (keys.length > 0) resultsText = `${keys.length} items found`;
+                         // Customization based on known modules could go here
+                    }
+                }
+
+                const card = document.createElement('div');
+                card.className = 'bg-surface-dark border border-white/10 rounded-lg p-6 hover:border-primary/30 transition-all';
+                card.innerHTML = `
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="flex items-center gap-3">
+                            <span class="material-symbols-outlined text-primary text-2xl">${icon}</span>
+                            <div>
+                                <h3 class="text-white font-bold">${moduleName}</h3>
+                                <p class="text-sm text-slate-400 font-mono break-all">${scan.query_input || 'No query input'}</p>
+                            </div>
+                        </div>
+                        <div class="text-right shrink-0 ml-2">
+                            <p class="text-xs text-slate-500" title="${date.toLocaleString()}">${timeAgo}</p>
+                            <span class="inline-block mt-1 px-2 py-1 bg-primary/20 text-primary text-xs rounded uppercase font-bold tracking-wider">${scan.status || 'COMPLETED'}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="border-t border-white/10 pt-4 mt-4">
+                        <div class="grid grid-cols-2 gap-4 mb-4">
+                            <div>
+                                <p class="text-xs text-slate-400">Results</p>
+                                <p class="text-white font-mono text-sm overflow-hidden text-ellipsis whitespace-nowrap">${resultsText}</p>
+                            </div>
+                            <div>
+                                <p class="text-xs text-slate-400">Credits</p>
+                                <p class="text-white font-mono text-sm">${scan.credits_used || 0}</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex gap-2">
+                            <button onclick="viewDetails('${scan.id}')" 
+                                class="flex-1 px-4 py-2 bg-primary/20 text-primary border border-primary/30 rounded hover:bg-primary/30 transition-all text-sm font-medium">
+                                View Details
+                            </button>
+                            <button onclick="exportResults('${scan.id}')" 
+                                class="px-4 py-2 bg-white/10 text-white border border-white/10 rounded hover:bg-white/20 transition-all text-sm font-medium flex items-center gap-2">
+                                <span class="material-symbols-outlined text-[18px]">download</span>
+                                Export
+                            </button>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        // Stats Logic
+        async function loadStats() {
+            try {
+                // Fetch stats from RPC if available, or calculate local
+                // We'll calculate from a larger fetch or separate count queries for accuracy
+                const { data: { user } } = await supabaseClient.auth.getUser();
+                if (!user) return;
+
+                // Attempt to use the same RPC as profile.html for total scans/credits
+                const { data: userStats, error } = await supabaseClient
+                    .rpc('get_user_stats', { p_user_id: user.id });
+
+                if (!error && userStats && userStats.length > 0) {
+                    const stats = userStats[0];
+                    document.getElementById('stat-total-scans').textContent = (stats.total_searches || 0).toLocaleString();
+                    
+                    // We need to fetch credits used from users table
+                     const { data: userData } = await supabaseClient
+                        .from('users')
+                        .select('credits')
+                        .eq('id', user.id)
+                        .single();
+                        
+                    if (userData) {
+                        const defaultCredits = CONFIG.DEFAULT_CREDITS || 2500;
+                        const used = defaultCredits - (userData.credits || 0);
+                         document.getElementById('stat-credits-used').textContent = Math.max(0, used).toLocaleString();
+                    }
+                }
+
+                // For "Most Used" and "This Week", we need to query history
+                // "This Week"
+                const oneWeekAgo = new Date();
+                oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+                const { count: weekCount } = await supabaseClient
+                    .from('search_history')
+                    .select('*', { count: 'exact', head: true })
+                    .gte('created_at', oneWeekAgo.toISOString());
+                
+                document.getElementById('stat-week-scans').textContent = (weekCount || 0).toLocaleString();
+
+                // "Most Used" - Requires aggregation. Supabase JS doesn't do group by well without RPC.
+                // We'll approximate from the last 100 loaded or leave as "-" if not enough info
+                // Or we can create an RPC but I shouldn't modify DB. 
+                // Client side calculation from the top 100 is acceptable for this view.
+                
+            } catch (e) {
+                console.error("Stats error", e);
+                document.getElementById('stat-total-scans').textContent = "-";
+            }
+        }
+        
+        function calculateClientSideStats(items) {
+             if (!items || items.length === 0) return;
+             
+             // Most Used Module
+             const counts = {};
+             items.forEach(i => {
+                 counts[i.module_type] = (counts[i.module_type] || 0) + 1;
+             });
+             let max = 0;
+             let maxType = '-';
+             Object.entries(counts).forEach(([type, count]) => {
+                 if (count > max) {
+                     max = count;
+                     maxType = type;
+                 }
+             });
+             const name = MODULE_TYPES[maxType] || maxType;
+             document.getElementById('stat-most-used').textContent = name;
+             
+             // If RPC failed, populate others
+             if (document.getElementById('stat-total-scans').textContent === 'Loading...') {
+                 document.getElementById('stat-total-scans').textContent = items.length + "+";
+             }
+        }
+
+        // Filter Handlers
+        function applyFilters() {
+            loadSearchHistory();
+        }
+
+        function clearFilters() {
+            document.getElementById('filter-module').value = '';
+            document.getElementById('filter-date-start').value = '';
+            document.getElementById('filter-date-end').value = '';
+            document.getElementById('search-input').value = '';
+            loadSearchHistory();
+        }
+        
+        function debounceSearch() {
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(() => {
+                applyFilters();
+            }, 500);
+        }
+
+        // Details Modal
+        function viewDetails(id) {
+            const scan = currentHistory.find(h => h.id === id);
+            if (!scan) return;
+
+            const modal = document.getElementById('details-modal');
+            const content = document.getElementById('modal-content');
+            const exportBtn = document.getElementById('modal-export-btn');
+            
+            const date = new Date(scan.created_at).toLocaleString();
+            const moduleName = MODULE_TYPES[scan.module_type] || scan.module_type;
+
+            content.innerHTML = `
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                    <div>
+                        <h4 class="text-sm text-slate-400 uppercase tracking-wider mb-2">General Info</h4>
+                        <div class="space-y-2">
+                            <p class="text-sm"><span class="text-slate-500 w-24 inline-block">Module:</span> <span class="text-white font-bold">${moduleName}</span></p>
+                            <p class="text-sm"><span class="text-slate-500 w-24 inline-block">Target:</span> <span class="text-white font-mono bg-white/5 px-2 py-0.5 rounded">${scan.query_input}</span></p>
+                            <p class="text-sm"><span class="text-slate-500 w-24 inline-block">Date:</span> <span class="text-white">${date}</span></p>
+                            <p class="text-sm"><span class="text-slate-500 w-24 inline-block">Status:</span> <span class="text-primary">${scan.status}</span></p>
+                            <p class="text-sm"><span class="text-slate-500 w-24 inline-block">Credits:</span> <span class="text-white">${scan.credits_used}</span></p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-6">
+                    <h4 class="text-sm text-slate-400 uppercase tracking-wider mb-2">Results Summary</h4>
+                    <pre class="bg-[#020617] p-4 rounded-lg border border-white/10 text-xs text-slate-300 font-mono overflow-auto max-h-40 custom-scrollbar">${JSON.stringify(scan.result_summary, null, 2) || '{}'}</pre>
+                </div>
+
+                <div>
+                    <h4 class="text-sm text-slate-400 uppercase tracking-wider mb-2">Full Results</h4>
+                    <pre class="bg-[#020617] p-4 rounded-lg border border-white/10 text-xs text-green-400/80 font-mono overflow-auto max-h-96 custom-scrollbar">${JSON.stringify(scan.full_result, null, 2) || '{}'}</pre>
+                </div>
+            `;
+            
+            exportBtn.onclick = () => exportResults(id);
+            modal.classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('details-modal').classList.add('hidden');
+        }
+
+        // Export
+        function exportResults(id) {
+            const scan = currentHistory.find(h => h.id === id);
+            if (!scan) return;
+            
+            const data = {
+                scan_info: {
+                    id: scan.id,
+                    module: scan.module_type,
+                    query: scan.query_input,
+                    date: scan.created_at,
+                    status: scan.status
+                },
+                results: scan.full_result
+            };
+
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `scan-${scan.module_type}-${scan.created_at.split('T')[0]}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        // Utils
+        function getTimeAgo(date) {
+            const seconds = Math.floor((new Date() - date) / 1000);
+            let interval = seconds / 31536000;
+            if (interval > 1) return Math.floor(interval) + " years ago";
+            interval = seconds / 2592000;
+            if (interval > 1) return Math.floor(interval) + " months ago";
+            interval = seconds / 86400;
+            if (interval > 1) return Math.floor(interval) + " days ago";
+            interval = seconds / 3600;
+            if (interval > 1) return Math.floor(interval) + " hours ago";
+            interval = seconds / 60;
+            if (interval > 1) return Math.floor(interval) + " minutes ago";
+            return Math.floor(seconds) + " seconds ago";
+        }
+
+         async function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                const { error } = await supabaseClient.auth.signOut();
+                window.location.href = 'login.html';
+            }
+        }
+    </script>
+</body>
+</html>
