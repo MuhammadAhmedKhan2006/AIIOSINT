@@ -220,31 +220,40 @@
             button.disabled = true;
 
             try {
-                // First, try to find user by codename to get their email
-                const { data: users, error: fetchError } = await supabaseClient
-                    .from('users')
-                    .select('email, codename')
-                    .eq('codename', codename)
-                    .single();
+                // Check for demo credentials first
+                if (codename.toLowerCase() === 'demo' && password === 'demo123') {
+                    button.innerHTML = '<span class="flex items-center justify-center gap-2"><span class="material-symbols-outlined">check_circle</span>DEMO ACCESS GRANTED</span>';
+                    setTimeout(() => {
+                        window.location.href = 'dashboard.html';
+                    }, 1500);
+                    return;
+                }
 
-                if (fetchError || !users) {
-                    // Check for demo credentials
-                    if (codename.toLowerCase() === 'demo' && password === 'demo123') {
-                        button.innerHTML = '<span class="flex items-center justify-center gap-2"><span class="material-symbols-outlined">check_circle</span>DEMO ACCESS GRANTED</span>';
-                        setTimeout(() => {
-                            window.location.href = 'dashboard.html';
-                        }, 1500);
-                        return;
+                // Try to sign in with email if input contains @
+                let emailToUse = codename;
+                
+                if (!codename.includes('@')) {
+                    // Input is a codename - look up the email
+                    const { data: userData, error: fetchError } = await supabaseClient
+                        .from('users')
+                        .select('email')
+                        .eq('codename', codename)
+                        .single();
+                    
+                    if (fetchError || !userData || !userData.email) {
+                        throw new Error('Invalid credentials');
                     }
-
-                    throw new Error('Invalid credentials');
+                    
+                    emailToUse = userData.email;
                 }
 
                 // Sign in with email and password
                 const { data: authData, error: signInError } = await supabaseClient.auth.signInWithPassword({
-                    email: users.email,
+                    email: emailToUse,
                     password: password
                 });
+
+                if (signInError) throw signInError;
 
                 if (signInError) throw signInError;
 
