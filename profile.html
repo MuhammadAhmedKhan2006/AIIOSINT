@@ -80,11 +80,11 @@
                                 </div>
                                 <div class="flex items-center justify-between">
                                     <span class="text-sm text-slate-400">Security Level</span>
-                                    <span class="text-sm text-white font-mono">Level 5</span>
+                                    <span id="security-level" class="text-sm text-white font-mono">Level 1</span>
                                 </div>
                                 <div class="flex items-center justify-between">
                                     <span class="text-sm text-slate-400">Total Scans</span>
-                                    <span class="text-sm text-white font-mono">1,247</span>
+                                    <span id="total-scans" class="text-sm text-white font-mono">0</span>
                                 </div>
                             </div>
                         </div>
@@ -158,28 +158,28 @@
                                     <span class="material-symbols-outlined text-primary">search</span>
                                     <span class="text-sm text-slate-400">DNS Lookups</span>
                                 </div>
-                                <span class="text-2xl font-bold text-white font-mono">342</span>
+                                <span id="stat-dns" class="text-2xl font-bold text-white font-mono">0</span>
                             </div>
                             <div class="bg-background-dark border border-white/10 rounded-lg p-4">
                                 <div class="flex items-center gap-2 mb-2">
                                     <span class="material-symbols-outlined text-primary">wifi_tethering_off</span>
                                     <span class="text-sm text-slate-400">Subdomain Scans</span>
                                 </div>
-                                <span class="text-2xl font-bold text-white font-mono">156</span>
+                                <span id="stat-subdomain" class="text-2xl font-bold text-white font-mono">0</span>
                             </div>
                             <div class="bg-background-dark border border-white/10 rounded-lg p-4">
                                 <div class="flex items-center gap-2 mb-2">
                                     <span class="material-symbols-outlined text-primary">lock_open</span>
                                     <span class="text-sm text-slate-400">Breach Searches</span>
                                 </div>
-                                <span class="text-2xl font-bold text-white font-mono">89</span>
+                                <span id="stat-breach" class="text-2xl font-bold text-white font-mono">0</span>
                             </div>
                             <div class="bg-background-dark border border-white/10 rounded-lg p-4">
                                 <div class="flex items-center gap-2 mb-2">
                                     <span class="material-symbols-outlined text-primary">hub</span>
                                     <span class="text-sm text-slate-400">Port Scans</span>
                                 </div>
-                                <span class="text-2xl font-bold text-white font-mono">234</span>
+                                <span id="stat-port" class="text-2xl font-bold text-white font-mono">0</span>
                             </div>
                         </div>
                     </div>
@@ -275,13 +275,24 @@
 
                     if (userStats && userStats.length > 0) {
                         const stats = userStats[0];
-                        const statElements = document.querySelectorAll('.text-4xl.font-bold.text-primary');
-                        if (statElements.length >= 4) {
-                            statElements[0].textContent = stats.dns_lookups || 0;
-                            statElements[1].textContent = stats.subdomain_scans || 0;
-                            statElements[2].textContent = stats.breach_searches || 0;
-                            statElements[3].textContent = stats.port_scans || 0;
-                        }
+                        
+                        // Update usage details in sidebar (new IDs)
+                        document.getElementById('stat-dns').textContent = stats.dns_lookups || 0;
+                        document.getElementById('stat-subdomain').textContent = stats.subdomain_scans || 0;
+                        document.getElementById('stat-breach').textContent = stats.breach_searches || 0;
+                        document.getElementById('stat-port').textContent = stats.port_scans || 0;
+                        
+                        // Update total scans
+                        document.getElementById('total-scans').textContent = (stats.total_searches || 0).toLocaleString();
+                        
+                        // Update security level based on total scans
+                        const totalScans = stats.total_searches || 0;
+                        let secLevel = 1;
+                        if (totalScans >= 100) secLevel = 5;
+                        else if (totalScans >= 50) secLevel = 4;
+                        else if (totalScans >= 25) secLevel = 3;
+                        else if (totalScans >= 10) secLevel = 2;
+                        document.getElementById('security-level').textContent = `Level ${secLevel}`;
                     }
 
                     // Update credits display
